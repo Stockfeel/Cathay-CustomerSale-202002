@@ -1,7 +1,6 @@
 <template>
   <HomeLayout>
     <Info />
-    <Info />
   </HomeLayout>
 </template>
 
