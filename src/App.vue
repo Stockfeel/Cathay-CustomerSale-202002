@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <GlobalFonts />
+    <InitialStyle />
     <router-view></router-view>
     <Home />
   </div>
@@ -7,22 +9,15 @@
 
 <script>
 import Home from './components/home.vue'
+import GlobalFonts from './fonts/fonts';
+import { InitialStyle } from './style';
 
 export default {
   name: 'App',
   components: {
-    Home
+    Home,
+    GlobalFonts,
+    InitialStyle
   }
 }
 </script>
-
-<style>
-*{
-  box-sizing: border-box;
-}
-#app, html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-}
-</style>

@@ -5,7 +5,10 @@
         <div class='avatar__annotation'>70% 相似</div>
         <img src='../assets/info_avatar.png'>
       </div>
-      <DropDown>互動</DropDown>
+      <DropDown>
+        <span>互動</span>
+        <Icon :iconUrl="require('../assets/icon-arrow-white-down.svg')" />
+      </DropDown>
     </AvatarLayout>
     <IntroLayout>
       <section>
@@ -25,7 +28,7 @@
         <router-link to='./profile'>
           <MoreButton>
             <p>看更多輪廓及編輯</p>
-            <Icon imgUrl='../assets/button-more.svg' />
+            <Icon :iconUrl="require('../assets/button_more.svg')" :size="20"/>
           </MoreButton>
         </router-link>
       </section>
@@ -33,10 +36,12 @@
         <Title textAlign='left'>服務歷程</Title>
         <p>{{ service.date }} {{ service.time }} {{ service.route }}</p>
         <p>{{ service.note }} </p>
-        <MoreButton>
-            <p>看更多歷程</p>
-            <Icon imgUrl='../assets/button-more.svg' />
-        </MoreButton>
+        <router-link to='./service'>
+          <MoreButton>
+              <p>看更多歷程</p>
+              <Icon :iconUrl="require('../assets/button_more.svg')" :size="20"/>
+          </MoreButton>
+        </router-link>
       </section>
     </IntroLayout>
   </Card>
@@ -70,8 +75,8 @@ const AvatarLayout = styled.div`
     background: #dd7b7b;
     color: white;
     padding: 5px;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
   }
   img {
     width: 100px;
@@ -95,7 +100,7 @@ const IntroLayout = styled.div`
   p {
     margin: 0;
   }
-  section p {
+  section > p {
     margin-top: 5px;
   }
 `

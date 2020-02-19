@@ -1,6 +1,20 @@
 import styled from 'vue-styled-components';
-import buttonMore from './assets/button_more.svg';
 import buttonClose from './assets/button_close.svg';
+import { injectGlobal } from 'vue-styled-components';
+
+// Intial
+export const InitialLayout = injectGlobal`
+	*{
+	  box-sizing: border-box;
+	  font-family: 'Lato', 'Noto Sans TC';
+	}
+
+	#app, html, body {
+	  width: 100%;
+	  height: 100%;
+	  margin: 0;
+	}
+`
 
 // Atoms
 const color = {
@@ -24,14 +38,15 @@ export const Title = styled('p', titleProps)`
   color: ${color.text};
 `
 
-export const Icon = styled.div`
-  background-image: url(${buttonMore});
+const iconProps = { iconUrl: String, size: Number };
+export const Icon = styled('div', iconProps)`
+  background-image: url('${props => props.iconUrl}');
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: ${props => props.size || 10}px;
+  height: ${props => props.size || 10}px;
 ` 
 
 const listItemProps = { listBasis: String}
@@ -63,15 +78,31 @@ export const List = styled('ul', listProps)`
 
 const formInputProps = { inputBasis: String }
 export const FormInput = styled('div', formInputProps)`
-	flex-basis: ${props => props.inputBasis};
-	margin: 0px;
+	display: flex;
+	align-items: center;
+	width: ${props => props.inputBasis};
+	margin: 0;
+	margin-bottom: 10px;
 	input {
 		cursor: pointer;
+		margin: 0;
 	}
 	label {
-		margin: 5px;
+		font-size: ${font.h2}
 		color: ${color.text};
 		cursor: pointer;
+		margin-left: 8px;
+	}
+	textarea {
+		height: 100px;
+		border: #d9dbdb 1px solid;
+		border-radius: 8px;
+		width: 75%;
+		padding: 10px;
+		&:focus {
+			outline: none;
+			border: ${color.primary} 1px solid;
+		}
 	}
 	input[type='text'] {
 		color: ${color.text};
@@ -85,9 +116,66 @@ export const FormInput = styled('div', formInputProps)`
 			border: ${color.primary} 1px solid;
 		}
 	}
-	input[type='checkbox'] {
+	input[type="checkbox"] {
+		position: relative;
+    -webkit-appearance: none;
+    vertical-align: middle;
+    background: #fff;
+    border: ${color.primary} solid 1px;
+    border-radius: 3px;
+    min-height: 12px;
+    min-width: 12px;
+    &:focus {
+    	outline: none;
+    }
+    &:checked {
+    	background: ${color.primary};	    	
+    	&::after {
+		    content: '';
+		    top: 1px;
+		    left: 1px;
+		    z-index: 2;
+		    position: absolute;
+		    background: transparent;
+		    border: #fff solid 2px;
+		    border-top: none;
+		    border-right: none;
+		    height: 3px;
+		    width: 6px;
+		    -moz-transform: rotate(-45deg);
+		    -ms-transform: rotate(-45deg);
+		    -webkit-transform: rotate(-45deg); 
+		    transform: rotate(-45deg);	
+    	}
+    }
 	}
 	input[type='radio'] {
+    display: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    background-color: white;
+    box-shadow: 0 0 0 3px white, 0 0 0 4px ${color.primary};
+    border-radius: 10px;
+    width: 100%;
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    cursor: pointer;
+    &:checked {
+	    outline: none;
+	    background: ${color.primary};
+    }
+  	&::-ms-check {
+  		display: none;
+  	}
+	}
+	input[type='date'] {
+		padding: 5px;
+		border-radius: 8px;
+		border: #d9dbdb 1px solid;
 	}
 `
 
@@ -120,7 +208,8 @@ export const CloseButton = styled.div`
 
 export const DropDown = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
+  align-items: center;
   background: #05b077;
   box-shadow: 0 4px 12px 0 #85cbcb;
   border-radius: 20px;
@@ -144,31 +233,36 @@ export const MoreButton = styled.div`
 
 // Organisms
 export const ButtonWrapper = styled.div`
-  position: fixed;
-  bottom: 0; 
-  left: 0;
-  display: flex;
+	position: fixed;
+	display: flex;
+	z-index: 1;
 	justify-content: center;
 	align-items: center;
+	bottom: 0; 
+	left: 0;
 	background: white;
-	padding: 35px;
+	height: 10%;
 	width: 100%;
 	& > * {
 		margin-right: 10px;
 	}
 `
 
-export const FormWrapper = styled.div`
+const wrapperProps = { wrapperAlign: String };
+export const FormWrapper = styled('div', wrapperProps)`
 	display: flex;
 	flex-wrap: wrap;
+	align-items: ${props => props.wrapperAlign || 'flex-start'};
 	> * {
 		margin-left: 20px;
 	}
 `
 
 // Templates
-export const Card = styled.div`
+const cardProps = { cardDirection: String };
+export const Card = styled('div', cardProps)`
 	display: flex;
+	flex-direction: ${props => props.cardDirection || 'row'}
 	border-radius: 12px;
 	box-shadow: 0 6px 15px 0 rgba(128, 197, 197, 0.72);
 	color: ${color.text};
@@ -182,16 +276,18 @@ export const Modal = styled.div`
 	left: 50%
 	top: 50%;
 	transform: translate(-50%, -50%);
-	overflow-y: scroll;
 	overflow-x: hidden;
 	width: 90%;
 	border-radius: 8px;
 	background: ${color.bg};
-	padding: 20px;
-	z-index: 2;
+	z-index: 1;
 	box-shadow: 
 		0 0 0 100px rgba(1,1,1,.3),
 		0 0 0 100px rgba(1,1,1,.3);
 	height: 90%;
+	main {
+		height: 80%;
+		overflow-y: scroll;
+	}
 `
 
