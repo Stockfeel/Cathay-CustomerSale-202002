@@ -1,38 +1,38 @@
 <template>
-  <Modal>
+  <Modal :mainHeight="60">
     <router-link to='./'>
       <CloseButton/>
     </router-link>
     <Title textAlign='center'>服務歷程</Title>
-    <ServiceLayout>
-      <section>
-        <FormWrapper wrapperAlign='center'>
-          <span>時間</span>
-          <FormInput><input type='date' /></FormInput>
-          <span>至</span>
-          <FormInput><input type='date' /></FormInput>
-          <Button>查詢</Button>
-        </FormWrapper>
-        <FormWrapper wrapperAlign='center'>
-          <span>管道</span>
-          <FormInput>
-            <input type="radio" name="all"/>
-            <label>全選</label>
-          </FormInput>
-          <FormInput>
-            <input type="radio" name="all"/>
-            <label>全不選</label>
-          </FormInput>
-        </FormWrapper>
-        <FormWrapper wrapperAlign='center'>
-          <FormInput inputBasis="21%" v-for="(option, idx) in routeOptions" :key="`option-${idx}`">
-            <input type="checkbox" name="option" 
-              :id="`option-${idx}`" :value="option" />
-            <label :for="`option-${idx}`">{{ option }}</label>
-          </FormInput>
-        </FormWrapper>
-      </section>
-      <ServiceTable>
+    <ServiceSection>
+      <FormWrapper wrapperAlign='center'>
+        <span>時間</span>
+        <FormInput><input type='date' /></FormInput>
+        <span>至</span>
+        <FormInput><input type='date' /></FormInput>
+        <Button>查詢</Button>
+      </FormWrapper>
+      <FormWrapper wrapperAlign='center' :wrapperMargin='20'>
+        <span>管道</span>
+        <FormInput>
+          <input type="radio" name="all"/>
+          <label>全選</label>
+        </FormInput>
+        <FormInput>
+          <input type="radio" name="all"/>
+          <label>全不選</label>
+        </FormInput>
+      </FormWrapper>
+      <FormWrapper wrapperAlign='center'>
+        <FormInput inputBasis="25%" v-for="(option, idx) in routeOptions" :key="`option-${idx}`">
+          <input type="checkbox" name="option" 
+            :id="`option-${idx}`" :value="option" />
+          <label :for="`option-${idx}`">{{ option }}</label>
+        </FormInput>
+      </FormWrapper>
+    </ServiceSection>
+    <main>
+      <Table>
         <thead>
           <tr>
             <th>序號</th>
@@ -44,7 +44,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(record, idx) in records" :key="`record-${idx}`">
+          <tr v-for="(record, idx) in tableData" :key="`record-${idx}`">
             <td><p>{{ record.id }}</p></td>
             <td>
               <p>{{ record.date }}</p>
@@ -59,64 +59,37 @@
             <td><p>{{ record.key }}</p></td>
           </tr>
         </tbody>
-      </ServiceTable>
-    </ServiceLayout>
-    <Pagination :length="16" :current="5"/>
+      </Table>
+    </main>
+    <ButtonWrapper>
+      <b-pagination
+        v-model="page"
+        :total-rows="records.length"
+        :per-page="10"
+        next-text=">"
+        prev-text="<"
+        first-number
+        last-number
+        @change="changePage"
+      ></b-pagination>
+    </ButtonWrapper>
   </Modal>
 </template>
 
 <script>
-import { Button, Modal, Title, CloseButton, FormInput, FormWrapper, Icon } from '../style.js';
-import Pagination from './pagination.vue';
+import { Button, Modal, Title, CloseButton, FormInput, FormWrapper, Icon, ButtonWrapper, Table } from '../style.js';
 import styled from 'vue-styled-components';
 
-const ServiceLayout = styled.div`
-  span {
-    display: inline-block;
+const ServiceSection = styled.section`
+  width: 90%;
+  margin: 0 auto;
+  & > div {
+    margin-top: 15px;
+    &:first-child > * {
+      margin-right: 8px;
+    }
   }
-  section {
-    width: 100%;
-    margin: 0 auto;
-  }
-`
 
-const ServiceTable = styled('table')`
-  border-collapse: collapse;
-  width: 100%;
-  margin: 10px auto; 
-  thead {
-    th {
-      height: 40px;
-      font-size: 14px;
-      font-weight: normal;
-      background: #e3fafa;
-      border-bottom: 1px solid rgba(51, 51, 51, 0.2);
-      padding: auto;
-      color: #324c5a;
-    }
-    th:not(:last-child) {
-      border-right: 1px solid rgba(51, 51, 51, 0.2);
-    }
-  }
-  tr {
-    vertical-align: middle;
-  }
-  tbody {
-    td {
-      height: 40px;
-      border-bottom: 1px solid rgba(51, 51, 51, 0.2);
-      padding: auto;
-      color: #324c5a;
-      p {
-        font-size: 14px;
-        margin: 0 auto;
-        text-align: center;
-      }
-    } 
-    td:not(:last-child) {
-      border-right: 1px solid rgba(51, 51, 51, 0.2);
-    }
-  }
 `
 
 export default {
@@ -128,13 +101,27 @@ export default {
     Modal,
     Title,
     CloseButton,
-    ServiceTable,
-    Pagination,
-    ServiceLayout,
-    Icon
+    ServiceSection,
+    Icon,
+    ButtonWrapper,
+    Table
+  },
+  methods: {
+    changePage (page) {
+      this.tableData = this.records.slice((page - 1)*10, page*10 )
+    }
   },
   data () {
     return {
+      options: {
+          theme: 'bootstrap4',
+          edgeNavigation: true,
+          texts: { 
+            count: '' 
+          }
+      },
+      tableData: [],
+      page: 1,
       routeOptions: ['0800', '0900', '直效', '保費', '服務中心櫃台', '業務員_行動', '業務員_一般', '醫院', '保代', '官網', '電話_其他', '簡訊', 'MML', '機場櫃檯', '內部作業', '其他', '傳真', '電話_服務中心', '申訴'],
       records: [
         {
@@ -250,5 +237,8 @@ export default {
       ]
     }
   },
+  mounted: function(){
+    this.tableData = this.records.slice(0, 10);
+  }
 }
 </script>

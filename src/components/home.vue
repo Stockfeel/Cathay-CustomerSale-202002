@@ -2,12 +2,14 @@
   <HomeLayout>
     <Info />
     <Market />
+    <Suggestions />
   </HomeLayout>
 </template>
 
 <script>
 import Info from './info.vue';
 import Market from './market.vue';
+import Suggestions from './suggestions.vue';
 import styled from 'vue-styled-components';
 
 const HomeLayout = styled.div`
@@ -29,6 +31,7 @@ export default {
   components: {
     Info,
     Market,
+    Suggestions,
     HomeLayout
   }
 }

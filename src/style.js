@@ -36,6 +36,7 @@ export const Title = styled('p', titleProps)`
   font-weight: bold;
   font-size: ${font.h1};
   color: ${color.text};
+  margin: 0;
 `
 
 const iconProps = { iconUrl: String, size: Number };
@@ -68,12 +69,12 @@ export const List = styled('ul', listProps)`
 	flex-direction: ${props => props.listDirection};
 	flex-wrap: wrap;
 	margin: 0px;
-  padding: 0px 0px 0px 15px;
-  list-style: none;
-  > * {
-  	margin-right: ${props => props.listDirection === 'row' ? '1.2em' : '0'};
-  	margin-bottom: .2em;
-  }
+	padding: 0px 0px 0px 15px;
+	list-style: none;
+	> * {
+		margin-right: ${props => props.listDirection === 'row' ? '1.2em' : '0'};
+		margin-bottom: .2em;
+	}
 `
 
 const formInputProps = { inputBasis: String }
@@ -82,7 +83,6 @@ export const FormInput = styled('div', formInputProps)`
 	align-items: center;
 	width: ${props => props.inputBasis};
 	margin: 0;
-	margin-bottom: 10px;
 	input {
 		cursor: pointer;
 		margin: 0;
@@ -118,36 +118,36 @@ export const FormInput = styled('div', formInputProps)`
 	}
 	input[type="checkbox"] {
 		position: relative;
-    -webkit-appearance: none;
-    vertical-align: middle;
-    background: #fff;
-    border: ${color.primary} solid 1px;
-    border-radius: 3px;
-    min-height: 12px;
-    min-width: 12px;
-    &:focus {
-    	outline: none;
-    }
-    &:checked {
-    	background: ${color.primary};	    	
-    	&::after {
-		    content: '';
-		    top: 1px;
-		    left: 1px;
-		    z-index: 2;
-		    position: absolute;
-		    background: transparent;
-		    border: #fff solid 2px;
-		    border-top: none;
-		    border-right: none;
-		    height: 3px;
-		    width: 6px;
-		    -moz-transform: rotate(-45deg);
-		    -ms-transform: rotate(-45deg);
-		    -webkit-transform: rotate(-45deg); 
-		    transform: rotate(-45deg);	
-    	}
-    }
+	    -webkit-appearance: none;
+	    vertical-align: middle;
+	    background: #fff;
+	    border: ${color.primary} solid 1px;
+	    border-radius: 3px;
+	    min-height: 12px;
+	    min-width: 12px;
+	    &:focus {
+	    	outline: none;
+	    }
+	    &:checked {
+	    	background: ${color.primary};	    	
+	    	&::after {
+			    content: '';
+			    top: 2px;
+			    left: 1px;
+			    z-index: 2;
+			    position: absolute;
+			    background: transparent;
+			    border: #fff solid 2px;
+			    border-top: none;
+			    border-right: none;
+			    height: 4px;
+			    width: 8px;
+			    -moz-transform: rotate(-45deg);
+			    -ms-transform: rotate(-45deg);
+			    -webkit-transform: rotate(-45deg); 
+			    transform: rotate(-45deg);	
+	    	}
+	    }
 	}
 	input[type='radio'] {
     display: none;
@@ -231,6 +231,19 @@ export const MoreButton = styled.div`
   }
 `
 
+export const SuggestButton = styled.div`
+	color: white;
+	height: 45px;
+	border-radius: 23px;
+  width: 223px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #06bdc0;
+  box-shadow: 0 2px 6px 0 #93d1d1;
+  margin: 8px 0;
+`
+
 // Organisms
 export const ButtonWrapper = styled.div`
 	position: fixed;
@@ -248,14 +261,54 @@ export const ButtonWrapper = styled.div`
 	}
 `
 
-const wrapperProps = { wrapperAlign: String };
+const wrapperProps = { wrapperAlign: String, wrapperMargin: Number };
 export const FormWrapper = styled('div', wrapperProps)`
 	display: flex;
 	flex-wrap: wrap;
 	align-items: ${props => props.wrapperAlign || 'flex-start'};
 	> * {
-		margin-left: 20px;
+		margin-right: ${props => props.wrapperMargin || 0 }px;
 	}
+`
+
+export const Table = styled.table`
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 30px;
+  thead {
+    th {
+      height: 40px;
+      font-size: 14px;
+      font-weight: normal;
+      background: #e3fafa;
+      border-bottom: 1px solid rgba(51, 51, 51, 0.2);
+      padding: auto;
+      color: #324c5a;
+      text-align: center;
+    }
+    th:not(:last-child) {
+      border-right: 1px solid rgba(51, 51, 51, 0.2);
+    }
+  }
+  tr {
+    vertical-align: middle;
+  }
+  tbody {
+    td {
+      height: 40px;
+      border-bottom: 1px solid rgba(51, 51, 51, 0.2);
+      padding: auto;
+      color: #324c5a;
+      p {
+        font-size: 14px;
+        margin: 0 auto;
+        text-align: center;
+      }
+    } 
+    td:not(:last-child) {
+      border-right: 1px solid rgba(51, 51, 51, 0.2);
+    }
+  }
 `
 
 // Templates
@@ -271,7 +324,9 @@ export const Card = styled('div', cardProps)`
 	margin: 10px;
 `;
 
-export const Modal = styled.div`
+const modalProps = { mainHeight: Number };
+export const Modal = styled('div', modalProps)`
+	padding: 20px 0;
 	position: fixed;
 	left: 50%
 	top: 50%;
@@ -286,7 +341,8 @@ export const Modal = styled.div`
 		0 0 0 100px rgba(1,1,1,.3);
 	height: 90%;
 	main {
-		height: 80%;
+		width: 100%;
+		height: ${props => props.mainHeight || 80}%;
 		overflow-y: scroll;
 	}
 `

@@ -59,7 +59,7 @@
           <td>
             <FormWrapper>
               <FormInput v-for="(item, idx) in userOptions[userClass].data" 
-                inputBasis="40%" :key="idx">
+                inputBasis="33%" :key="idx">
                 <input :type="userOptions[userClass].type" :name="userClass" 
                   :id="`${userClass}-${idx}`" :value="item" v-model="form[userClass]"/>
                 <label :for="`${userClass}-${idx}`" v-if="userOptions[userClass].type !== 'text'">{{ item }}</label>

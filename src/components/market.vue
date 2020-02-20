@@ -18,10 +18,12 @@
           <span>申辦網路服務</span>
         </span>
       </div>
-      <MoreButton>
-        <p>看更多紀錄</p>
-        <Icon :iconUrl="require('../assets/button_more.svg')" :size="20"/>
-      </MoreButton>
+      <router-link to='./market'>
+        <MoreButton>
+          <p>看更多紀錄</p>
+          <Icon :iconUrl="require('../assets/button_more.svg')" :size="20"/>
+        </MoreButton>
+      </router-link>
     </MarketLayout>
   </Card>
 </template>

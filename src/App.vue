@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <GlobalFonts />
-    <InitialStyle />
+    <InitialLayout />
     <router-view></router-view>
     <Home />
   </div>
@@ -10,14 +10,14 @@
 <script>
 import Home from './components/home.vue'
 import GlobalFonts from './fonts/fonts';
-import { InitialStyle } from './style';
+import { InitialLayout } from './style';
 
 export default {
   name: 'App',
   components: {
     Home,
     GlobalFonts,
-    InitialStyle
+    InitialLayout
   }
 }
 </script>
