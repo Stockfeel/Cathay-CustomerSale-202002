@@ -1,9 +1,11 @@
 <template>
   <Modal>
-    <router-link to='./'>
-      <CloseButton/>
-    </router-link>
-    <Title textAlign='center'>客戶輪廓</Title>
+    <Header>
+      <router-link to='./'>
+        <CloseButton/>
+      </router-link>
+      <Title textAlign='center'>客戶輪廓</Title>
+    </Header>
     <main>
       <ProfileTable v-if="!isEdit">
         <tr v-for="(userClass, idx) in Object.keys(user)" :key="`user-${idx}`">
@@ -94,7 +96,17 @@
 </template>
 
 <script>
-import { List, ListItem, Modal, Title, FormWrapper, FormInput, ButtonWrapper, Button, CloseButton } from '../style.js';
+import { 
+  List, 
+  ListItem, 
+  Modal, 
+  Title, 
+  FormWrapper, 
+  FormInput, 
+  ButtonWrapper, 
+  Button, 
+  CloseButton, 
+  Header } from '../style.js';
 import styled from 'vue-styled-components';
 
 const profileTableProps = { isEdited: String }
@@ -160,6 +172,7 @@ export default {
     FormInput,
     List, 
     ListItem,
+    Header
   },
   data () {
     return {

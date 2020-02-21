@@ -7,8 +7,9 @@ export const InitialLayout = injectGlobal`
 	*{
 	  box-sizing: border-box;
 	  font-family: 'Lato', 'Noto Sans TC';
+	  padding: 0;
+	  margin: 0;
 	}
-
 	#app, html, body {
 	  width: 100%;
 	  height: 100%;
@@ -245,6 +246,14 @@ export const SuggestButton = styled.div`
 `
 
 // Organisms
+export const Header = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 8%; 
+`
+
 export const ButtonWrapper = styled.div`
 	position: fixed;
 	display: flex;
@@ -256,6 +265,7 @@ export const ButtonWrapper = styled.div`
 	background: white;
 	height: 10%;
 	width: 100%;
+	box-shadow: 0 2px 8px 0 rgba(128, 197, 197, 0.5);
 	& > * {
 		margin-right: 10px;
 	}
@@ -274,7 +284,6 @@ export const FormWrapper = styled('div', wrapperProps)`
 export const Table = styled.table`
   border-collapse: collapse;
   width: 100%;
-  margin-top: 30px;
   thead {
     th {
       height: 40px;
@@ -300,9 +309,10 @@ export const Table = styled.table`
       padding: auto;
       color: #324c5a;
       p {
+      	display: inline-block;
         font-size: 14px;
         margin: 0 auto;
-        text-align: center;
+        text-align: left;
       }
     } 
     td:not(:last-child) {
@@ -342,7 +352,7 @@ export const Modal = styled('div', modalProps)`
 	height: 90%;
 	main {
 		width: 100%;
-		height: ${props => props.mainHeight || 80}%;
+		height: ${props => props.mainHeight || 82}%;
 		overflow-y: scroll;
 	}
 `

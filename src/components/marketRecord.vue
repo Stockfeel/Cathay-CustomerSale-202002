@@ -1,18 +1,32 @@
 <template>
   <Modal>
-    <router-link to='./'>
-      <CloseButton/>
-    </router-link>
-    <Title textAlign='center'>行銷歷史紀錄</Title>
+    <Header>
+      <router-link to='./'>
+        <CloseButton/>
+      </router-link>
+      <Title textAlign='center'>行銷歷史紀錄</Title>
+    </Header>
     <main>
-      <Table>
+      <MarketTable>
         <thead>
           <tr>
             <th>日期</th>
-            <th>類別<Icon :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/></th>
-            <th>項目<Icon :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/></th>
-            <th>狀態<Icon :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/></th>
-            <th>備註<Icon :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/></th>
+            <th>類別 
+              <Icon data-sort='category' 
+                :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
+            </th>
+            <th>項目 
+              <Icon data-sort='product' 
+                :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
+            </th>
+            <th>狀態 
+              <Icon data-sort='state' 
+                :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
+            </th>
+            <th>備註 
+              <Icon data-sort='note' 
+                :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
+            </th>
             <th>客服人員</th>
           </tr>
         </thead>
@@ -24,7 +38,16 @@
             </td>      
             <td><p>{{ item.category }}</p></td>
             <td><p>{{ item.event }}</p></td>
-            <td><p>{{ item.state }}</p></td>
+            <td>
+              <p>
+                <Icon v-if="item.state === 1" :size='20'
+                  :iconUrl="require('../assets/icon-accept.svg')"/>
+                <Icon v-if="item.state === 2" :size='20'
+                  :iconUrl="require('../assets/icon-refuse.svg')"/>
+                <Icon v-if="item.state === 3" :size='20'
+                  :iconUrl="require('../assets/icon-notime.svg')"/>                                    
+              </p>
+            </td>
             <td>
               <p>{{ item.note.text }}</p>
               <div>
@@ -38,7 +61,7 @@
             </td>
           </tr>
         </tbody>
-      </Table>
+      </MarketTable>
     </main>
     <ButtonWrapper>
       <b-pagination
@@ -56,8 +79,27 @@
 </template>
 
 <script>
-import { Modal, Title, CloseButton, ButtonWrapper, Table } from '../style.js';
-// import styled from 'vue-styled-components';
+import { Modal, Title, CloseButton, ButtonWrapper, Table, Header, Icon } from '../style.js';
+import styled from 'vue-styled-components';
+
+const MarketTable = styled(Table)`
+  th:first-child {
+    width: 90px;
+  }
+  th:nth-child(2) {
+    width: 75px;
+  }
+  th:nth-child(3) {
+    width: 100px;
+  }
+  th:nth-child(4) {
+    width: 50px;
+  }
+  th:nth-child(5) {
+    width: 150px;
+  }
+
+`
 
 export default {
   name: 'MarketRecord',
@@ -66,7 +108,9 @@ export default {
     Title,
     CloseButton,
     ButtonWrapper,
-    Table
+    MarketTable,
+    Header,
+    Icon
   },
   methods: {
     changePage (page) {
@@ -132,6 +176,50 @@ export default {
           date: '108/12/26',
           time: '10:34',
           data: [
+            {
+              category: '商機推薦',
+              event: '一通電話Fun心旅遊趣',
+              state: 3,
+              note: {
+                text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
+                date: null,
+              },
+              place: '世界服務中心',
+              owner: '陳人壽',
+            },
+            {
+              category: '商機推薦',
+              event: '一通電話Fun心旅遊趣',
+              state: 3,
+              note: {
+                text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
+                date: null,
+              },
+              place: '世界服務中心',
+              owner: '陳人壽',
+            },
+            {
+              category: '商機推薦',
+              event: '一通電話Fun心旅遊趣',
+              state: 3,
+              note: {
+                text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
+                date: null,
+              },
+              place: '世界服務中心',
+              owner: '陳人壽',
+            },
+            {
+              category: '商機推薦',
+              event: '一通電話Fun心旅遊趣',
+              state: 3,
+              note: {
+                text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
+                date: null,
+              },
+              place: '世界服務中心',
+              owner: '陳人壽',
+            },
             {
               category: '商機推薦',
               event: '一通電話Fun心旅遊趣',
