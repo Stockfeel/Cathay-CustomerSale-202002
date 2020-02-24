@@ -5,10 +5,10 @@
         <div class='avatar__annotation'>70% 相似</div>
         <img src='../assets/info_avatar.png'>
       </div>
-      <DropDown>
+      <DropDownButton>
         <span>互動</span>
         <Icon :iconUrl="require('../assets/icon-arrow-white-down.svg')" />
-      </DropDown>
+      </DropDownButton>
     </AvatarLayout>
     <IntroLayout>
       <section>
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { List, ListItem, Card, Icon, DropDown, MoreButton, Title } from '../style.js';
+import { List, ListItem, Card, Icon, DropDownButton, MoreButton, Title } from '../style.js';
 import styled from 'vue-styled-components';
 
 const AvatarLayout = styled.div`
@@ -117,7 +117,7 @@ export default {
     Icon,
     MoreButton,
     Title,
-    DropDown,
+    DropDownButton,
     ListItem,
     List
   },

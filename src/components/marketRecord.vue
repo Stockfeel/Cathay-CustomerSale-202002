@@ -12,21 +12,31 @@
           <tr>
             <th>日期</th>
             <th>類別 
-              <Icon data-sort='category' 
+              <Icon data-filter='category' @click="toggleFilterMenu" v-if="filterMenu.category"
                 :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
+              <Icon data-filter='category' @click="toggleFilterMenu" v-if="!filterMenu.category"
+                :iconUrl="require('../assets/icon-arrow-dark-up.svg')"/>
+              <DropDown v-if="filterMenu.category">
+                <a @click="handleFilter" data-filter='category' data-type='all'>全部</a>
+                <a @click="handleFilter" data-filter='category' data-type='服務建議'>服務建議</a>
+                <a @click="handleFilter" data-filter='category' data-type='商機推薦'>商機推薦</a>
+                <a @click="handleFilter" data-filter='category' data-type='保障缺口'>保障缺口</a>
+              </DropDown>
             </th>
-            <th>項目 
-              <Icon data-sort='product' 
-                :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
-            </th>
+            <th>項目</th>
             <th>狀態 
-              <Icon data-sort='state' 
+              <Icon data-filter='state' @click="toggleFilterMenu" v-if="filterMenu.state"
                 :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
+              <Icon data-filter='state' @click="toggleFilterMenu" v-if="!filterMenu.state"
+                :iconUrl="require('../assets/icon-arrow-dark-up.svg')"/>
+              <DropDown v-if="filterMenu.state">
+                <a @click="handleFilter" data-filter='state' data-type='all'>全部</a>
+                <a @click="handleFilter" data-filter='state' data-type='1'>接受</a>
+                <a @click="handleFilter" data-filter='state' data-type='2'>拒絕</a>
+                <a @click="handleFilter" data-filter='state' data-type='3'>沒時間</a>
+              </DropDown>
             </th>
-            <th>備註 
-              <Icon data-sort='note' 
-                :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
-            </th>
+            <th>備註</th>
             <th>客服人員</th>
           </tr>
         </thead>
@@ -49,11 +59,21 @@
               </p>
             </td>
             <td>
-              <p>{{ item.note.text }}</p>
-              <div>
-                <p v-if="item.note.date">預約時間</p>
-                <p v-if="item.note.date">{{ item.note.date }}</p>
+              <p v-if="!item.edit">{{ item.note.text }} <Icon :iconUrl="require('../assets/icon-edit-edit-green.svg')" :size='20' @click="item.edit = !item.edit;"/></p>
+              <div v-if="item.edit">
+                <FormInput>
+                  <input type='text' :value="item.note.text"/>
+                </FormInput>
+                <SendButton @click="item.edit = !item.edit;">儲存送出</SendButton>
+                <span @click="item.edit = !item.edit;">取消</span>
               </div>
+              <ListItem v-if="item.note.date">
+                <span>預約聯絡</span>
+                <p v-if="!item.edit">{{ item.note.date }}</p>
+                <FormInput>
+                  <input type='date' v-if="item.edit" />
+                </FormInput>
+              </ListItem>
             </td>
             <td>
               <p>{{ item.place }}</p>
@@ -66,23 +86,27 @@
     <ButtonWrapper>
       <b-pagination
         v-model="page"
-        :total-rows="records.length"
+        :total-rows="filterData.length"
         :per-page="3"
         next-text=">"
         prev-text="<"
         first-number
         last-number
-        @change="changePage"
+        @change="showTable"
       ></b-pagination>
     </ButtonWrapper>
   </Modal>
 </template>
 
 <script>
-import { Modal, Title, CloseButton, ButtonWrapper, Table, Header, Icon } from '../style.js';
+import { Modal, Title, CloseButton, ButtonWrapper, SendButton, Table, FormInput, Header, Icon, DropDown, ListItem } from '../style.js';
 import styled from 'vue-styled-components';
 
 const MarketTable = styled(Table)`
+  text-align: center;
+  td {
+    padding: 5px;
+  }
   th:first-child {
     width: 90px;
   }
@@ -98,7 +122,6 @@ const MarketTable = styled(Table)`
   th:nth-child(5) {
     width: 150px;
   }
-
 `
 
 export default {
@@ -110,16 +133,40 @@ export default {
     ButtonWrapper,
     MarketTable,
     Header,
-    Icon
+    Icon,
+    DropDown,
+    ListItem,
+    SendButton,
+    FormInput
   },
   methods: {
-    changePage (page) {
-      this.tableData = this.records.slice((page - 1)*3, page*3 )
+    showTable(page) {
+      this.tableData = this.filterData.slice((page - 1)*3, page*3 )
+    },
+    toggleFilterMenu (evt) {
+      this.filterMenu[evt.target.dataset.filter] = !this.filterMenu[evt.target.dataset.filter];
+    },
+    handleFilter(evt) {
+      this.filterData = [...this.records].map(item => {
+        return {
+          ...item, 
+          data: item.data.filter(qData => 
+            evt.target.dataset.type === 'all' ? true : qData[evt.target.dataset.filter] == evt.target.dataset.type
+          )
+        }
+      }).filter(item => item.data.length > 0);
+      this.showTable(this.page);
+      this.toggleFilterMenu(evt);
     }
   },
   data() {
     return {
       tableData: [],
+      filterData: [],
+      filterMenu: {
+        category: false,
+        state: false
+      },
       page: 1,
       records: [
         {
@@ -136,6 +183,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
             },
             {
               category: '商機推薦',
@@ -147,6 +195,19 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
+            },
+            {
+              category: '保障缺口',
+              event: '一通電話Fun心旅遊趣',
+              state: 3,
+              note: {
+                text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
+                date: null,
+              },
+              place: '世界服務中心',
+              owner: '陳人壽',
+              edit: false,
             },
             {
               category: '商機推薦',
@@ -158,17 +219,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
-            },
-            {
-              category: '商機推薦',
-              event: '一通電話Fun心旅遊趣',
-              state: 3,
-              note: {
-                text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
-                date: null,
-              },
-              place: '世界服務中心',
-              owner: '陳人壽',
+              edit: false,
             }
           ]
         },
@@ -186,6 +237,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
             },
             {
               category: '商機推薦',
@@ -197,6 +249,19 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
+            },
+            {
+              category: '保障缺口',
+              event: '一通電話Fun心旅遊趣',
+              state: 3,
+              note: {
+                text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
+                date: null,
+              },
+              place: '世界服務中心',
+              owner: '陳人壽',
+              edit: false,
             },
             {
               category: '商機推薦',
@@ -208,6 +273,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
             },
             {
               category: '商機推薦',
@@ -219,6 +285,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
             },
             {
               category: '商機推薦',
@@ -230,17 +297,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
-            },
-            {
-              category: '商機推薦',
-              event: '一通電話Fun心旅遊趣',
-              state: 3,
-              note: {
-                text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
-                date: null,
-              },
-              place: '世界服務中心',
-              owner: '陳人壽',
+              edit: false,
             }
           ]
         },
@@ -258,6 +315,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
             },
             {
               category: '商機推薦',
@@ -269,6 +327,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
             }
           ]
         },
@@ -277,7 +336,7 @@ export default {
           time: '12:14',
           data: [
             {
-              category: '商機推薦',
+              category: '服務建議',
               event: '一通電話Fun心旅遊趣',
               state: 1,
               note: {
@@ -286,6 +345,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
             },
             {
               category: '商機推薦',
@@ -297,6 +357,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
             },
             {
               category: '商機推薦',
@@ -308,6 +369,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
             },
             {
               category: '商機推薦',
@@ -319,6 +381,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
             }
           ]
         },
@@ -336,6 +399,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
             },
             {
               category: '商機推薦',
@@ -347,6 +411,7 @@ export default {
               },
               place: '世界服務中心',
               owner: '陳人壽',
+              edit: false,
             }
           ]
         },
@@ -354,7 +419,8 @@ export default {
     }
   },
   mounted: function(){
-    this.tableData = this.records.slice(0, 3);
+    this.filterData = this.records;
+    this.tableData = this.filterData.slice(0, 3);
   }
 }
 </script>

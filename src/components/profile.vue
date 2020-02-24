@@ -62,7 +62,7 @@
             <FormWrapper>
               <FormInput v-for="(item, idx) in userOptions[userClass].data" 
                 inputBasis="33%" :key="idx">
-                <input :type="userOptions[userClass].type" :name="userClass" 
+                <input type="checkbox" :name="userClass" 
                   :id="`${userClass}-${idx}`" :value="item" v-model="form[userClass]"/>
                 <label :for="`${userClass}-${idx}`" v-if="userOptions[userClass].type !== 'text'">{{ item }}</label>
               </FormInput>
@@ -78,8 +78,8 @@
             <FormWrapper>
               <FormInput v-for="(item, idx) in interestsOptions.data[interestKey].data" 
                 inputBasis="33%" :key="`interestOption-${idx}`">
-                <input type="checkbox" :name="interestKey" 
-                  :id="`${interestKey}-${idx}`" :value="item" />
+<!--                 <input type="checkbox" :name="interestKey" 
+                  :id="`${interestKey}-${idx}`" :value="item" /> -->
                 <label :for="`${interestKey}-${idx}`">{{ item }}</label>
               </FormInput>
             </FormWrapper>

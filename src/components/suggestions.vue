@@ -3,21 +3,21 @@
     <SuggestSection>
       <div>
         <Title>服務建議</Title>
-        <SuggestButton>申辦網路服務</SuggestButton>
-        <SuggestButton>申辦電子單據</SuggestButton>
+        <SuggestButton v-for="(item, idx) in Object.keys(service)" :key="`service-${idx}`">
+          <router-link :to="`./product/${item}`"> {{ service[item].title }} </router-link>
+        </SuggestButton>
       </div>
       <div>
         <Title>商機推薦</Title>
-        <SuggestButton>意外附約升級</SuggestButton>
-        <SuggestButton>意外附約目標客戶</SuggestButton>
+        <SuggestButton v-for="(item, idx) in product" :key="`product-${idx}`"> {{ item.title }} </SuggestButton>
       </div>
     </SuggestSection>
     <InsuranceSection>
       <div class='insurance__button'>
         <Title>保障缺口</Title>
-        <DropDown>同步畫面</DropDown>
-        <DropDown>配對顧問</DropDown>
-        <DropDown>諮詢客服</DropDown>
+        <DropDownButton>同步畫面</DropDownButton>
+        <DropDownButton>配對顧問</DropDownButton>
+        <DropDownButton>諮詢客服</DropDownButton>
       </div>
       <section>
         <Insurance v-for="(insurance, idx) in insurances" 
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { Card, Title, SuggestButton, DropDown, Icon } from '../style.js';
+import { Card, Title, SuggestButton, DropDownButton, Icon } from '../style.js';
 import styled from 'vue-styled-components';
 
 const SuggestSection = styled.section`
@@ -135,12 +135,76 @@ export default {
     SuggestSection,
     SuggestButton,
     InsuranceSection,
-    DropDown,
+    DropDownButton,
     Insurance,
     Icon
   },
   data() {
     return {
+      service: {
+        1: {
+          id: 1,
+          title: '申辦網路服務',
+          state: 1,
+        },
+        2: {
+          id: 2,
+          title: '申辦電子單據',
+          state: 2,
+        },
+        3: {
+          id: 3,
+          title: '申辦網路服務',
+          state: 3,
+        },
+        4: {
+          id: 4,
+          title: '申辦網路服務',
+          state: 1,
+        },
+        5: {
+          id: 5,
+          title: '申辦電子單據',
+          state: 2,
+        },
+        6: {
+          id: 6,
+          title: '申辦電子單據',
+          state: 3,
+        }
+      },
+      product: [
+        {
+          id: 1,
+          title: '意外附約升級',
+          state: 1,
+        },
+        {
+          id: 2,
+          title: '意外附約目標客戶',
+          state: 2,
+        },
+        {
+          id: 3,
+          title: '意外附約升級',
+          state: 3,
+        },
+        {
+          id: 4,
+          title: '意外附約目標客戶',
+          state: 2,
+        },
+        {
+          id: 5,
+          title: '意外附約目標客戶',
+          state: 1,
+        },
+        {
+          id: 6,
+          title: '意外附約升級',
+          state: 1,
+        }
+      ],
       insurances: [
         {
           text: '照護給付',

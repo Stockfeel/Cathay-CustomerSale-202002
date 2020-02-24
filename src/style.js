@@ -54,6 +54,7 @@ export const Icon = styled('div', iconProps)`
 const listItemProps = { listBasis: String}
 export const ListItem = styled('li', listItemProps)`
 	flex-basis: ${props => props.listBasis};
+	list-style: none;
   &::before {
     content: "•"; 
     color: #05b077;
@@ -62,6 +63,18 @@ export const ListItem = styled('li', listItemProps)`
     margin-left: -.8em
   }
 `
+
+const imageProps = { imgUrl: String };
+export const Image = styled('div', imageProps)`
+  background-image: url('${props => props.imgUrl}');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  display: block;
+  width: 300px;
+  height: 300px;
+` 
+
 
 // Molecules
 const listProps = { listDirection: String }
@@ -109,7 +122,6 @@ export const FormInput = styled('div', formInputProps)`
 		color: ${color.text};
 		font-size: ${font.h2};
 		padding: 5px;
-		width: 350px;
 		border-radius: 8px;
 		border: #d9dbdb 1px solid;
 		&:focus {
@@ -207,7 +219,7 @@ export const CloseButton = styled.div`
   top: 10px;
 `
 
-export const DropDown = styled.div`
+export const DropDownButton = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -243,6 +255,17 @@ export const SuggestButton = styled.div`
   background: #06bdc0;
   box-shadow: 0 2px 6px 0 #93d1d1;
   margin: 8px 0;
+`
+
+export const SendButton = styled.div`
+  display: flex;
+  justify-content: center;
+  background: ${color.primary};
+  border-radius: 20px;
+  color: white;
+  width: 105px;
+  padding: 2px 0;
+  cursor: pointer;
 `
 
 // Organisms
@@ -319,6 +342,23 @@ export const Table = styled.table`
       border-right: 1px solid rgba(51, 51, 51, 0.2);
     }
   }
+`
+
+export const DropDown = styled.div`
+	background: white;
+	box-shadow: 0 6px 15px 0 rgba(128, 197, 197, 0.72);
+	position: absolute;
+	width: 100px;
+	border-radius: 12px;
+	overflow: hidden;
+	margin-top: 20px;
+	a {
+		display: block;
+		padding: 10px;
+		&:hover {
+			background: #fdf8e9;
+		}
+	}
 `
 
 // Templates

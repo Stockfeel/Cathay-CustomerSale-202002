@@ -16,7 +16,7 @@
         <FormInput><input type='date' 
           v-model="endDate" 
           name='date'/></FormInput>
-        <Button @click="handleChangeData" >查詢</Button>
+        <Button @click="handleChangeData">查詢</Button>
       </FormWrapper>
       <FormWrapper wrapperAlign='center' :wrapperMargin='20'>
         <span>管道</span>
@@ -33,11 +33,11 @@
       </FormWrapper>
       <FormWrapper wrapperAlign='center'>
         <FormInput inputBasis="25%" v-for="(option, idx) in routeOptions" :key="`option-${idx}`">
-          <input @change="handleChangeData"
+          <input @change="handleChangeData" 
+            :value="option"
             type="checkbox" name="option" 
             v-model="checkedRoutes" 
-            :id="`option-${idx}`" 
-            :value="option" />
+            :id="`option-${idx}`" />
           <label :for="`option-${idx}`">{{ option }}</label>
         </FormInput>
       </FormWrapper>
@@ -48,20 +48,28 @@
           <tr>
             <th>序號</th>
             <th>日期/時間 
-              <Icon @click="handleSort" data-sort='date'
+              <Icon @click="handleSort" data-sort='date' v-if="sortState.date"
                 :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
+              <Icon @click="handleSort" data-sort='date' v-if="!sortState.date"
+                :iconUrl="require('../assets/icon-arrow-dark-up.svg')"/>
             </th>
             <th>事件 
-              <Icon @click="handleSort" data-sort='event'
+              <Icon @click="handleSort" data-sort='event' v-if="sortState.event"
                 :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
+              <Icon @click="handleSort" data-sort='event' v-if="!sortState.event"
+                :iconUrl="require('../assets/icon-arrow-dark-up.svg')"/>
             </th>
             <th>管道 
-              <Icon @click="handleSort" data-sort='route' 
+              <Icon @click="handleSort" data-sort='route' v-if="sortState.route"
                 :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
+              <Icon @click="handleSort" data-sort='route' v-if="!sortState.route"
+                :iconUrl="require('../assets/icon-arrow-dark-up.svg')"/>
             </th>
             <th>處理人員/分機 
-              <Icon @click="handleSort" data-sort='owner' 
+              <Icon @click="handleSort" data-sort='owner' v-if="sortState.owner"
                 :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
+              <Icon @click="handleSort" data-sort='owner' v-if="!sortState.owner"
+                :iconUrl="require('../assets/icon-arrow-dark-up.svg')"/>
             </th>
             <th>KEY值</th>
           </tr>
