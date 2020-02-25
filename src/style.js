@@ -12,7 +12,6 @@ export const InitialLayout = injectGlobal`
 	}
 	#app, html, body {
 	  width: 100%;
-	  height: 100%;
 	  margin: 0;
 	}
 `
@@ -31,6 +30,11 @@ const font = {
 	text: '12px'
 }
 
+export const LinkStyle = styled.span`
+	color: white; 
+	text-decoration: none;
+`
+
 const titleProps = { textAlign: String };
 export const Title = styled('p', titleProps)`
   text-align: ${props => props.textAlign};
@@ -40,7 +44,7 @@ export const Title = styled('p', titleProps)`
   margin: 0;
 `
 
-const iconProps = { iconUrl: String, size: Number };
+const iconProps = { iconUrl: String, size: Number, rotate: Number };
 export const Icon = styled('div', iconProps)`
   background-image: url('${props => props.iconUrl}');
   background-repeat: no-repeat;
@@ -49,6 +53,7 @@ export const Icon = styled('div', iconProps)`
   display: inline-block;
   width: ${props => props.size || 10}px;
   height: ${props => props.size || 10}px;
+  transform: rotate(${props => props.rotate || 0}deg);
 ` 
 
 const listItemProps = { listBasis: String}
@@ -97,21 +102,26 @@ export const FormInput = styled('div', formInputProps)`
 	align-items: center;
 	width: ${props => props.inputBasis};
 	margin: 0;
+	font-size: 14px;
 	input {
 		cursor: pointer;
 		margin: 0;
+	}
+	span {
+		margin-left: 8px;
 	}
 	label {
 		font-size: ${font.h2}
 		color: ${color.text};
 		cursor: pointer;
-		margin-left: 8px;
+		margin: 0;
+		margin-left: 5px;
 	}
 	textarea {
-		height: 100px;
+		height: 150px;
 		border: #d9dbdb 1px solid;
 		border-radius: 8px;
-		width: 75%;
+		width: ${ props => props.inputBasis+'px' || '100%'};
 		padding: 10px;
 		&:focus {
 			outline: none;
@@ -122,45 +132,46 @@ export const FormInput = styled('div', formInputProps)`
 		color: ${color.text};
 		font-size: ${font.h2};
 		padding: 5px;
-		border-radius: 8px;
-		border: #d9dbdb 1px solid;
+		border: none;
+		border-bottom: #d9dbdb 1px solid;
+		width: 80%;
 		&:focus {
 			outline: none;
-			border: ${color.primary} 1px solid;
+			border-bottom: ${color.primary} 1px solid;
 		}
 	}
 	input[type="checkbox"] {
 		position: relative;
-	    -webkit-appearance: none;
-	    vertical-align: middle;
-	    background: #fff;
-	    border: ${color.primary} solid 1px;
-	    border-radius: 3px;
-	    min-height: 12px;
-	    min-width: 12px;
-	    &:focus {
-	    	outline: none;
-	    }
-	    &:checked {
-	    	background: ${color.primary};	    	
-	    	&::after {
-			    content: '';
-			    top: 2px;
-			    left: 1px;
-			    z-index: 2;
-			    position: absolute;
-			    background: transparent;
-			    border: #fff solid 2px;
-			    border-top: none;
-			    border-right: none;
-			    height: 4px;
-			    width: 8px;
-			    -moz-transform: rotate(-45deg);
-			    -ms-transform: rotate(-45deg);
-			    -webkit-transform: rotate(-45deg); 
-			    transform: rotate(-45deg);	
-	    	}
-	    }
+    -webkit-appearance: none;
+    vertical-align: middle;
+    background: #fff;
+    border: ${color.primary} solid 1px;
+    border-radius: 3px;
+    min-height: 12px;
+    min-width: 12px;
+    &:focus {
+    	outline: none;
+    }
+    &:checked {
+    	background: ${color.primary};	    	
+    	&::after {
+		    content: '';
+		    top: 2px;
+		    left: 1px;
+		    z-index: 2;
+		    position: absolute;
+		    background: transparent;
+		    border: #fff solid 2px;
+		    border-top: none;
+		    border-right: none;
+		    height: 4px;
+		    width: 8px;
+		    -moz-transform: rotate(-45deg);
+		    -ms-transform: rotate(-45deg);
+		    -webkit-transform: rotate(-45deg); 
+		    transform: rotate(-45deg);	
+    	}
+    }
 	}
 	input[type='radio'] {
     display: none;
@@ -192,14 +203,15 @@ export const FormInput = styled('div', formInputProps)`
 	}
 `
 
-const btnProps = { bgColor: String };
+const btnProps = { bgColor: String, textColor: String };
 export const Button = styled('div', btnProps)`
   display: flex;
   justify-content: center;
   background: ${props => props.bgColor || color.primary};
   box-shadow: 0 4px 12px 0 ${props => props.bgColor || color.primary};
   border-radius: 20px;
-  color: white;
+  color: ${props => props.textColor || "white"};
+  border: ${props => props.textColor || "transparent"} solid 1px;
   width: 105px;
   padding: 5px 0;
   cursor: pointer;
@@ -232,12 +244,14 @@ export const DropDownButton = styled.div`
   cursor: pointer;
 `
 
-export const MoreButton = styled.div`
+const moreProps = { align: String };
+export const MoreButton = styled('div', moreProps)`
   display: flex; 
   align-items: center;
-  justify-content: flex-end;
+  justify-content: ${ props => props.align || 'flex-end'};
   cursor: pointer;
   p {
+  	margin: 0;
     display: inline-block;
     color: ${color.contrast};
     font-size: ${font.h3};
@@ -268,6 +282,63 @@ export const SendButton = styled.div`
   cursor: pointer;
 `
 
+const switchProps = { word: String };
+export const SwitchButton = styled("label", switchProps)`
+  position: relative;
+  display: inline-block;
+  width: 124px;
+  height: 34px;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #05b077;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 17px;
+    box-shadow: 0 2px 14px 0 rgba(5, 176, 116, 0.28);
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "${props => props.word || '同步畫面'}";
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #05b077;
+    border-radius: 16px;
+    height: 32px;
+    width: 108px;
+    left: 1px;
+    bottom: 1px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked + .slider {
+    background-color: #e26c6c;
+    box-shadow: 0 2px 14px 0 #e26c6c;
+  }
+
+  input:checked + .slider:before {
+    -webkit-transform: translateX(14px);
+    -ms-transform: translateX(14px);
+    transform: translateX(14px);
+    color: #e26c6c;
+  }
+`
+
 // Organisms
 export const Header = styled.div`
 	display: flex;
@@ -281,16 +352,22 @@ export const ButtonWrapper = styled.div`
 	position: fixed;
 	display: flex;
 	z-index: 1;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	bottom: 0; 
 	left: 0;
 	background: white;
-	height: 10%;
 	width: 100%;
+	padding: 20px 0;
 	box-shadow: 0 2px 8px 0 rgba(128, 197, 197, 0.5);
 	& > * {
 		margin-right: 10px;
+		display: flex;
+		margin: 10px;
+	}
+	.state__button > * {
+		margin: 0 10px;
 	}
 `
 
@@ -345,6 +422,7 @@ export const Table = styled.table`
 `
 
 export const DropDown = styled.div`
+	z-index: 2;
 	background: white;
 	box-shadow: 0 6px 15px 0 rgba(128, 197, 197, 0.72);
 	position: absolute;

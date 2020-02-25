@@ -1,15 +1,15 @@
 <template>
   <HomeLayout>
-    <Info />
-    <Market />
-    <Suggestions />
+    <ProfileSection />
+    <MarketSection />
+    <SuggestSection />
   </HomeLayout>
 </template>
 
 <script>
-import Info from './info.vue';
-import Market from './market.vue';
-import Suggestions from './suggestions.vue';
+import ProfileSection from './profileSection.vue';
+import MarketSection from './marketSection.vue';
+import SuggestSection from './suggestSection.vue';
 import styled from 'vue-styled-components';
 
 const HomeLayout = styled.div`
@@ -25,13 +25,10 @@ const HomeLayout = styled.div`
 
 export default {
   name: 'Home',
-  props: {
-    msg: String
-  },
   components: {
-    Info,
-    Market,
-    Suggestions,
+    ProfileSection,
+    MarketSection,
+    SuggestSection,
     HomeLayout
   }
 }

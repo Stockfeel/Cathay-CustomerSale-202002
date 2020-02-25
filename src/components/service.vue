@@ -76,18 +76,18 @@
         </thead>
         <tbody>
           <tr v-for="(record, idx) in tableData" :key="`record-${idx}`">
-            <td><p>{{ record.id }}</p></td>
-            <td>
+            <td align="center"><p>{{ record.id }}</p></td>
+            <td align="center">
               <p>{{ record.date }}</p>
               <p>{{ record.time }}</p>
             </td>
-            <td><p>{{ record.event }}</p></td>
-            <td><p>{{ record.route }}</p></td>
-            <td>
+            <td align="center"><p>{{ record.event }}</p></td>
+            <td align="center"><p>{{ record.route }}</p></td>
+            <td align="center">
               <p>{{ record.owner }}</p>
               <p>{{ record.num }}</p>
             </td>
-            <td><p>{{ record.key }}</p></td>
+            <td align="center"><p>{{ record.key }}</p></td>
           </tr>
         </tbody>
       </Table>

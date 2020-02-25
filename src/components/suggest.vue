@@ -1,0 +1,210 @@
+<template>
+  <SuggestLayout>
+    <Header>
+      <router-link to="../">
+        <CloseButton/>
+      </router-link>
+      <Title textAlign="center">{{ products[$route.params.id].title }}</Title>
+    </Header>
+    <pre>
+請問您有信用卡嗎? 公司有個新活動，一通電話就可以 投保旅平險，保費可享77折比櫃台 投保還便宜，現在辦理完全免費，如果方便現在馬上幫你申辦開通資格好嗎？
+
+一通電話就能讓您FUN心旅遊 
+1.省力－只要塡申請書，不需任何手續費。 
+2.省錢－一人申辦，約定之配偶、父母、子女電話投保同享77折費率 。
+3.省時－出發前1小時撥打0800-036-599輕鬆投保。
+4.貼心－365天24小時全年無休，一通電話即可享旅平險保障。
+    </pre>
+    <div class="intro__button">
+      <SwitchButton word="同步中 ●">
+        <input type="checkbox"/>
+        <span class="slider"></span>
+      </SwitchButton>
+      <DropDownButton @click="isPop = !isPop">發送給客戶</DropDownButton>
+      <DropDownButton>列印</DropDownButton>
+    </div>
+    <img :src="require('@/assets/dm.png')" />
+    <ButtonWrapper>
+      <div class="state__button">
+        <Button bgColor="#05b077">接受</Button>
+        <Button bgColor="#3aafb1">沒時間</Button>
+        <Button bgColor="#616161" @click="isEdit = !isEdit">拒絕</Button>
+      </div>
+      <ScrollIn v-if="isEdit">
+        <FormInput inputBasis="450">
+          <b-form-textarea
+            id="textarea"
+            v-model="noteInput"
+            placeholder="輸入備註"
+            rows="3"
+            max-rows="6"
+          ></b-form-textarea>
+        </FormInput>
+        <div class="input__button">
+          <Button bgColor="#05b077">
+            <router-link to="../">
+              <LinkStyle>寄送預約</LinkStyle>
+            </router-link>
+          </Button>
+          <Button bgColor="#fff" textColor="#05b077">
+            <router-link to="../">
+              <LinkStyle>稍後再填</LinkStyle>
+            </router-link>
+          </Button>
+        </div>
+      </ScrollIn>
+    </ButtonWrapper>
+    <PopUp v-if="isPop">
+      <p>DM 發送對象：{{ '林國泰' }}</p>
+      <FormInput>
+        <Input type="checkbox" id="email-check" />
+        <label for="email-check">客戶Email：</label>
+      </FormInput>
+      <FormInput><Input type="text" /></FormInput>
+      <FormInput>
+        <Input type="checkbox" id="mobile-check" />
+        <label for="mobile-check">客戶手機號碼：</label>
+      </FormInput>
+      <FormInput><Input type="text" /></FormInput>
+      <div class="popup__button">
+        <Button bgColor="#05b077" @click="isPop = !isPop">發送</Button>
+        <Button bgColor="#616161" @click="isPop = !isPop">取消</Button>
+      </div>
+    </PopUp>
+  </SuggestLayout>
+</template>
+
+<script>
+import { Modal, Header, CloseButton, Title, ButtonWrapper, Button, DropDownButton, SwitchButton, FormInput, LinkStyle } from "../style.js";
+import styled from 'vue-styled-components';
+
+const ScrollIn = styled.div`
+  display: flex;
+  flex-direction: column; 
+  .input__button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    & > * {
+      margin: 20px 10px;
+    }
+  }
+`
+
+const PopUp = styled.div`
+  position: absolute;
+  background: white; 
+  width: 376px; 
+  height: 310px;
+  box-shadow: 0 6px 20px 0 rgba(128, 197, 197, 0.72);
+  padding: 20px 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 12px;
+  & > * {
+    margin-top: 10px;
+  }
+  .popup__button {
+    display: flex;
+    justify-content: center;
+    & > * {
+      margin: 10px;
+    }
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 10px 10px 10px;
+    top: -10px;
+    left: 50%;
+    border-color: transparent transparent #fff transparent;
+  }
+`
+
+const SuggestLayout = styled(Modal)`
+  section {
+    padding: 20px;
+  }
+  .intro__button {
+    display: flex;
+    justify-content: center;
+    padding: 10px 30px;
+    & > * {
+      margin: 0 10px;
+    }
+  }
+  img {
+    box-shadow: 0 0 0 3px #ffcbcb, 0 0 0 4px #feecec;
+  }
+  pre {
+    width: 80%;
+    margin: 0 auto
+    white-space: pre-wrap;  
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+  }
+`
+
+export default {
+  name: "Suggest",
+  components: {
+    SuggestLayout,
+    Header, 
+    CloseButton, 
+    Title,
+    ButtonWrapper,
+    Button,
+    DropDownButton,
+    SwitchButton,
+    PopUp,
+    FormInput,
+    ScrollIn,
+    LinkStyle
+  },
+  data () {
+    return {
+      syncState: false,
+      isPop: false,
+      isEdit: false,
+      noteInput: '',
+      products: {
+        1: {
+          id: 1,
+          title: '申辦網路服務',
+          state: 1,
+        },
+        2: {
+          id: 2,
+          title: '申辦電子單據',
+          state: 2,
+        },
+        3: {
+          id: 3,
+          title: '申辦網路服務',
+          state: 3,
+        },
+        4: {
+          id: 4,
+          title: '申辦網路服務',
+          state: 1,
+        },
+        5: {
+          id: 5,
+          title: '申辦電子單據',
+          state: 2,
+        },
+        6: {
+          id: 6,
+          title: '申辦電子單據',
+          state: 3,
+        }
+      },
+    }
+  }
+}
+</script>

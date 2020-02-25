@@ -106,10 +106,7 @@ const IntroLayout = styled.div`
 `
 
 export default {
-  name: 'Info',
-  props: {
-    msg: String
-  },
+  name: 'profileSection',
   components: {
     Card,
     IntroLayout,

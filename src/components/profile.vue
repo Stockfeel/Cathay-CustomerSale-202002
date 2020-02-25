@@ -78,8 +78,8 @@
             <FormWrapper>
               <FormInput v-for="(item, idx) in interestsOptions.data[interestKey].data" 
                 inputBasis="33%" :key="`interestOption-${idx}`">
-<!--                 <input type="checkbox" :name="interestKey" 
-                  :id="`${interestKey}-${idx}`" :value="item" /> -->
+                <input type="checkbox" :name="interestKey" 
+                  :id="`${interestKey}-${idx}`" :value="item" />
                 <label :for="`${interestKey}-${idx}`">{{ item }}</label>
               </FormInput>
             </FormWrapper>
