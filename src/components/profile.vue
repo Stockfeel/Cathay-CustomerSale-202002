@@ -62,7 +62,7 @@
             <FormWrapper>
               <FormInput v-for="(item, idx) in userOptions[userClass].data" 
                 inputBasis="33%" :key="idx">
-                <input type="checkbox" :name="userClass" 
+                <input :type="userOptions[userClass].type" :name="userClass" 
                   :id="`${userClass}-${idx}`" :value="item" v-model="form[userClass]"/>
                 <label :for="`${userClass}-${idx}`" v-if="userOptions[userClass].type !== 'text'">{{ item }}</label>
               </FormInput>
@@ -87,11 +87,13 @@
         </tr>
       </ProfileTable>
     </main>
-    <ButtonWrapper>
-      <Button v-on:click="isEdit = !isEdit" v-if="!isEdit">編輯</Button>
-      <Button v-on:click="isEdit = !isEdit" v-if="isEdit">儲存</Button>
-      <Button v-on:click="isEdit = !isEdit" v-if="isEdit" bgColor="#616161">取消</Button>
-    </ButtonWrapper>
+    <Footer>
+      <ButtonWrapper>
+        <Button v-on:click="isEdit = !isEdit" v-if="!isEdit">編輯</Button>
+        <Button v-on:click="isEdit = !isEdit" v-if="isEdit">儲存</Button>
+        <Button v-on:click="isEdit = !isEdit" v-if="isEdit" bgColor="#616161">取消</Button>
+      </ButtonWrapper>
+    </Footer>
   </Modal>
 </template>
 
@@ -106,7 +108,8 @@ import {
   ButtonWrapper, 
   Button, 
   CloseButton, 
-  Header } from '../style.js';
+  Header, 
+  Footer } from '../style.js';
 import styled from 'vue-styled-components';
 
 const profileTableProps = { isEdited: String }
@@ -172,7 +175,8 @@ export default {
     FormInput,
     List, 
     ListItem,
-    Header
+    Header,
+    Footer
   },
   data () {
     return {

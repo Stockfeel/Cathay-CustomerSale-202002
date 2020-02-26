@@ -31,7 +31,11 @@
 </template>
 
 <script>
-import { Card, Title, MoreButton, Icon } from '../style.js';
+import { 
+  Card, 
+  Title, 
+  MoreButton, 
+  Icon } from '../style.js';
 import styled from 'vue-styled-components';
 
 const MarketLayout = styled.section`
@@ -47,29 +51,8 @@ export default {
     MarketLayout,
     Icon
   },
-  data () {
-    return {
-      market: {
-        date: '108/12/26',
-        time: '10:36',
-        owner: '陳世華',
-        place: '世界服務中心',
-        data: [
-          {
-            state: 1,
-            note: '申辦網路服務'
-          },
-          {
-            state: 2,
-            note: '申辦網路服務'
-          },
-          {
-            state: 3,
-            note: '申辦網路服務'
-          }
-        ]
-      } 
-    }
+  props: {
+    market: Object
   },
 }
 </script>

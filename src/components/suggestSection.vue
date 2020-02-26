@@ -19,19 +19,53 @@
       </MoreButton>
     </ProductLayout>
     <InsuranceLayout>
-      <div class="insurance__button">
+      <div>
         <Title>保障缺口</Title>
-        <DropDownButton>同步畫面</DropDownButton>
-        <DropDownButton>配對顧問</DropDownButton>
-        <DropDownButton>諮詢客服</DropDownButton>
+        <ButtonWrapper>
+          <SwitchButton word="同步中 ●">
+            <input type="checkbox"/>
+            <span class="slider"></span>
+          </SwitchButton>        
+          <div>
+            <DropDownButton @click="isConOpen = !isConOpen">
+              <span>配對顧問</span>
+              <Icon v-if="!isConOpen" :iconUrl="require('../assets/icon-arrow-white-down.svg')" />
+              <Icon v-if="isConOpen" :iconUrl="require('../assets/icon-arrow-white-up.svg')" />
+            </DropDownButton>
+            <DropDown v-if="isConOpen">
+              <a>原顧問</a>
+              <a>新顧問</a>
+            </DropDown>
+          </div>
+          <div>
+            <DropDownButton @click="isCusOpen = !isCusOpen">
+              <span>諮詢客服</span>
+              <Icon v-if="!isCusOpen" :iconUrl="require('../assets/icon-arrow-white-down.svg')" />
+              <Icon v-if="isCusOpen" :iconUrl="require('../assets/icon-arrow-white-up.svg')" />
+            </DropDownButton>
+            <DropDown v-if="isCusOpen">
+              <a>客服顧問</a>
+              <a>本次客服</a>
+            </DropDown>
+          </div>
+        </ButtonWrapper>
       </div>
-      <InsuranceSection />
+      <InsuranceSection :insurances="insurances" />
     </InsuranceLayout>
   </Card>
 </template>
 
 <script>
-import { Card, Title, SuggestButton, DropDownButton, MoreButton, Icon } from '../style.js';
+import { 
+  Card, 
+  Title, 
+  SuggestButton, 
+  DropDownButton,
+  MoreButton, 
+  Icon,
+  SwitchButton, 
+  ButtonWrapper, 
+  DropDown } from '../style.js';
 import InsuranceSection from './insuranceSection.vue';
 import styled from 'vue-styled-components';
 
@@ -87,7 +121,10 @@ export default {
     DropDownButton,
     InsuranceSection,
     MoreButton,
-    Icon
+    Icon,
+    SwitchButton,
+    ButtonWrapper,
+    DropDown
   },
   methods: {
     showMore() {
@@ -96,75 +133,18 @@ export default {
       this.menuState = !this.menuState;
     }
   },
+  props: {
+    service: Array,
+    product: Array,
+    insurances: Array
+  },
   data() {
     return {
+      isConOpen: false,
+      isCusOpen: false,
       menuState: false,
       serviceTable: [],
       productTable: [],
-      service: [
-        {
-          id: 1,
-          title: '申辦網路服務',
-          state: 1,
-        },
-        {
-          id: 2,
-          title: '申辦電子單據',
-          state: 2,
-        },
-        {
-          id: 3,
-          title: '申辦網路服務',
-          state: 3,
-        },
-        {
-          id: 4,
-          title: '申辦網路服務',
-          state: 1,
-        },
-        {
-          id: 5,
-          title: '申辦電子單據',
-          state: 2,
-        },
-        {
-          id: 6,
-          title: '申辦電子單據',
-          state: 3,
-        }
-      ],
-      product: [
-        {
-          id: 1,
-          title: '意外附約升級',
-          state: 1,
-        },
-        {
-          id: 2,
-          title: '意外附約目標客戶',
-          state: 2,
-        },
-        {
-          id: 3,
-          title: '意外附約升級',
-          state: 3,
-        },
-        {
-          id: 4,
-          title: '意外附約目標客戶',
-          state: 2,
-        },
-        {
-          id: 5,
-          title: '意外附約目標客戶',
-          state: 1,
-        },
-        {
-          id: 6,
-          title: '意外附約升級',
-          state: 1,
-        }
-      ]
     }
   },
   mounted: function(){

@@ -23,13 +23,13 @@
       <DropDownButton @click="isPop = !isPop">發送給客戶</DropDownButton>
       <DropDownButton>列印</DropDownButton>
     </div>
-    <img :src="require('@/assets/dm.png')" />
-    <ButtonWrapper>
-      <div class="state__button">
-        <Button bgColor="#05b077">接受</Button>
-        <Button bgColor="#3aafb1">沒時間</Button>
+    <img />
+    <Footer>
+      <ButtonWrapper>
+        <Button bgColor="#05b077" @click="isEdit = !isEdit">接受</Button>
+        <Button bgColor="#3aafb1" @click="isEdit = !isEdit">沒時間</Button>
         <Button bgColor="#616161" @click="isEdit = !isEdit">拒絕</Button>
-      </div>
+      </ButtonWrapper>
       <ScrollIn v-if="isEdit">
         <FormInput inputBasis="450">
           <b-form-textarea
@@ -48,12 +48,12 @@
           </Button>
           <Button bgColor="#fff" textColor="#05b077">
             <router-link to="../">
-              <LinkStyle>稍後再填</LinkStyle>
+              <LinkStyle textColor="#05b077">稍後再填</LinkStyle>
             </router-link>
           </Button>
         </div>
       </ScrollIn>
-    </ButtonWrapper>
+    </Footer>
     <PopUp v-if="isPop">
       <p>DM 發送對象：{{ '林國泰' }}</p>
       <FormInput>
@@ -66,16 +66,27 @@
         <label for="mobile-check">客戶手機號碼：</label>
       </FormInput>
       <FormInput><Input type="text" /></FormInput>
-      <div class="popup__button">
+      <ButtonWrapper>
         <Button bgColor="#05b077" @click="isPop = !isPop">發送</Button>
         <Button bgColor="#616161" @click="isPop = !isPop">取消</Button>
-      </div>
+      </ButtonWrapper>
     </PopUp>
   </SuggestLayout>
 </template>
 
 <script>
-import { Modal, Header, CloseButton, Title, ButtonWrapper, Button, DropDownButton, SwitchButton, FormInput, LinkStyle } from "../style.js";
+import { 
+  Modal, 
+  Header, 
+  CloseButton, 
+  Title, 
+  Footer, 
+  ButtonWrapper, 
+  Button, 
+  DropDownButton, 
+  SwitchButton, 
+  FormInput, 
+  LinkStyle } from "../style.js";
 import styled from 'vue-styled-components';
 
 const ScrollIn = styled.div`
@@ -164,7 +175,8 @@ export default {
     PopUp,
     FormInput,
     ScrollIn,
-    LinkStyle
+    LinkStyle,
+    Footer
   },
   data () {
     return {

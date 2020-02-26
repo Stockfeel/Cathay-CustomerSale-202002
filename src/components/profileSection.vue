@@ -5,10 +5,18 @@
         <div class='avatar__annotation'>70% 相似</div>
         <img src='../assets/info_avatar.png'>
       </div>
-      <DropDownButton>
-        <span>互動</span>
-        <Icon :iconUrl="require('../assets/icon-arrow-white-down.svg')" />
-      </DropDownButton>
+      <div>
+        <DropDownButton @click="isMenuOpen = !isMenuOpen">
+          <span>互動</span>
+          <Icon v-if="!isMenuOpen" :iconUrl="require('../assets/icon-arrow-white-down.svg')" />
+          <Icon v-if="isMenuOpen" :iconUrl="require('../assets/icon-arrow-white-up.svg')" />        
+        </DropDownButton>
+        <DropDown v-if="isMenuOpen">
+          <a>搜資遊戲</a>
+          <a>問卷 1</a>
+          <a>問卷 2</a>
+        </DropDown>
+      </div>
     </AvatarLayout>
     <IntroLayout>
       <section>
@@ -48,7 +56,15 @@
 </template>
 
 <script>
-import { List, ListItem, Card, Icon, DropDownButton, MoreButton, Title } from '../style.js';
+import { 
+  List, 
+  ListItem, 
+  Card, 
+  Icon, 
+  DropDownButton, 
+  MoreButton, 
+  Title, 
+  DropDown } from '../style.js';
 import styled from 'vue-styled-components';
 
 const AvatarLayout = styled.div`
@@ -107,6 +123,10 @@ const IntroLayout = styled.div`
 
 export default {
   name: 'profileSection',
+  props: {
+    user: Object,
+    service: Object,
+  },
   components: {
     Card,
     IntroLayout,
@@ -116,24 +136,12 @@ export default {
     Title,
     DropDownButton,
     ListItem,
-    List
+    List,
+    DropDown,
   },
   data () {
     return {
-      user: {
-        name: '林國泰',
-        age: 31,
-        specials: ['XXX/XX/XX 申訴名單', 'XXX/XX拒絕行'],
-        features: ['慣用左手','不識字'],
-        employee: '國壽副總',
-        tags: ['旅遊愛好','新手爸媽','數位族'],
-      },
-      service: {
-        date: '108/12/26',
-        time: '10:36',
-        route: '0800 進線',
-        note: '申請 ATM 保單借款'
-      } 
+      isMenuOpen: false,
     }
   },
 }

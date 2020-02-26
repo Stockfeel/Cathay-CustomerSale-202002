@@ -101,7 +101,7 @@
         </tbody>
       </MarketTable>
     </main>
-    <ButtonWrapper>
+    <Footer>
       <b-pagination
         v-model="page"
         :total-rows="filterData.length"
@@ -112,12 +112,22 @@
         last-number
         @change="showTable"
       ></b-pagination>
-    </ButtonWrapper>
+    </Footer>
   </Modal>
 </template>
 
 <script>
-import { Modal, Title, CloseButton, ButtonWrapper, SendButton, Table, FormInput, Header, Icon, DropDown } from '../style.js';
+import { 
+  Modal, 
+  Title, 
+  CloseButton, 
+  Footer, 
+  SendButton, 
+  Table, 
+  FormInput, 
+  Header, 
+  Icon, 
+  DropDown } from '../style.js';
 import styled from 'vue-styled-components';
 
 const MarketTable = styled(Table)`
@@ -173,7 +183,7 @@ export default {
     Modal,
     Title,
     CloseButton,
-    ButtonWrapper,
+    Footer,
     MarketTable,
     Header,
     Icon,

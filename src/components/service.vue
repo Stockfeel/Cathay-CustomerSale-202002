@@ -92,7 +92,7 @@
         </tbody>
       </Table>
     </main>
-    <ButtonWrapper v-if="filterData.length > 10">
+    <Footer v-if="filterData.length > 10">
       <b-pagination
         v-model="page"
         :total-rows="filterData.length"
@@ -103,7 +103,7 @@
         last-number
         @change="changePage"
       ></b-pagination>
-    </ButtonWrapper>
+    </Footer>
   </Modal>
 </template>
 
@@ -116,7 +116,7 @@ import {
   FormInput, 
   FormWrapper, 
   Icon, 
-  ButtonWrapper, 
+  Footer, 
   Table, 
   Header } from '../style.js';
 import styled from 'vue-styled-components';
@@ -144,7 +144,7 @@ export default {
     CloseButton,
     ServiceSection,
     Icon,
-    ButtonWrapper,
+    Footer,
     Table,
     Header
   },

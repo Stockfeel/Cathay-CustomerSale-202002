@@ -30,8 +30,9 @@ const font = {
 	text: '12px'
 }
 
-export const LinkStyle = styled.span`
-	color: white; 
+const LinkProps = { textColor: String };
+export const LinkStyle = styled('span', LinkProps)`
+	color: ${props => props.textColor || 'white'}; 
 	text-decoration: none;
 `
 
@@ -348,27 +349,27 @@ export const Header = styled.div`
 	height: 8%; 
 `
 
+export const Footer = styled.div`
+  position: fixed;
+  display: flex;
+  z-index: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  bottom: 0; 
+  left: 0;
+  background: white;
+  width: 100%;
+  padding: 20px 0;
+  box-shadow: 0 2px 8px 0 rgba(128, 197, 197, 0.5);
+`
+
 export const ButtonWrapper = styled.div`
-	position: fixed;
-	display: flex;
-	z-index: 1;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	bottom: 0; 
-	left: 0;
-	background: white;
-	width: 100%;
-	padding: 20px 0;
-	box-shadow: 0 2px 8px 0 rgba(128, 197, 197, 0.5);
-	& > * {
-		margin-right: 10px;
-		display: flex;
-		margin: 10px;
-	}
-	.state__button > * {
-		margin: 0 10px;
-	}
+  display: flex;
+  justify-content: center;
+  & > * {
+    margin: 10px;
+  }
 `
 
 const wrapperProps = { wrapperAlign: String, wrapperMargin: Number };
@@ -429,7 +430,7 @@ export const DropDown = styled.div`
 	width: 100px;
 	border-radius: 12px;
 	overflow: hidden;
-	margin-top: 20px;
+  margin-top: 10px;
 	a {
 		display: block;
 		padding: 10px;
@@ -437,6 +438,25 @@ export const DropDown = styled.div`
 			background: #fdf8e9;
 		}
 	}
+`
+
+export const DropDownCheckbox = styled.div`
+  z-index: 2;
+  background: white;
+  box-shadow: 0 6px 15px 0 rgba(128, 197, 197, 0.72);
+  position: absolute;
+  width: 64%;
+  padding: 10px 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  span {
+    display: flex;
+    width: 100%;
+    margin: 0;
+  }
 `
 
 // Templates
