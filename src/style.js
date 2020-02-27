@@ -1,5 +1,8 @@
 import styled from 'vue-styled-components';
 import buttonClose from './assets/button_close.svg';
+import noTime from './assets/btn-icon-notime.svg';
+import no from './assets/btn-icon-no.svg';
+import yes from './assets/btn-icon-yes.svg';
 import { injectGlobal } from 'vue-styled-components';
 
 // Intial
@@ -18,16 +21,18 @@ export const InitialLayout = injectGlobal`
 
 // Atoms
 const color = {
-	text: '#324c5a',
-	primary: '#05b077',
-	contrast: '#3aafb1',
-	bg: 'white'
+	text: "#324c5a",
+	primary: "#05b077",
+	contrast: "#3aafb1",
+  wait: "#efbd00",
+  reject: "#616161",
+	bg: "white"
 } 
 const font = {
-	h1: '18px',
-	h2: '16px',
-	h3: '14px',
-	text: '12px'
+	h1: "18px",
+	h2: "16px",
+	h3: "14px",
+	text: "12px"
 }
 
 const LinkProps = { textColor: String };
@@ -259,7 +264,34 @@ export const MoreButton = styled('div', moreProps)`
   }
 `
 
-export const SuggestButton = styled.div`
+const suggestProps = { state: Number }
+const styleButton = type => {
+  switch (type) {
+    case 1:
+      return {
+        color: color.primary,
+        url: yes,
+      }
+    case 2:
+      return {
+        color: color.wait,
+        url: noTime,
+      }
+    case 3:
+      return {
+        color: color.reject,
+        url: no,
+      }
+    default:
+      return {
+        color: "#06bdc0",
+        url: '',
+      };
+  }
+}
+
+export const SuggestButton = styled('div', suggestProps)`
+  position: relative;
 	color: white;
 	height: 45px;
 	border-radius: 23px;
@@ -267,9 +299,20 @@ export const SuggestButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #06bdc0;
+  background: ${props => styleButton(props.state).color};
   box-shadow: 0 2px 6px 0 #93d1d1;
   margin: 8px 0;
+  &:after {
+    position: absolute; 
+    right: 10px; 
+    content: '';
+    width: 30px;
+    height: 30px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background: url(${props => styleButton(props.state).url});
+    border-radius: 15px;
+  }
 `
 
 export const SendButton = styled.div`
@@ -469,6 +512,7 @@ export const PopUp = styled.div`
   left: 50%;
   transform: translateX(-50%);
   border-radius: 12px;
+  margin-top: 20px;
   & > * {
     margin-top: 10px;
   }
@@ -495,6 +539,7 @@ export const PopUp = styled.div`
 export const ScrollIn = styled.div`
   display: flex;
   flex-direction: column; 
+  margin-top: 20px;
   .input__button {
     display: flex;
     flex-direction: row;

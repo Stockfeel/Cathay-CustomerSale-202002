@@ -4,13 +4,15 @@
       <section>
         <div class="product__type">
           <Title>服務建議</Title>
-          <SuggestButton v-for="(item, idx) in serviceTable" :key="`service-${idx}`">
+          <SuggestButton v-for="(item, idx) in serviceTable" :key="`service-${idx}`" :state="item.state">
             <router-link :to="`./suggest/${item.id}`"> {{ item.title }} </router-link>
           </SuggestButton>
         </div>
         <div class="product__type">
           <Title>商機推薦</Title>
-          <SuggestButton v-for="(item, idx) in productTable" :key="`product-${idx}`"> {{ item.title }} </SuggestButton>
+          <SuggestButton v-for="(item, idx) in productTable" :key="`product-${idx}`" :state="item.state"> 
+            <router-link :to="`./suggest/${item.id}`"> {{ item.title }} </router-link>
+          </SuggestButton>
         </div>
       </section>
       <MoreButton align="center" @click="showMore">

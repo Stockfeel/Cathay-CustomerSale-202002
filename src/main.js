@@ -7,10 +7,10 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue);
 
-Vue.config.productionTip = false
-Vue.prototype.router = router
+Vue.config.productionTip = false;
+Vue.prototype.router = router;
 
 new Vue({
   render: h => h(App),
   router,
-}).$mount('#app')
+}).$mount('#app');

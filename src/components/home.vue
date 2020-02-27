@@ -104,14 +104,14 @@ export default {
           {
             id: 6,
             title: '申辦電子單據',
-            state: 3,
+            state: 0,
           }
         ],
         product: [
           {
             id: 1,
             title: '意外附約升級',
-            state: 1,
+            state: 0,
           },
           {
             id: 2,

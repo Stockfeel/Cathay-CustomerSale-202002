@@ -6,28 +6,53 @@
       </router-link>
       <Title textAlign="center">{{ products[$route.params.id].title }}</Title>
     </Header>
-    <pre>
-請問您有信用卡嗎? 公司有個新活動，一通電話就可以 投保旅平險，保費可享77折比櫃台 投保還便宜，現在辦理完全免費，如果方便現在馬上幫你申辦開通資格好嗎？
+    <main>
+      <pre>
+  請問您有信用卡嗎? 公司有個新活動，一通電話就可以 投保旅平險，保費可享77折比櫃台 投保還便宜，現在辦理完全免費，如果方便現在馬上幫你申辦開通資格好嗎？
 
-一通電話就能讓您FUN心旅遊 
-1.省力－只要塡申請書，不需任何手續費。 
-2.省錢－一人申辦，約定之配偶、父母、子女電話投保同享77折費率 。
-3.省時－出發前1小時撥打0800-036-599輕鬆投保。
-4.貼心－365天24小時全年無休，一通電話即可享旅平險保障。
-    </pre>
-    <div class="intro__button">
-      <SwitchButton word="同步中 ●">
-        <input type="checkbox"/>
-        <span class="slider"></span>
-      </SwitchButton>
-      <DropDownButton @click="isPop = !isPop">發送給客戶</DropDownButton>
-      <DropDownButton>列印</DropDownButton>
-    </div>
-    <img :src="imgUrl" />
+  一通電話就能讓您FUN心旅遊 
+  1.省力－只要塡申請書，不需任何手續費。 
+  2.省錢－一人申辦，約定之配偶、父母、子女電話投保同享77折費率 。
+  3.省時－出發前1小時撥打0800-036-599輕鬆投保。
+  4.貼心－365天24小時全年無休，一通電話即可享旅平險保障。
+      </pre>
+      <div class="intro__button">
+        <SwitchButton :word="isSync == 'on' ? '同步中 ●' : '同步畫面'">
+          <input type="checkbox" v-model="isSync" value="on"/>
+          <span class="slider"></span>
+        </SwitchButton>
+        <div>
+          <DropDownButton @click="isPop = !isPop">發送給客戶</DropDownButton>
+          <PopUp v-if="isPop">
+            <p>DM 發送對象：{{ profile.name }}</p>
+            <FormInput>
+              <Input type="checkbox" id="email-check" v-model="isEmailEnter" value="on" />
+              <label for="email-check">客戶Email：</label>
+            </FormInput>
+            <FormInput>
+              <Input type="text" :value="isEmailEnter == 'on' ? '' : profile.email" />
+            </FormInput>
+            <FormInput>
+              <Input type="checkbox" id="mobile-check" />
+              <label for="mobile-check">客戶手機號碼：</label>
+            </FormInput>
+            <FormInput><Input type="text" :value="isEmailEnter == 'on' ? '' : profile.mobile" /></FormInput>
+            <ButtonWrapper>
+              <Button bgColor="#05b077" @click="isPop = !isPop">發送</Button>
+              <Button bgColor="#616161" @click="isPop = !isPop">取消</Button>
+            </ButtonWrapper>
+          </PopUp>
+        </div>
+        <DropDownButton>列印</DropDownButton>
+      </div>
+      <div :class="`img__container ${isSync == 'on' ? 'active' : ''}`">
+        <img :src="require(`../assets/dm.png`)" />
+      </div>
+    </main>
     <Footer>
       <ButtonWrapper>
-        <Button bgColor="#05b077" @click="isEdit = !isEdit">接受</Button>
-        <Button bgColor="#3aafb1" @click="isEdit = !isEdit">沒時間</Button>
+        <Button bgColor="#05b077" @click="backTo()">接受</Button>
+        <Button bgColor="#3aafb1" @click="backTo()">沒時間</Button>
         <Button bgColor="#616161" @click="isEdit = !isEdit">拒絕</Button>
       </ButtonWrapper>
       <ScrollIn v-if="isEdit">
@@ -54,23 +79,6 @@
         </div>
       </ScrollIn>
     </Footer>
-    <PopUp v-if="isPop">
-      <p>DM 發送對象：{{ '林國泰' }}</p>
-      <FormInput>
-        <Input type="checkbox" id="email-check" />
-        <label for="email-check">客戶Email：</label>
-      </FormInput>
-      <FormInput><Input type="text" /></FormInput>
-      <FormInput>
-        <Input type="checkbox" id="mobile-check" />
-        <label for="mobile-check">客戶手機號碼：</label>
-      </FormInput>
-      <FormInput><Input type="text" /></FormInput>
-      <ButtonWrapper>
-        <Button bgColor="#05b077" @click="isPop = !isPop">發送</Button>
-        <Button bgColor="#616161" @click="isPop = !isPop">取消</Button>
-      </ButtonWrapper>
-    </PopUp>
   </SuggestLayout>
 </template>
 
@@ -90,7 +98,6 @@ import {
   PopUp,
   ScrollIn } from "../style.js";
 import styled from 'vue-styled-components';
-import dm from "../assets/dm.png";
 
 const SuggestLayout = styled(Modal)`
   section {
@@ -104,8 +111,21 @@ const SuggestLayout = styled(Modal)`
       margin: 0 10px;
     }
   }
-  img {
-    box-shadow: 0 0 0 3px #ffcbcb, 0 0 0 4px #feecec;
+  main > div.img__container {
+    overflow: hidden;
+    width: 90%; 
+    margin: 0 auto;
+    margin-top: 20px;
+    border-radius: 15px;
+    img {
+      width: 100%:
+      height: 100%;
+      object-position: 50% 50%;
+      object-fit: cover;
+    }
+    &.active {
+      box-shadow: 0 0 0 3px #ffcbcb, 0 0 0 4px #feecec;
+    }
   }
   pre {
     width: 80%;
@@ -135,13 +155,24 @@ export default {
     LinkStyle,
     Footer,
   },
+  methods: {
+    backTo() {
+      this.$router.push('/')
+    }
+  },
   data () {
     return {
-      imgUrl: dm,
-      syncState: false,
+      isSync: [],
       isPop: false,
       isEdit: false,
+      isEmailEnter: [],
+      isMobileEnter: [],
       noteInput: '',
+      profile: {
+        name: '林國泰',
+        email: 'djfosi@gmail.com',
+        mobile: '09897484731'
+      },
       products: {
         1: {
           id: 1,
