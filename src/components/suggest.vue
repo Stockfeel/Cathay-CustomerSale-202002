@@ -23,7 +23,7 @@
       <DropDownButton @click="isPop = !isPop">發送給客戶</DropDownButton>
       <DropDownButton>列印</DropDownButton>
     </div>
-    <img />
+    <img :src="imgUrl" />
     <Footer>
       <ButtonWrapper>
         <Button bgColor="#05b077" @click="isEdit = !isEdit">接受</Button>
@@ -86,54 +86,11 @@ import {
   DropDownButton, 
   SwitchButton, 
   FormInput, 
-  LinkStyle } from "../style.js";
+  LinkStyle,
+  PopUp,
+  ScrollIn } from "../style.js";
 import styled from 'vue-styled-components';
-
-const ScrollIn = styled.div`
-  display: flex;
-  flex-direction: column; 
-  .input__button {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    & > * {
-      margin: 20px 10px;
-    }
-  }
-`
-
-const PopUp = styled.div`
-  position: absolute;
-  background: white; 
-  width: 376px; 
-  height: 310px;
-  box-shadow: 0 6px 20px 0 rgba(128, 197, 197, 0.72);
-  padding: 20px 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 12px;
-  & > * {
-    margin-top: 10px;
-  }
-  .popup__button {
-    display: flex;
-    justify-content: center;
-    & > * {
-      margin: 10px;
-    }
-  }
-  &::before {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 10px 10px 10px;
-    top: -10px;
-    left: 50%;
-    border-color: transparent transparent #fff transparent;
-  }
-`
+import dm from "../assets/dm.png";
 
 const SuggestLayout = styled(Modal)`
   section {
@@ -176,10 +133,11 @@ export default {
     FormInput,
     ScrollIn,
     LinkStyle,
-    Footer
+    Footer,
   },
   data () {
     return {
+      imgUrl: dm,
       syncState: false,
       isPop: false,
       isEdit: false,

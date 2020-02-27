@@ -541,4 +541,3 @@ export const Modal = styled('div', modalProps)`
 	}
 `
 
-
