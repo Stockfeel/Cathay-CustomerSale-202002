@@ -4,7 +4,7 @@
       <router-link to="../">
         <CloseButton/>
       </router-link>
-      <Title textAlign="center">{{ products[$route.params.id].title }}</Title>
+      <Title textAlign="center">{{ products[$route.query.id].title }}</Title>
     </Header>
     <main>
       <pre>

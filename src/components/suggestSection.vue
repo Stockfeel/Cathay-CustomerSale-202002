@@ -5,13 +5,13 @@
         <div class="product__type">
           <Title>服務建議</Title>
           <SuggestButton v-for="(item, idx) in serviceTable" :key="`service-${idx}`" :state="item.state">
-            <router-link :to="`./suggest/${item.id}`"> {{ item.title }} </router-link>
+            <router-link :to="`./suggest?id=${item.id}`"> {{ item.title }} </router-link>
           </SuggestButton>
         </div>
         <div class="product__type">
           <Title>商機推薦</Title>
-          <SuggestButton v-for="(item, idx) in productTable" :key="`product-${idx}`" :state="item.state"> 
-            <router-link :to="`./suggest/${item.id}`"> {{ item.title }} </router-link>
+          <SuggestButton v-for="(item, idx) in productTable" :key="`product-${idx}`" :state="item.state">
+            <router-link :to="`./suggest?id=${item.id}`"> {{ item.title }} </router-link>
           </SuggestButton>
         </div>
       </section>
@@ -24,19 +24,23 @@
       <div>
         <Title>保障缺口</Title>
         <ButtonWrapper>
-          <SwitchButton word="同步中 ●">
-            <input type="checkbox"/>
+          <SwitchButton :word="isSync == 'on' ? '同步中 ●' : '同步畫面'">
+            <input type="checkbox" v-model="isSync" value="on"/>
             <span class="slider"></span>
-          </SwitchButton>        
+          </SwitchButton>    
           <div>
             <DropDownButton @click="isConOpen = !isConOpen">
               <span>配對顧問</span>
               <Icon v-if="!isConOpen" :iconUrl="require('../assets/icon-arrow-white-down.svg')" />
               <Icon v-if="isConOpen" :iconUrl="require('../assets/icon-arrow-white-up.svg')" />
             </DropDownButton>
-            <DropDown v-if="isConOpen">
-              <a>原顧問</a>
-              <a>新顧問</a>
+            <DropDown v-if="isConOpen" @click="isConOpen = !isConOpen">
+              <router-link to="./introduce?type=current&cat=consult">
+                <LinkStyle textColor="#324c5a">原顧問</LinkStyle>
+              </router-link>
+              <router-link to="./introduce?type=new&cat=consult">
+                <LinkStyle textColor="#324c5a">新顧問</LinkStyle>
+              </router-link>
             </DropDown>
           </div>
           <div>
@@ -45,14 +49,18 @@
               <Icon v-if="!isCusOpen" :iconUrl="require('../assets/icon-arrow-white-down.svg')" />
               <Icon v-if="isCusOpen" :iconUrl="require('../assets/icon-arrow-white-up.svg')" />
             </DropDownButton>
-            <DropDown v-if="isCusOpen">
-              <a>客服顧問</a>
-              <a>本次客服</a>
+            <DropDown v-if="isCusOpen" @click="isCusOpen = !isCusOpen">
+              <router-link to="./introduce?type=current&cat=service">
+                <LinkStyle textColor="#324c5a">客服顧問</LinkStyle>
+              </router-link>
+              <router-link to="./introduce?type=new&cat=service">
+                <LinkStyle textColor="#324c5a">本次客服</LinkStyle>
+              </router-link>
             </DropDown>
           </div>
         </ButtonWrapper>
       </div>
-      <InsuranceSection :insurances="insurances" />
+      <InsuranceSection :insurances="insurances" :class="`${isSync == 'on' ? 'active' : ''}`" />
     </InsuranceLayout>
   </Card>
 </template>
@@ -67,7 +75,8 @@ import {
   Icon,
   SwitchButton, 
   ButtonWrapper, 
-  DropDown } from '../style.js';
+  DropDown,
+  LinkStyle } from '../style.js';
 import InsuranceSection from './insuranceSection.vue';
 import styled from 'vue-styled-components';
 
@@ -109,6 +118,11 @@ const InsuranceLayout = styled.section`
     flex-wrap: wrap;
     width: 100%;
     margin-top: 20px;
+    border-radius: 12px;
+    padding: 5px;
+    &.active {
+      box-shadow: 0 0 0 5px #ffcbcb, 0 0 0 10px #feecec;
+    }
   }
 `
 
@@ -126,7 +140,8 @@ export default {
     Icon,
     SwitchButton,
     ButtonWrapper,
-    DropDown
+    DropDown,
+    LinkStyle
   },
   methods: {
     showMore() {
@@ -145,6 +160,7 @@ export default {
       isConOpen: false,
       isCusOpen: false,
       menuState: false,
+      isSync: [],
       serviceTable: [],
       productTable: [],
     }

@@ -6,6 +6,8 @@ import Service from '../components/service.vue'
 import Market from '../components/market.vue'
 import Suggest from '../components/suggest.vue'
 import Introduce from '../components/introduce.vue'
+import IntroduceFinish from '../components/introduceFinish.vue'
+import Insurance from '../components/insurance.vue'
 
 Vue.use(Router)
 
@@ -16,7 +18,9 @@ export default new Router({
     { path: '/service', name: 'Service', component: Service },
     { path: '/market', name: 'Market', component: Market },
     { path: '/introduce', name: 'Introduce', component: Introduce },
-    { path: '/suggest/:id', name: 'suggest', component: Suggest },
+    { path: '/finish', name: 'IntroduceFinish', component: IntroduceFinish },
+    { path: '/suggest', name: 'Suggest', component: Suggest },
+    { path: '/insurance', name: 'Insurance', component: Insurance },
   ]
 })
 

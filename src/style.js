@@ -52,6 +52,7 @@ export const Title = styled('p', titleProps)`
 
 const iconProps = { iconUrl: String, size: Number, rotate: Number };
 export const Icon = styled('div', iconProps)`
+  position: relative;
   background-image: url('${props => props.iconUrl}');
   background-repeat: no-repeat;
   background-position: center;
@@ -60,6 +61,22 @@ export const Icon = styled('div', iconProps)`
   width: ${props => props.size || 10}px;
   height: ${props => props.size || 10}px;
   transform: rotate(${props => props.rotate || 0}deg);
+` 
+
+const starProps = { word: String }
+export const StarIcon = styled(Icon, starProps)`
+  position: absolute; 
+  top: -15px;
+  left: -15px;
+  &:after {
+    content: '${props => props.word || ''}';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: ${color.text};
+    font-size: 15px;
+  }
 ` 
 
 const listItemProps = { listBasis: String}
@@ -127,7 +144,7 @@ export const FormInput = styled('div', formInputProps)`
 		height: 150px;
 		border: #d9dbdb 1px solid;
 		border-radius: 8px;
-		width: ${ props => props.inputBasis+'px' || '100%'};
+		width: ${ props => props.inputBasis || '100%'};
 		padding: 10px;
 		&:focus {
 			outline: none;
@@ -218,8 +235,7 @@ export const Button = styled('div', btnProps)`
   border-radius: 20px;
   color: ${props => props.textColor || "white"};
   border: ${props => props.textColor || "transparent"} solid 1px;
-  width: 105px;
-  padding: 5px 0;
+  padding: 5px 20px;
   cursor: pointer;
 `
 
@@ -550,6 +566,21 @@ export const ScrollIn = styled.div`
   }
 `
 
+export const Tab = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  & > * {
+    margin: 10px;
+    padding: 5px 10px; 
+    &.active {
+      background: #05b077;
+      color: white; 
+      border-radius: 100px;
+    }
+  }
+`
+
 // Templates
 const cardProps = { cardDirection: String };
 export const Card = styled('div', cardProps)`
@@ -563,7 +594,7 @@ export const Card = styled('div', cardProps)`
 	margin: 10px;
 `;
 
-const modalProps = { mainHeight: Number };
+const modalProps = { mainHeight: Number, autoHeight: Boolean };
 export const Modal = styled('div', modalProps)`
 	padding: 20px 0;
 	position: fixed;
@@ -575,10 +606,14 @@ export const Modal = styled('div', modalProps)`
 	border-radius: 8px;
 	background: ${color.bg};
 	z-index: 1;
-	box-shadow: 
-		0 0 0 100px rgba(1,1,1,.3),
-		0 0 0 100px rgba(1,1,1,.3);
-	height: 90%;
+	box-shadow: ${props => props.autoHeight ? `
+    0 0 0 500px rgba(1,1,1,.3),
+    0 0 0 500px rgba(1,1,1,.3)
+    ` : `
+    0 0 0 100px rgba(1,1,1,.3),
+    0 0 0 100px rgba(1,1,1,.3)
+  `};
+	height: ${props => props.autoHeight ? 'auto' : '90%'};
 	main {
 		width: 100%;
 		height: ${props => props.mainHeight || 82}%;

@@ -3,7 +3,9 @@
     <Insurance v-for="(insurance, idx) in insurances" 
       :key="`insurance-${idx}`" 
       :average="insurance.average" 
-      :difference="insurance.average - insurance.value">
+      :difference="insurance.average - insurance.value"
+      @click="$router.push(`./insurance?cat=${insurance.text}`)" 
+    >
       <div class='insurance__title'><Icon :iconUrl="require(`../assets/${insurance.average - insurance.value > 0 ? 'icon-notice' : 'icon-accept'}.svg`)" />{{ insurance.text }}</div>
       <div class='insurance__bar'>
         <div class='bar__img'></div>
@@ -37,6 +39,9 @@ const Insurance = styled('div', InsuranceProps)`
   height: 60px;
   cursor: pointer;
   border-radius: 12px;
+  &.active {
+    box-shadow: 0 0 0 3px #ffcbcb, 0 0 0 4px #feecec;
+  }
   &:hover {
     box-shadow: 0 4px 15px 0 rgba(221, 123, 123, 0.7);
   }
@@ -83,8 +88,61 @@ export default {
     Insurance,
     Icon
   },
-  props: {
-    insurances: Array
+  data() {
+    return {
+      insurances: [
+        {
+          text: '照護給付',
+          value: 10000,
+          average: 30000
+        },
+        {
+          text: '重疾給付',
+          value: 3444,
+          average: 30000
+        },
+        {
+          text: '癌症醫療',
+          value: 12345789,
+          average: 30000
+        },
+        {
+          text: '實支實付',
+          value: 40000,
+          average: 30000
+        },
+        {
+          text: '手術醫療',
+          value: 10000,
+          average: 5324
+        },
+        {
+          text: '疾病醫療',
+          value: 10000,
+          average: 30000
+        },
+        {
+          text: '意外醫療',
+          value: 10000,
+          average: 30000
+        },
+        {
+          text: '生存給付',
+          value: 10000,
+          average: 30000
+        },
+        {
+          text: '身故給付',
+          value: 10000,
+          average: 30000
+        },
+        {
+          text: '傷殘給付',
+          value: 10000,
+          average: 30000
+        }
+      ]
+    }
   }
 }
 </script>

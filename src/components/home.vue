@@ -5,7 +5,7 @@
     </div>
     <ProfileSection :user="user" :service="service"/>
     <MarketSection :market="market" />
-    <SuggestSection :service="suggest.service" :product="suggest.product" :insurances="insurances"/>
+    <SuggestSection :service="suggest.service" :product="suggest.product"/>
   </HomeLayout>
 </template>
 
@@ -139,59 +139,7 @@ export default {
             state: 1,
           }
         ]
-      },
-      insurances: [
-        {
-          text: '照護給付',
-          value: 10000,
-          average: 30000
-        },
-        {
-          text: '重疾給付',
-          value: 3444,
-          average: 30000
-        },
-        {
-          text: '癌症醫療',
-          value: 12345789,
-          average: 30000
-        },
-        {
-          text: '實支實付',
-          value: 40000,
-          average: 30000
-        },
-        {
-          text: '手術醫療',
-          value: 10000,
-          average: 5324
-        },
-        {
-          text: '疾病醫療',
-          value: 10000,
-          average: 30000
-        },
-        {
-          text: '意外醫療',
-          value: 10000,
-          average: 30000
-        },
-        {
-          text: '生存給付',
-          value: 10000,
-          average: 30000
-        },
-        {
-          text: '身故給付',
-          value: 10000,
-          average: 30000
-        },
-        {
-          text: '傷殘給付',
-          value: 10000,
-          average: 30000
-        }
-      ]
+      }
     }
   },
   components: {

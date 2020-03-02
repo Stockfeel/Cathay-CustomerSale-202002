@@ -1,17 +1,17 @@
 <template>
-  <Modal>
+  <Modal :autoHeight="true">
     <Header>
       <router-link to='./'>
         <CloseButton/>
       </router-link>
-      <Title textAlign='center'>呼叫原顧問</Title>
+      <Title textAlign='center'>{{ step === 0 ? stepTitle[step][$route.query.cat][$route.query.type] : stepTitle[step] }}</Title>
     </Header>
-    <IntroduceLayout>
-      <section>
+    <IntroduceLayout v-if="step == 0">
+      <section v-if="$route.query.type == 'new' && $route.query.cat === 'consult'">
         <div>
           <p>
             <span>台北市</span> 
-            <Icon :iconUrl="require('../assets/icon-arrow-dark-down.svg')" size="15"></Icon>
+            <Icon :iconUrl="require('../assets/icon-arrow-dark-down.svg')" :size="15"></Icon>
           </p>
           <DropDown>
             <a>台北市</a>
@@ -23,7 +23,7 @@
         <div>
           <p>
             <span>松山區</span> 
-            <Icon :iconUrl="require('../assets/icon-location.svg')" size="20"></Icon>
+            <Icon :iconUrl="require('../assets/icon-location.svg')" :size="20"></Icon>
           </p>
           <DropDownCheckbox>
             <span>台北市</span>
@@ -84,7 +84,7 @@
           </DropDownCheckbox>
         </div>
       </section>
-      <Table>
+      <IntroduceTable>
         <thead>
           <tr>
             <th>預約</th>
@@ -97,19 +97,44 @@
         </thead>
         <tbody>
           <tr v-for="(item, idx) in consultant" :key="`consultant-${idx}`">
-            <td>{{ item.book }}</td>
+            <td>
+              <FormInput>
+                <Input type="checkbox" id="email-check" v-model="item.book" />
+              </FormInput>
+            </td>
             <td>{{ item.place }}</td>
             <td>{{ item.state }}</td>
             <td>{{ item.service }}</td>
-            <td>{{ item.gender }} {{ item.name }}</td>
+            <td>
+              <Icon 
+                v-if="item.gender === 'M'" 
+                :iconUrl="require('../assets/icon-gender-male.svg')" 
+                :size="20"
+              />
+              <Icon 
+                v-if="item.gender === 'F'" 
+                :iconUrl="require('../assets/icon-gender-female.svg')" 
+                :size="20"
+              />
+              {{ item.name }}</td>
             <td>{{ item.contact }}</td>
           </tr>
         </tbody>
-      </Table>
+      </IntroduceTable>
     </IntroduceLayout>
-    <Footer>
-      <Button>下一步</Button>
-    </Footer>
+    <IntroduceLayout v-if="step == 1">
+      <FormInput inputBasis="100%">
+        <textarea></textarea>
+      </FormInput>
+    </IntroduceLayout>
+    <IntroduceLayout v-if="step == 2">
+      <IntroduceCheck />
+    </IntroduceLayout>
+    <ButtonWrapper>
+      <Button v-if="step > 0" @click="step -= 1">上一步</Button>
+      <Button v-if="step < 2" @click="step += 1">下一步</Button>
+      <Button v-if="step === 2" @click="$router.push('../')">請客戶填寫預約單</Button>
+    </ButtonWrapper>
   </Modal>
 </template>
 
@@ -119,18 +144,25 @@ import {
   Title, 
   Button, 
   CloseButton, 
+  ButtonWrapper,
   DropDown,
-  Footer, 
   Header, 
   Table, 
   DropDownCheckbox, 
   FormInput, 
-  Icon } from '../style.js';
-import styled from 'vue-styled-components';
+  Icon } from "../style.js";
+import styled from "vue-styled-components";
+import IntroduceCheck from "./introduceCheck.vue";
+
+const IntroduceTable = styled(Table)`
+  text-align: center;
+`
 
 const IntroduceLayout = styled.main`
   display: flex;
   flex-direction: column;
+  padding: 10px;
+  margin: 0 auto;
   section {
     display: flex;
     justify-content: space-between;
@@ -164,21 +196,34 @@ export default {
     Modal,
     Title,
     CloseButton,
-    Footer,
     Header,
     Button,
-    Table,
+    ButtonWrapper,
+    IntroduceTable,
     DropDown,
     DropDownCheckbox,
     IntroduceLayout,
     FormInput,
-    Icon
+    Icon,
+    IntroduceCheck,
   },
   methods: {
 
   },
   data() {
     return {
+      step: 0,
+      stepTitle: [{
+        consult: {
+          new: '配對顧問',
+          current: '呼叫原顧問'
+        }, 
+        service: {
+          new: '轉介客服',
+          current: '客服顧問',
+        }
+
+      }, '備註欄', '確認預約單資訊'],
       consultant: [
         {
           book: false,
@@ -190,12 +235,12 @@ export default {
           contact: '02-7777-0000#1234'
         },
         {
-          book: false,
+          book: true,
           place: '台北市',
           state: '松山區',
           service: '世界服',
           name: '陳世華',
-          gender: 'M',
+          gender: 'F',
           contact: '02-7777-0000#1234'
         },
         {
