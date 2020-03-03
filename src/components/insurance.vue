@@ -43,10 +43,10 @@
           />
           <div class="item__more">
             <Icon :iconUrl="require('../assets/button_more.svg')" :size="30" :rotate="90"
-              @click="hottest[item].isShow = idx" />
+              @click="hottest[item].isShow = hottest[item].isShow === idx ? -1 : idx" />
           </div>
         </Product>
-        <div class="section__show" v-if="hottest[item].isShow">
+        <div class="section__show" v-if="hottest[item].isShow !== -1">
           <main>
             <Information :profile="profile" :product="hottest[item].products[hottest[item].isShow]"/>
           </main>
@@ -173,6 +173,7 @@ const InsuranceLayout = styled.main`
       height: 50%;
       background: rgba(227, 250, 250, 0.5);
       width: 100%;
+      padding: 20px;
     }
   }
 `
@@ -226,7 +227,7 @@ export default {
       }],
       hottest: {
         "保障規劃類型保險(主約)": {
-          isShow: 0,
+          isShow: -1,
           note: "包括健康醫療(住院、手術、實支實付、重疾、長照)、壽險與意外傷害保障的保險商品",
           products: [{
             name: "國泰人壽Hen幸福保險",
@@ -265,7 +266,7 @@ export default {
           }]
         },
         "保障規劃類型保險(附約)": {
-          isShow: 0,
+          isShow: -1,
           note: "包括健康醫療(住院、手術、實支實付、重疾、長照)、壽險與意外傷害保障的保險商品",
           products: [{
             name: "國泰人壽Hen幸福保險",
@@ -303,7 +304,7 @@ export default {
           }]
         },
         "資產規劃類型保險(主約)": {
-          isShow: 0,
+          isShow: -1,
           note: "包括健康醫療(住院、手術、實支實付、重疾、長照)、壽險與意外傷害保障的保險商品",
           products: [{
             name: "國泰人壽Hen幸福保險",
