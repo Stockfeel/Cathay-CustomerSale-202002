@@ -20,7 +20,12 @@
     </AvatarLayout>
     <IntroLayout>
       <section>
-        <Title textAlign='left'>{{ user.name }} ({{ user.age }} 歲)</Title>
+        <Title textAlign='left'>
+          {{ user.name }} ({{ user.age }} 歲) 
+          <Icon :iconUrl="require('../assets/icon-profile-birth.svg')" :size="20"/>
+          <Icon :iconUrl="require('../assets/icon-profile-secret.svg')" :size="20"/>
+          <Icon :iconUrl="require('../assets/icon-profile-vip.svg')" :size="20"/>
+        </Title>
         <List listDirection='column'>
           <ListItem>特殊客戶：
             <span v-for="(special, idx) in user.specials" :key="idx">{{ idx ? '、': ''}} {{ special }}</span>

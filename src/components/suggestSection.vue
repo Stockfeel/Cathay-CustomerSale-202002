@@ -61,10 +61,14 @@
         </ButtonWrapper>
       </div>
       <InsuranceSection :insurances="insurances" :class="`${isSync == 'on' ? 'active' : ''}`" />
+      <div class="suggest__notime">
+        全部沒時間
+        <div>-</div>
+      </div>
     </InsuranceLayout>
   </Card>
 </template>
-
+ 
 <script>
 import { 
   Card, 
@@ -122,6 +126,26 @@ const InsuranceLayout = styled.section`
     padding: 5px;
     &.active {
       box-shadow: 0 0 0 5px #ffcbcb, 0 0 0 10px #feecec;
+    }
+  }
+  .suggest__notime {
+    position: absolute; 
+    bottom: -25px;
+    left: 50%; 
+    transform: translateX(-50%);
+    color: white;
+    background: #616161;
+    border-radius: 20px;
+    font-size: 16px; 
+    padding: 2px 10px;
+    div {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 `

@@ -591,7 +591,7 @@ export const Card = styled('div', cardProps)`
 	color: ${color.text};
 	background: ${color.bg};
 	width: 97%;
-	margin: 10px;
+	margin: 8px 10px;
 `;
 
 const modalProps = { mainHeight: Number, autoHeight: Boolean };
@@ -614,6 +614,7 @@ export const Modal = styled('div', modalProps)`
     0 0 0 100px rgba(1,1,1,.3)
   `};
 	height: ${props => props.autoHeight ? 'auto' : '90%'};
+  max-height: 90%;
 	main {
 		width: 100%;
 		height: ${props => props.mainHeight || 82}%;
