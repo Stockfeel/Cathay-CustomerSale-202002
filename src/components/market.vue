@@ -4,7 +4,7 @@
       <router-link to='./'>
         <CloseButton/>
       </router-link>
-      <Title textAlign='center'>行銷歷史紀錄</Title>
+      <Title textAlign='center'>行銷歷史紀錄<span>（近半年）</span></Title>
     </Header>
     <main>
       <MarketTable>
@@ -16,12 +16,12 @@
                 :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
               <Icon data-filter='category' @click="toggleFilterMenu" v-if="!filterMenu.category"
                 :iconUrl="require('../assets/icon-arrow-dark-up.svg')"/>
-              <DropDown v-if="filterMenu.category">
-                <a @click="handleFilter" data-filter='category' data-type='all'>全部</a>
-                <a @click="handleFilter" data-filter='category' data-type='服務建議'>服務建議</a>
-                <a @click="handleFilter" data-filter='category' data-type='商機推薦'>商機推薦</a>
-                <a @click="handleFilter" data-filter='category' data-type='保障缺口'>保障缺口</a>
-              </DropDown>
+              <DropDownMenu v-if="filterMenu.category">
+                <div @click="handleFilter" data-filter='category' data-type='all'>全部</div>
+                <div @click="handleFilter" data-filter='category' data-type='服務建議'>服務建議</div>
+                <div @click="handleFilter" data-filter='category' data-type='商機推薦'>商機推薦</div>
+                <div @click="handleFilter" data-filter='category' data-type='保障缺口'>保障缺口</div>
+              </DropDownMenu>
             </th>
             <th>項目</th>
             <th>狀態 
@@ -29,12 +29,12 @@
                 :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
               <Icon data-filter='state' @click="toggleFilterMenu" v-if="!filterMenu.state"
                 :iconUrl="require('../assets/icon-arrow-dark-up.svg')"/>
-              <DropDown v-if="filterMenu.state">
-                <a @click="handleFilter" data-filter='state' data-type='all'>全部</a>
-                <a @click="handleFilter" data-filter='state' data-type='1'>接受</a>
-                <a @click="handleFilter" data-filter='state' data-type='2'>拒絕</a>
-                <a @click="handleFilter" data-filter='state' data-type='3'>沒時間</a>
-              </DropDown>
+              <DropDownMenu v-if="filterMenu.state">
+                <div @click="handleFilter" data-filter='state' data-type='all'>全部</div>
+                <div @click="handleFilter" data-filter='state' data-type='1'>接受</div>
+                <div @click="handleFilter" data-filter='state' data-type='2'>拒絕</div>
+                <div @click="handleFilter" data-filter='state' data-type='3'>沒時間</div>
+              </DropDownMenu>
             </th>
             <th>備註</th>
             <th>客服人員</th>
@@ -79,17 +79,17 @@
               </FormInput>
               <div class="input__date">
                 <FormInput>
-                  <input type="checkbox" v-if="item.edit" :checked="item.note.date ? true : false" />
+                  <input type="checkbox" v-if="item.edit" :checked="item.note.date ? true : false" v-model="item.note.isBook" />
                   <span v-if="!item.edit && item.note.date">•</span>
                   <span v-if="item.note.date || item.edit">預約聯絡</span>
                 </FormInput>
                 <p v-if="!item.edit">{{ item.note.date }}</p>
                 <FormInput>
-                  <input type='date' v-if="item.edit" :value="item.note.date" />
+                  <input type='date' v-if="item.edit" :value="item.note.date" :disabled="!item.note.isBook" />
                 </FormInput>
               </div>
               <div class="input__buttons" v-if="item.edit">
-                <SendButton @click="item.edit = !item.edit;">儲存送出</SendButton>
+                <SendButton @click="item.edit = !item.edit;">儲存寄出</SendButton>
                 <span @click="item.edit = !item.edit;">取消</span>
               </div>
             </td>
@@ -126,8 +126,9 @@ import {
   Table, 
   FormInput, 
   Header, 
-  Icon, 
-  DropDown } from '../style.js';
+  Icon,
+  DropDownMenu
+} from '../style.js';
 import styled from 'vue-styled-components';
 
 const MarketTable = styled(Table)`
@@ -187,7 +188,7 @@ export default {
     MarketTable,
     Header,
     Icon,
-    DropDown,
+    DropDownMenu,
     SendButton,
     FormInput,
   },
@@ -232,6 +233,7 @@ export default {
               note: {
                 text: '客戶下個月有出國行程，對旅平險',
                 date: '2020-01-30',
+                isBook: true,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -244,6 +246,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -256,6 +259,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -268,6 +272,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -286,6 +291,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -298,6 +304,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -310,6 +317,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -322,6 +330,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -334,6 +343,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -346,6 +356,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -364,6 +375,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -376,6 +388,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -406,6 +419,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -418,6 +432,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -430,6 +445,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -448,6 +464,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',
@@ -460,6 +477,7 @@ export default {
               note: {
                 text: '客戶想申辦網路服務但時間不夠，下次再幫客戶開通開通',
                 date: null,
+                isBook: false,
               },
               place: '世界服務中心',
               owner: '陳人壽',

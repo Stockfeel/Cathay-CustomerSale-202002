@@ -9,7 +9,14 @@
         <span class="slider"></span>
       </SwitchButton>
       <div>
-        <DropDownButton @click="isPop = !isPop">發送給客戶</DropDownButton>
+        <Button @click="isPop = !isPop" 
+          bgColor="white" 
+          borderColor="#05b077" 
+          textColor="#05b077"
+          :class="isPop ? 'active ' : ''"
+        >
+          發送給客戶
+        </Button>
         <PopUp v-if="isPop">
           <p>DM 發送對象：{{ profile.name }}</p>
           <FormInput>
@@ -30,7 +37,13 @@
           </ButtonWrapper>
         </PopUp>
       </div>
-      <DropDownButton>列印</DropDownButton>
+      <Button 
+        bgColor="white" 
+        borderColor="#05b077" 
+        textColor="#05b077"
+      >
+        列印
+      </Button>
     </div>
     <div :class="`img__container ${isSync == 'on' ? 'active' : ''}`">
       <img :src="require(`../assets/dm.png`)" />
@@ -42,7 +55,6 @@
 import { 
   ButtonWrapper, 
   Button, 
-  DropDownButton, 
   SwitchButton, 
   FormInput, 
   PopUp
@@ -50,6 +62,12 @@ import {
 import styled from 'vue-styled-components';
 
 const InformationLayout = styled.div`
+  & > p {
+    width: 80%;
+    margin: 0 auto;
+    color: #05b077;
+    margin-bottom: 20px;
+  } 
   section {
     padding: 20px;
   }
@@ -75,7 +93,7 @@ const InformationLayout = styled.div`
       object-fit: cover;
     }
     &.active {
-      box-shadow: 0 0 0 3px #ffcbcb, 0 0 0 4px #feecec;
+      box-shadow: 0 0 0 6px #ffcbcb, 0 0 0 10px #feecec;
     }
   }
   pre {
@@ -86,6 +104,7 @@ const InformationLayout = styled.div`
     white-space: -pre-wrap;
     white-space: -o-pre-wrap;
     word-wrap: break-word;
+    color: #69808d;
   }
 `
 
@@ -95,7 +114,6 @@ export default {
     InformationLayout,
     ButtonWrapper,
     Button,
-    DropDownButton,
     SwitchButton,
     PopUp,
     FormInput,

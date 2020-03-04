@@ -3,6 +3,7 @@ import buttonClose from './assets/button_close.svg';
 import noTime from './assets/btn-icon-notime.svg';
 import no from './assets/btn-icon-no.svg';
 import yes from './assets/btn-icon-yes.svg';
+import calendar from './assets/icon-calendar.svg';
 import { injectGlobal } from 'vue-styled-components';
 
 // Intial
@@ -48,6 +49,11 @@ export const Title = styled('p', titleProps)`
   font-size: ${font.h1};
   color: ${color.text};
   margin: 0;
+  display: flex;
+  align-items: flex-end;
+  span {
+    font-size: 16px;
+  }
 `
 
 const iconProps = { iconUrl: String, size: Number, rotate: Number };
@@ -121,6 +127,7 @@ export const List = styled('ul', listProps)`
 
 const formInputProps = { inputBasis: String }
 export const FormInput = styled('div', formInputProps)`
+  position: relative;
 	display: flex;
 	align-items: center;
 	width: ${props => props.inputBasis};
@@ -138,7 +145,7 @@ export const FormInput = styled('div', formInputProps)`
 		color: ${color.text};
 		cursor: pointer;
 		margin: 0;
-		margin-left: 5px;
+		margin-left: 10px;
 	}
 	textarea {
 		height: 150px;
@@ -150,6 +157,9 @@ export const FormInput = styled('div', formInputProps)`
 			outline: none;
 			border: ${color.primary} 1px solid;
 		}
+    &.lock {
+      border: red 1px solid;
+    }
 	}
 	input[type='text'] {
 		color: ${color.text};
@@ -213,7 +223,7 @@ export const FormInput = styled('div', formInputProps)`
     cursor: pointer;
     &:checked {
 	    outline: none;
-	    background: ${color.primary};
+	    box-shadow: 0 0 0 3px ${color.primary}, 0 0 0 4px ${color.primary};
     }
   	&::-ms-check {
   		display: none;
@@ -223,20 +233,56 @@ export const FormInput = styled('div', formInputProps)`
 		padding: 5px;
 		border-radius: 8px;
 		border: #d9dbdb 1px solid;
+    &::-webkit-calendar-picker-indicator {
+      margin-top: 4px;
+      display: block;
+      color: rgba(0, 0, 0, 0);
+      opacity: 1;
+      background: url(${calendar}) no-repeat;
+      width: 20px;
+      height: 20px;
+    }
+    &::-webkit-inner-spin-button { 
+      -webkit-appearance: none;
+      display: none;
+    }
+    &::-webkit-clear-button {
+      display: none;
+    }
 	}
+  .word__count {
+    position: absolute;
+    color: #628ea7;
+    right: 5%;
+    bottom: 10px;
+    &.lock {
+      color: red;
+    }
+  }
 `
 
-const btnProps = { bgColor: String, textColor: String };
+const btnProps = { 
+  bgColor: String, 
+  textColor: String, 
+  borderColor: String,
+  padding: Number };
 export const Button = styled('div', btnProps)`
   display: flex;
   justify-content: center;
   background: ${props => props.bgColor || color.primary};
-  box-shadow: 0 4px 12px 0 ${props => props.bgColor || color.primary};
+  box-shadow: 0 4px 12px 0 ${props => props.borderColor ? props.borderColor : props.bgColor};
   border-radius: 20px;
   color: ${props => props.textColor || "white"};
-  border: ${props => props.textColor || "transparent"} solid 1px;
-  padding: 5px 20px;
+  border: ${props => props.borderColor || 'none'} solid 1px;
+  padding: 5px ${props => props.padding || '20'}px;
   cursor: pointer;
+  &.lock {
+    opacity: .5;
+  }
+  &.active {
+    background: ${color.primary};
+    color: white;
+  }
 `
 
 export const CloseButton = styled.div`
@@ -324,9 +370,10 @@ export const SuggestButton = styled('div', suggestProps)`
     content: '';
     width: 30px;
     height: 30px;
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
-    background: url(${props => styleButton(props.state).url});
+    background-position: center;
+    background: url('${props => styleButton(props.state).url}');
     border-radius: 15px;
   }
 `
@@ -481,7 +528,7 @@ export const Table = styled.table`
   }
 `
 
-export const DropDown = styled.div`
+export const DropDownMenu = styled.div`
 	z-index: 2;
 	background: white;
 	box-shadow: 0 6px 15px 0 rgba(128, 197, 197, 0.72);
@@ -490,7 +537,9 @@ export const DropDown = styled.div`
 	border-radius: 12px;
 	overflow: hidden;
   margin-top: 10px;
-	a {
+  text-align: left;
+	div {
+    cursor: pointer; 
 		display: block;
 		padding: 10px;
 		&:hover {
@@ -556,6 +605,7 @@ export const ScrollIn = styled.div`
   display: flex;
   flex-direction: column; 
   margin-top: 20px;
+  width: 90%;
   .input__button {
     display: flex;
     flex-direction: row;

@@ -31,7 +31,7 @@
           <label for="notall">全不選</label>
         </FormInput>
       </FormWrapper>
-      <FormWrapper wrapperAlign='center'>
+      <ServiceFormWrapper wrapperAlign='center'>
         <FormInput inputBasis="25%" v-for="(option, idx) in routeOptions" :key="`option-${idx}`">
           <input @change="handleChangeData" 
             :value="option"
@@ -40,7 +40,8 @@
             :id="`option-${idx}`" />
           <label :for="`option-${idx}`">{{ option }}</label>
         </FormInput>
-      </FormWrapper>
+      </ServiceFormWrapper>
+      <p>服務歷程平台無法查詢大於 6 個月以上的簡訊事件</p>
     </ServiceSection>
     <main>
       <Table>
@@ -130,6 +131,24 @@ const ServiceSection = styled.section`
       margin-right: 8px;
     }
   }
+  & > p {
+    color: #628ea7;
+    font-size: 14px;
+    margin-left: 10px;
+    &::before {
+      content: "•"; 
+      color: #05b077;
+      display: inline-block; 
+      width: 1em;
+      margin-left: -.8em
+    }
+  }
+`
+
+const ServiceFormWrapper = styled(FormWrapper)`
+  & > * {
+    margin: 5px 0;
+  }
 
 `
 
@@ -146,7 +165,8 @@ export default {
     Icon,
     Footer,
     Table,
-    Header
+    Header,
+    ServiceFormWrapper
   },
   methods: {
     changePage (page = this.page) {

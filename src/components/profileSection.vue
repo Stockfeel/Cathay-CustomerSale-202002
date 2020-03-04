@@ -5,26 +5,29 @@
         <div class='avatar__annotation'>70% 相似</div>
         <img src='../assets/info_avatar.png'>
       </div>
-      <div>
-        <DropDownButton @click="isMenuOpen = !isMenuOpen">
-          <span>互動</span>
-          <Icon v-if="!isMenuOpen" :iconUrl="require('../assets/icon-arrow-white-down.svg')" />
-          <Icon v-if="isMenuOpen" :iconUrl="require('../assets/icon-arrow-white-up.svg')" />        
-        </DropDownButton>
-        <DropDown v-if="isMenuOpen">
-          <a>搜資遊戲</a>
-          <a>問卷 1</a>
-          <a>問卷 2</a>
-        </DropDown>
-      </div>
+      <DropDown 
+        text="互動"
+        :list="[{
+          text: '搜資遊戲', 
+          slug: ''
+        }, {
+          text: '問卷 1',
+          slug: ''
+        }, {
+          text: '問卷 2',
+          slug: ''
+        }]" 
+      />
     </AvatarLayout>
     <IntroLayout>
       <section>
         <Title textAlign='left'>
-          {{ user.name }} ({{ user.age }} 歲) 
-          <Icon :iconUrl="require('../assets/icon-profile-birth.svg')" :size="20"/>
-          <Icon :iconUrl="require('../assets/icon-profile-secret.svg')" :size="20"/>
-          <Icon :iconUrl="require('../assets/icon-profile-vip.svg')" :size="20"/>
+          {{ user.name }} ({{ user.age }} 歲)
+          <span class="icon__wrapper"> 
+            <Icon :iconUrl="require('../assets/icon-profile-birth.svg')" :size="25"/>
+            <Icon :iconUrl="require('../assets/icon-profile-secret.svg')" :size="25"/>
+            <Icon :iconUrl="require('../assets/icon-profile-vip.svg')" :size="25"/>
+          </span>
         </Title>
         <List listDirection='column'>
           <ListItem>特殊客戶：
@@ -38,7 +41,7 @@
             <span v-for="(tag, idx) in user.tags" :key="idx">{{ idx ? '、': ''}}{{ tag }}</span>
           </ListItem>
         </List>
-        <router-link to='./profile'>
+        <router-link tag="div" to='./profile'>
           <MoreButton>
             <p>看更多輪廓及編輯</p>
             <Icon :iconUrl="require('../assets/button_more.svg')" :size="20"/>
@@ -49,10 +52,10 @@
         <Title textAlign='left'>服務歷程</Title>
         <p>{{ service.date }} {{ service.time }} {{ service.route }}</p>
         <p>{{ service.note }} </p>
-        <router-link to='./service'>
+        <router-link tag="div" to='./service'>
           <MoreButton>
-              <p>看更多歷程</p>
-              <Icon :iconUrl="require('../assets/button_more.svg')" :size="20"/>
+            <p>看更多歷程</p>
+            <Icon :iconUrl="require('../assets/button_more.svg')" :size="20"/>
           </MoreButton>
         </router-link>
       </section>
@@ -66,11 +69,10 @@ import {
   ListItem, 
   Card, 
   Icon, 
-  DropDownButton, 
   MoreButton, 
-  Title, 
-  DropDown } from '../style.js';
+  Title } from '../style.js';
 import styled from 'vue-styled-components';
+import DropDown from './ui/dropdown.vue';
 
 const AvatarLayout = styled.div`
   display: flex;  
@@ -82,6 +84,7 @@ const AvatarLayout = styled.div`
   .avatar__picture {
     position: relative;
     margin-bottom: 20px;
+    margin-top: -50px;
   }
   .avatar__annotation {
     position: absolute;
@@ -115,6 +118,12 @@ const IntroLayout = styled.div`
   flex: 1 1 auto;
   position: relative;
   padding: 10px 20px;
+  .icon__wrapper {
+    display: flex;
+    & > * {
+      margin: 0 5px;
+    }
+  }
   section {
     position: relative;
   }
@@ -139,10 +148,9 @@ export default {
     Icon,
     MoreButton,
     Title,
-    DropDownButton,
     ListItem,
     List,
-    DropDown,
+    DropDown
   },
   data () {
     return {

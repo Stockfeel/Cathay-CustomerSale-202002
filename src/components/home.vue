@@ -2,6 +2,7 @@
   <HomeLayout>
     <div class="time">
       00:08:14
+      <div class="time__tooltip">已服務時間</div>
     </div>
     <ProfileSection :user="user" :service="service"/>
     <MarketSection :market="market" />
@@ -33,6 +34,28 @@ const HomeLayout = styled.div`
     color: white;
     padding: 3px 3px 3px 10px;
     border-bottom-left-radius: 15px;
+    cursor: pointer;   
+    .time__tooltip {
+      visibility: hidden;
+      position: absolute;
+      margin-top: 10px;
+      margin-left: -50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      color: #324c5a;
+      background: white; 
+      box-shadow: 0 6px 15px 0 rgba(128, 197, 197, 0.72);
+      padding: 2px 5px;
+      width: 105px;
+      height: 40px;
+    }
+    &:hover {
+      .time__tooltip {
+        visibility: visible;
+      }
+    }
   } 
 `
 

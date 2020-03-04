@@ -1,12 +1,12 @@
 <template>
-  <section>
+  <InsuranceLayout>
     <Insurance v-for="(insurance, idx) in insurances" 
       :key="`insurance-${idx}`" 
       :average="insurance.average" 
       :difference="insurance.average - insurance.value"
       @click="$router.push(`./insurance?cat=${insurance.text}`)" 
     >
-      <div class='insurance__title'><Icon :iconUrl="require(`../assets/${insurance.average - insurance.value > 0 ? 'icon-notice' : 'icon-accept'}.svg`)" />{{ insurance.text }}</div>
+      <div class='insurance__title'><Icon :iconUrl="require(`../assets/${insurance.average - insurance.value > 0 ? 'icon-notice' : 'icon-accept'}.svg`)" :size="15" />{{ insurance.text }}</div>
       <div class='insurance__bar'>
         <div class='bar__img'></div>
         <div class='bar__side'>
@@ -21,12 +21,22 @@
         </div>
       </div>
     </Insurance>
-  </section>
+    <span>註：深色數字為相較於用戶</span>
+  </InsuranceLayout>
 </template>
 
 <script>
 import { Icon } from '../style.js';
 import styled from 'vue-styled-components';
+
+const InsuranceLayout = styled.section`
+  & > span {
+    color: #628ea7;
+    font-size: 14px;
+    text-align: right;
+    width: 100%;
+  } 
+`
 
 const InsuranceProps = {
   difference: Number,
@@ -39,6 +49,7 @@ const Insurance = styled('div', InsuranceProps)`
   height: 60px;
   cursor: pointer;
   border-radius: 12px;
+  padding: 5px 10px;
   &.active {
     box-shadow: 0 0 0 3px #ffcbcb, 0 0 0 4px #feecec;
   }
@@ -49,7 +60,11 @@ const Insurance = styled('div', InsuranceProps)`
     display: inline-block;
   }
   .insurance__title {
+    margin-left: -10px;
     color: ${props => props.difference < 0 ? '#93d1d1' : '#dd7b7b'}
+    & > *:first-child {
+      margin-right: 10px;
+    }
   }
   .insurance__bar {
     width: 60%;
@@ -86,7 +101,8 @@ export default {
   name: 'InsuranceSection',
   components: {
     Insurance,
-    Icon
+    Icon,
+    InsuranceLayout
   },
   data() {
     return {

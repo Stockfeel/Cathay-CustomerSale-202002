@@ -11,28 +11,37 @@
     </SuggestMain>
     <Footer>
       <ButtonWrapper>
-        <Button bgColor="#05b077" @click="backTo()">接受</Button>
-        <Button bgColor="#3aafb1" @click="backTo()">沒時間</Button>
+        <Button :class="isEdit ? 'lock' : ''" bgColor="#05b077" @click="backTo()">接受</Button>
+        <Button :class="isEdit ? 'lock' : ''" bgColor="#efbd00" @click="backTo()">沒時間</Button>
         <Button bgColor="#616161" @click="isEdit = !isEdit">拒絕</Button>
       </ButtonWrapper>
       <ScrollIn v-if="isEdit">
-        <FormInput inputBasis="450">
-          <b-form-textarea
-            id="textarea"
-            v-model="noteInput"
-            placeholder="輸入備註"
-            rows="3"
-            max-rows="6"
-          ></b-form-textarea>
+        <FormInput inputBasis="100%">
+          <textarea v-model="noteInput" 
+            :class="noteInput.length >= 60 ? 'lock' : ''"></textarea>
+          <div 
+            :class="noteInput.length >= 60 ? 'word__count lock' : 'word__count'">
+            {{ noteInput.length }}/60
+          </div>
         </FormInput>
+        <SuggestFormWrapper>
+          <FormInput inputBasis="20%">
+            <input type="checkbox" v-model="isBook"/>
+            <label>預約聯絡</label>
+          </FormInput>
+          <FormInput v-if="isBook" inputBasis="50%">
+            <span>寄送時間</span>
+            <input type="date" />
+          </FormInput>
+        </SuggestFormWrapper>
         <div class="input__button">
           <Button bgColor="#05b077">
-            <router-link to="../">
+            <router-link tag="div" to="../">
               <LinkStyle>寄送預約</LinkStyle>
             </router-link>
           </Button>
           <Button bgColor="#fff" textColor="#05b077">
-            <router-link to="../">
+            <router-link tag="div" to="../">
               <LinkStyle textColor="#05b077">稍後再填</LinkStyle>
             </router-link>
           </Button>
@@ -53,7 +62,8 @@ import {
   LinkStyle,
   Button,
   ButtonWrapper,
-  FormInput
+  FormInput,
+  FormWrapper
 } from "../style.js";
 import Information from "./information";
 import styled from 'vue-styled-components';
@@ -61,6 +71,15 @@ import styled from 'vue-styled-components';
 const SuggestMain = styled.main`
   height: 80%;
 `
+const SuggestFormWrapper = styled(FormWrapper)`
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  span {
+    margin-right: 20px;
+  }
+`
+
 export default {
   name: "Suggest",
   components: {
@@ -75,7 +94,8 @@ export default {
     Button,
     ButtonWrapper,
     SuggestMain,
-    FormInput
+    FormInput,
+    SuggestFormWrapper
   },
   methods: {
     backTo() {
@@ -87,6 +107,7 @@ export default {
       isSync: [],
       isPop: false,
       isEdit: false,
+      isBook: false,
       isEmailEnter: [],
       isMobileEnter: [],
       noteInput: '',

@@ -16,8 +16,9 @@
         </div>
       </section>
       <MoreButton align="center" @click="showMore">
-        <p>看更多選項</p>
-        <Icon :iconUrl="require('../assets/button_more.svg')" :size="20" :rotate="90" />
+        <p>{{ menuState ? "收合選項" : "看更多選項" }}</p>
+        <Icon v-if="menuState" :iconUrl="require('../assets/button_more.svg')" :size="20" :rotate="-90" />
+        <Icon v-if="!menuState" :iconUrl="require('../assets/button_more.svg')" :size="20" :rotate="90" />
       </MoreButton>
     </ProductLayout>
     <InsuranceLayout>
@@ -28,36 +29,24 @@
             <input type="checkbox" v-model="isSync" value="on"/>
             <span class="slider"></span>
           </SwitchButton>    
-          <div>
-            <DropDownButton @click="isConOpen = !isConOpen">
-              <span>配對顧問</span>
-              <Icon v-if="!isConOpen" :iconUrl="require('../assets/icon-arrow-white-down.svg')" />
-              <Icon v-if="isConOpen" :iconUrl="require('../assets/icon-arrow-white-up.svg')" />
-            </DropDownButton>
-            <DropDown v-if="isConOpen" @click="isConOpen = !isConOpen">
-              <router-link to="./introduce?type=current&cat=consult">
-                <LinkStyle textColor="#324c5a">原顧問</LinkStyle>
-              </router-link>
-              <router-link to="./introduce?type=new&cat=consult">
-                <LinkStyle textColor="#324c5a">新顧問</LinkStyle>
-              </router-link>
-            </DropDown>
-          </div>
-          <div>
-            <DropDownButton @click="isCusOpen = !isCusOpen">
-              <span>諮詢客服</span>
-              <Icon v-if="!isCusOpen" :iconUrl="require('../assets/icon-arrow-white-down.svg')" />
-              <Icon v-if="isCusOpen" :iconUrl="require('../assets/icon-arrow-white-up.svg')" />
-            </DropDownButton>
-            <DropDown v-if="isCusOpen" @click="isCusOpen = !isCusOpen">
-              <router-link to="./introduce?type=current&cat=service">
-                <LinkStyle textColor="#324c5a">客服顧問</LinkStyle>
-              </router-link>
-              <router-link to="./introduce?type=new&cat=service">
-                <LinkStyle textColor="#324c5a">本次客服</LinkStyle>
-              </router-link>
-            </DropDown>
-          </div>
+          <DropDown 
+            text="配對顧問"
+            :list="[{
+              text: '原顧問',
+              slug: 'introduce?type=current&cat=consult'
+            }, {
+              text: '新顧問',
+              slug: 'introduce?type=new&cat=consult'
+            }]" />
+          <DropDown 
+            text="配對顧問"
+            :list="[{
+              text: '客服顧問',
+              slug: 'introduce?type=current&cat=service'
+            }, {
+              text: '本次客服',
+              slug: 'introduce?type=new&cat=service'
+            }]" />
         </ButtonWrapper>
       </div>
       <InsuranceSection :insurances="insurances" :class="`${isSync == 'on' ? 'active' : ''}`" />
@@ -74,15 +63,15 @@ import {
   Card, 
   Title, 
   SuggestButton, 
-  DropDownButton,
   MoreButton, 
   Icon,
   SwitchButton, 
-  ButtonWrapper, 
-  DropDown,
-  LinkStyle } from '../style.js';
+  ButtonWrapper
+} from '../style.js';
 import InsuranceSection from './insuranceSection.vue';
+import DropDown from './ui/dropdown.vue';
 import styled from 'vue-styled-components';
+
 
 const ProductLayout = styled.section`
   padding: 10px 30px;
@@ -130,7 +119,7 @@ const InsuranceLayout = styled.section`
   }
   .suggest__notime {
     position: absolute; 
-    bottom: -25px;
+    margin-top: 15px;
     left: 50%; 
     transform: translateX(-50%);
     color: white;
@@ -158,14 +147,12 @@ export default {
     ProductLayout,
     SuggestButton,
     InsuranceLayout,
-    DropDownButton,
     InsuranceSection,
     MoreButton,
     Icon,
     SwitchButton,
     ButtonWrapper,
-    DropDown,
-    LinkStyle
+    DropDown
   },
   methods: {
     showMore() {

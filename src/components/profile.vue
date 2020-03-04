@@ -50,8 +50,17 @@
                 <input id="special-1" type="radio" name="special" />
                 <label for="special-1">有</label>
               </FormInput>
-              <FormInput inputBasis="80%">
-                <textarea id="special-2" type="text" name="special"></textarea>
+              <FormInput inputBasis="90%">
+                <textarea 
+                  :class="form.specialNotes.length >= 60 ? 'lock' : ''"
+                  id="special-2" 
+                  type="text" 
+                  name="special" 
+                  v-model="form.specialNotes"></textarea>
+                <div 
+                  :class="form.specialNotes.length >= 60 ? 'word__count lock' : 'word__count'">
+                  {{ form.specialNotes.length }}/60
+                </div>
               </FormInput>
             </FormWrapper>
           </td>
@@ -59,14 +68,14 @@
         <tr v-for="(userClass, idx) in Object.keys(userOptions)" :key="`userOption-${idx}`">
           <th>{{ userOptions[userClass].class }}</th>
           <td>
-            <FormWrapper>
+            <ProfileFormWrapper>
               <FormInput v-for="(item, idx) in userOptions[userClass].data" 
                 inputBasis="33%" :key="idx">
                 <input :type="userOptions[userClass].type" :name="userClass" 
                   :id="`${userClass}-${idx}`" :value="item" v-model="form[userClass]"/>
                 <label :for="`${userClass}-${idx}`" v-if="userOptions[userClass].type !== 'text'">{{ item }}</label>
               </FormInput>
-            </FormWrapper>
+            </ProfileFormWrapper>
           </td>
         </tr>
         <tr v-for="(interestKey, idx) in Object.keys(interestsOptions.data)" 
@@ -75,23 +84,23 @@
           <th v-if="idx"></th>
           <td>
             <p>{{ interestsOptions.data[interestKey].class }}</p>
-            <FormWrapper>
+            <ProfileFormWrapper>
               <FormInput v-for="(item, idx) in interestsOptions.data[interestKey].data" 
                 inputBasis="33%" :key="`interestOption-${idx}`">
                 <input type="checkbox" :name="interestKey" 
                   :id="`${interestKey}-${idx}`" :value="item" />
                 <label :for="`${interestKey}-${idx}`">{{ item }}</label>
               </FormInput>
-            </FormWrapper>
+            </ProfileFormWrapper>
           </td>
         </tr>
       </ProfileTable>
     </main>
     <Footer>
       <ButtonWrapper>
-        <Button v-on:click="isEdit = !isEdit" v-if="!isEdit">編輯</Button>
-        <Button v-on:click="isEdit = !isEdit" v-if="isEdit">儲存</Button>
-        <Button v-on:click="isEdit = !isEdit" v-if="isEdit" bgColor="#616161">取消</Button>
+        <Button v-on:click="isEdit = !isEdit" v-if="!isEdit" padding="50">編輯</Button>
+        <Button v-on:click="isEdit = !isEdit" v-if="isEdit" padding="50">儲存</Button>
+        <Button v-on:click="isEdit = !isEdit" v-if="isEdit" bgColor="#616161" padding="50">取消</Button>
       </ButtonWrapper>
     </Footer>
   </Modal>
@@ -155,7 +164,17 @@ const ProfileTable = styled('table', profileTableProps)`
     }
     &.profile__service {
       width: 180px;
+      vertical-align: middle;
+      p {
+        margin: 0;
+      }
     }
+  }
+`
+
+const ProfileFormWrapper = styled(FormWrapper)`
+  & div {
+    margin-bottom: 10px;
   }
 `
 
@@ -176,11 +195,12 @@ export default {
     List, 
     ListItem,
     Header,
-    Footer
+    Footer,
+    ProfileFormWrapper
   },
   data () {
     return {
-      isEdit: false,
+      isEdit: true,
       form: {
         specialNotes: '情緒不穩定，於櫃檯咆哮並怒罵客服人員',
         features: ['慣用左手', '慣用左手', '雙目失明'],
