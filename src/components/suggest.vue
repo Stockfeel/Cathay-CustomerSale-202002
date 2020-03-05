@@ -16,14 +16,7 @@
         <Button bgColor="#616161" @click="isEdit = !isEdit">拒絕</Button>
       </ButtonWrapper>
       <ScrollIn v-if="isEdit">
-        <FormInput inputBasis="100%">
-          <textarea v-model="noteInput" 
-            :class="noteInput.length >= 60 ? 'lock' : ''"></textarea>
-          <div 
-            :class="noteInput.length >= 60 ? 'word__count lock' : 'word__count'">
-            {{ noteInput.length }}/60
-          </div>
-        </FormInput>
+        <Textarea width="100%" />
         <SuggestFormWrapper>
           <FormInput inputBasis="20%">
             <input type="checkbox" v-model="isBook"/>
@@ -40,7 +33,11 @@
               <LinkStyle>寄送預約</LinkStyle>
             </router-link>
           </Button>
-          <Button bgColor="#fff" textColor="#05b077">
+          <Button 
+            bgColor="#fff" 
+            textColor="#05b077"
+            borderColor="#05b077"
+          >
             <router-link tag="div" to="../">
               <LinkStyle textColor="#05b077">稍後再填</LinkStyle>
             </router-link>
@@ -66,6 +63,7 @@ import {
   FormWrapper
 } from "../style.js";
 import Information from "./information";
+import Textarea from "./ui/textarea.vue";
 import styled from 'vue-styled-components';
 
 const SuggestMain = styled.main`
@@ -95,7 +93,8 @@ export default {
     ButtonWrapper,
     SuggestMain,
     FormInput,
-    SuggestFormWrapper
+    SuggestFormWrapper,
+    Textarea
   },
   methods: {
     backTo() {

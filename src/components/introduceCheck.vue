@@ -1,109 +1,109 @@
 <template>
   <CheckLayout>
     <CheckTable>
-    <tr>
-      <th>轉介者</th>
-      <td>{{ check.place }} {{ check.current }}</td>
-    </tr>
-    <tr>
-      <th>預約顧問</th>
-      <td>
-        <span v-for="(consult, idx) in check.consults" :key="`consult-${idx}`">
-          {{ consult }} <span v-if="idx !== check.consults.length - 1"> / </span>
-        </span>
-      </td>
-    </tr>
-    <tr>
-      <th>預約者</th>
-      <td>
-        <p v-if="!check.name.edit">
-          {{ check.name.text }}
-          <Icon 
-            :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
-            :size='20'
-            @click="check.name.edit = !check.name.edit;"
-          />
-        </p>
-        <FormInput class="input__text" v-if="check.name.edit" size="450">
-          <input type="text" v-model="check.name.text" />
-        </FormInput>
-        <div class="input__buttons" v-if="check.name.edit">
-          <SendButton @click="check.name.edit = !check.name.edit;">儲存修改</SendButton>
-          <span @click="check.name.edit = !check.name.edit;">取消</span>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <th>Email</th>
-      <td>
-        <p v-if="!check.email.edit">
-          {{ check.email.text }}
-          <Icon 
-            :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
-            :size='20'
-            @click="check.email.edit = !check.email.edit;"
-          />
-        </p>
-        <FormInput class="input__text" v-if="check.email.edit" size="450">
-          <input type="text" v-model="check.email.text" />
-        </FormInput>
-        <div class="input__buttons" v-if="check.email.edit">
-          <SendButton @click="check.email.edit = !check.email.edit;">儲存修改</SendButton>
-          <span @click="check.email.edit = !check.email.edit;">取消</span>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <th>聯絡電話</th>
-      <td>
-        <p v-if="!check.mobile.edit">
-          {{ check.mobile.text }}
-          <Icon 
-            :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
-            :size='20'
-            @click="check.mobile.edit = !check.mobile.edit;"
-          />
-        </p>
-        <FormInput class="input__text" v-if="check.mobile.edit" size="450">
-          <input type="text" v-model="check.mobile.text" />
-        </FormInput>
-        <div class="input__buttons" v-if="check.mobile.edit">
-          <SendButton @click="check.mobile.edit = !check.mobile.edit;">儲存修改</SendButton>
-          <span @click="check.mobile.edit = !check.mobile.edit;">取消</span>
-        </div>
-      </td>
-    </tr>
-    <tr rowspan="2">
-      <th>方便時間</th>
-      <td>
-        <FormWrapper>
-          <FormInput inputBasis="25%" v-for="(date, idx) in formDate" :key="`date-${idx}`">
-            <input type="checkbox" :id="`date-${idx}`"/>
-            <label :for="`date-${idx}`">{{ date }}</label>
+      <tr>
+        <th>轉介者</th>
+        <td class="check__item">{{ check.place }} {{ check.current }}</td>
+      </tr>
+      <tr>
+        <th>預約顧問</th>
+        <td>
+          <span class="check__item" v-for="(consult, idx) in check.consults" :key="`consult-${idx}`">
+            {{ consult }} <span v-if="idx !== check.consults.length - 1"> / </span>
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <th>預約者</th>
+        <td>
+          <p class="check__item" v-if="!check.name.edit">
+            {{ check.name.text }}
+            <Icon 
+              :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
+              :size='20'
+              @click="check.name.edit = !check.name.edit;"
+            />
+          </p>
+          <FormInput class="input__text" v-if="check.name.edit" size="450">
+            <input type="text" v-model="check.name.text" />
           </FormInput>
-        </FormWrapper>
-        <hr />
-      </td>
-    </tr>
-    <tr>
-      <th><!-- rowspan --></th>
-      <td>
-        <FormWrapper>
-          <FormInput inputBasis="50%" v-for="(time, idx) in formTime" :key="`time-${idx}`">
-            <input type="checkbox" :id="`time-${idx}`" />
-            <label :for="`time-${idx}`">{{ time }}</label>
+          <div class="input__buttons" v-if="check.name.edit">
+            <SendButton @click="check.name.edit = !check.name.edit;">儲存修改</SendButton>
+            <span @click="check.name.edit = !check.name.edit;">取消</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td>
+          <p class="check__item" v-if="!check.email.edit">
+            {{ check.email.text }}
+            <Icon 
+              :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
+              :size='20'
+              @click="check.email.edit = !check.email.edit;"
+            />
+          </p>
+          <FormInput class="input__text" v-if="check.email.edit" size="450">
+            <input type="text" v-model="check.email.text" />
           </FormInput>
-        </FormWrapper>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="3">
-        <FormInput>
-          <input type="checkbox"/>
-          <label>我同意 XXXXXXXXXX</label>
-        </FormInput>
-      </td>
-    </tr>
+          <div class="input__buttons" v-if="check.email.edit">
+            <SendButton @click="check.email.edit = !check.email.edit;">儲存修改</SendButton>
+            <span @click="check.email.edit = !check.email.edit;">取消</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>聯絡電話</th>
+        <td>
+          <p class="check__item" v-if="!check.mobile.edit">
+            {{ check.mobile.text }}
+            <Icon 
+              :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
+              :size='20'
+              @click="check.mobile.edit = !check.mobile.edit;"
+            />
+          </p>
+          <FormInput class="input__text" v-if="check.mobile.edit" size="450">
+            <input type="text" v-model="check.mobile.text" />
+          </FormInput>
+          <div class="input__buttons" v-if="check.mobile.edit">
+            <SendButton @click="check.mobile.edit = !check.mobile.edit;">儲存修改</SendButton>
+            <span @click="check.mobile.edit = !check.mobile.edit;">取消</span>
+          </div>
+        </td>
+      </tr>
+      <tr rowspan="2">
+        <th>方便時間</th>
+        <td>
+          <CheckFormWrapper>
+            <FormInput inputBasis="25%" v-for="(date, idx) in formDate" :key="`date-${idx}`">
+              <input type="checkbox" :id="`date-${idx}`"/>
+              <label :for="`date-${idx}`">{{ date }}</label>
+            </FormInput>
+          </CheckFormWrapper>
+          <hr />
+        </td>
+      </tr>
+      <tr>
+        <th><!-- rowspan --></th>
+        <td>
+          <CheckFormWrapper>
+            <FormInput inputBasis="50%" v-for="(time, idx) in formTime" :key="`time-${idx}`">
+              <input type="checkbox" :id="`time-${idx}`" />
+              <label :for="`time-${idx}`">{{ time }}</label>
+            </FormInput>
+          </CheckFormWrapper>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <FormInput>
+            <input type="checkbox"/>
+            <label>我同意 XXXXXXXXXX</label>
+          </FormInput>
+        </td>
+      </tr>
     </CheckTable>
   </CheckLayout>
 </template>
@@ -118,11 +118,20 @@ import {
 } from '../style.js';
 import styled from 'vue-styled-components';
 
+const CheckFormWrapper = styled(FormWrapper)`
+  & > * {
+    margin: 2px 0;
+  }
+`
+
 const CheckTable = styled(Table)`
   td, th {
     height: 50px;
     vertical-align: top;
     padding: 5px;
+  }
+  .check__item {
+    font-weight: bold;
   }
   th {
     width: 120px;
@@ -146,10 +155,10 @@ export default {
   components: {
     CheckTable,
     FormInput,
-    FormWrapper,
     CheckLayout,
     Icon,
-    SendButton
+    SendButton,
+    CheckFormWrapper
   },
   methods: {
 

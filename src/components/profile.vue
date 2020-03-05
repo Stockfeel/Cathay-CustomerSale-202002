@@ -50,18 +50,7 @@
                 <input id="special-1" type="radio" name="special" />
                 <label for="special-1">有</label>
               </FormInput>
-              <FormInput inputBasis="90%">
-                <textarea 
-                  :class="form.specialNotes.length >= 60 ? 'lock' : ''"
-                  id="special-2" 
-                  type="text" 
-                  name="special" 
-                  v-model="form.specialNotes"></textarea>
-                <div 
-                  :class="form.specialNotes.length >= 60 ? 'word__count lock' : 'word__count'">
-                  {{ form.specialNotes.length }}/60
-                </div>
-              </FormInput>
+              <Textarea width="90%"/>
             </FormWrapper>
           </td>
         </tr>
@@ -120,6 +109,7 @@ import {
   Header, 
   Footer } from '../style.js';
 import styled from 'vue-styled-components';
+import Textarea from './ui/textarea.vue';
 
 const profileTableProps = { isEdited: String }
 const ProfileTable = styled('table', profileTableProps)`
@@ -196,7 +186,8 @@ export default {
     ListItem,
     Header,
     Footer,
-    ProfileFormWrapper
+    ProfileFormWrapper,
+    Textarea
   },
   data () {
     return {

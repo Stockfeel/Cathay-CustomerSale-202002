@@ -39,13 +39,13 @@
               slug: 'introduce?type=new&cat=consult'
             }]" />
           <DropDown 
-            text="配對顧問"
+            text="諮詢客服"
             :list="[{
               text: '客服顧問',
-              slug: 'introduce?type=current&cat=service'
+              slug: 'introduce?type=new&cat=service'
             }, {
               text: '本次客服',
-              slug: 'introduce?type=new&cat=service'
+              slug: 'introduce?type=current&cat=service'
             }]" />
         </ButtonWrapper>
       </div>
@@ -71,7 +71,6 @@ import {
 import InsuranceSection from './insuranceSection.vue';
 import DropDown from './ui/dropdown.vue';
 import styled from 'vue-styled-components';
-
 
 const ProductLayout = styled.section`
   padding: 10px 30px;

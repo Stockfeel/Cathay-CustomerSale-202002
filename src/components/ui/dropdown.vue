@@ -1,11 +1,11 @@
 <template>
   <div>
-    <DropDownButton @mouseover="isMenuOpen = true">
+    <DropDownButton @mouseover="isMenuOpen = true" @click="show()">
       <span>{{ text }}</span>
       <Icon v-show="!isMenuOpen" :iconUrl="require('../../assets/icon-arrow-white-down.svg')" />
       <Icon v-show="isMenuOpen" :iconUrl="require('../../assets/icon-arrow-white-up.svg')" />        
     </DropDownButton>
-    <DropDownMenu v-show="isMenuOpen" 
+    <DropDownMenu v-show="isMenuOpen"
       @mouseover="isMenuOpen = true"
       @mouseout="isMenuOpen = false"
     >

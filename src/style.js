@@ -151,7 +151,7 @@ export const FormInput = styled('div', formInputProps)`
 		height: 150px;
 		border: #d9dbdb 1px solid;
 		border-radius: 8px;
-		width: ${ props => props.inputBasis || '100%'};
+		width: 100%;
 		padding: 10px;
 		&:focus {
 			outline: none;
@@ -253,7 +253,7 @@ export const FormInput = styled('div', formInputProps)`
   .word__count {
     position: absolute;
     color: #628ea7;
-    right: 5%;
+    right: 3%;
     bottom: 10px;
     &.lock {
       color: red;
@@ -563,7 +563,10 @@ export const DropDownCheckbox = styled.div`
   span {
     display: flex;
     width: 100%;
-    margin: 0;
+    margin: 2px 5px;
+  }
+  & > * {
+    margin: 2px 5px;
   }
 `
 
@@ -605,7 +608,6 @@ export const ScrollIn = styled.div`
   display: flex;
   flex-direction: column; 
   margin-top: 20px;
-  width: 90%;
   .input__button {
     display: flex;
     flex-direction: row;
@@ -613,6 +615,9 @@ export const ScrollIn = styled.div`
     & > * {
       margin: 20px 10px;
     }
+  }
+  p {
+    text-align: center;
   }
 `
 
@@ -622,7 +627,7 @@ export const Tab = styled.div`
   justify-content: center;
   & > * {
     margin: 10px;
-    padding: 5px 10px; 
+    padding: 5px 20px; 
     &.active {
       background: #05b077;
       color: white; 

@@ -7,25 +7,33 @@
       <Title textAlign='center'>{{ step === 0 ? stepTitle[step][$route.query.cat][$route.query.type] : stepTitle[step] }}</Title>
     </Header>
     <IntroduceLayout v-if="step == 0">
-      <section v-if="$route.query.type == 'new' && $route.query.cat === 'consult'">
+      <section v-if="$route.query.type == 'new'">
         <div>
           <p>
             <span>台北市</span> 
-            <Icon :iconUrl="require('../assets/icon-arrow-dark-down.svg')" :size="15"></Icon>
+            <Icon v-if="!isMenuOpen" 
+              @click="isMenuOpen = !isMenuOpen"
+              :iconUrl="require('../assets/icon-arrow-dark-down.svg')" 
+              :size="15"></Icon>
+            <Icon v-if="isMenuOpen" 
+              @click="isMenuOpen = !isMenuOpen"
+              :iconUrl="require('../assets/icon-arrow-dark-up.svg')" 
+              :size="15"></Icon>
           </p>
-          <DropDown>
-            <a>台北市</a>
-            <a>新北市</a>
-            <a>基隆市</a>
-            <a>桃園縣</a>
-          </DropDown>
+          <DropDownMenu v-if="isMenuOpen">
+            <div>台北市</div>
+            <div>新北市</div>
+            <div>基隆市</div>
+            <div>桃園縣</div>
+          </DropDownMenu>
         </div>
         <div>
           <p>
             <span>松山區</span> 
-            <Icon :iconUrl="require('../assets/icon-location.svg')" :size="20"></Icon>
+            <Icon :iconUrl="require('../assets/icon-location.svg')" 
+            :size="20" @click="isListOpen = !isListOpen"></Icon>
           </p>
-          <DropDownCheckbox>
+          <DropDownCheckbox v-if="isListOpen">
             <span>台北市</span>
             <span>
               <FormInput>
@@ -85,7 +93,7 @@
         </div>
       </section>
       <IntroduceTable>
-        <thead>
+        <thead :class="$route.query.cat === 'consult' ? '' : 'consult'">
           <tr>
             <th>預約</th>
             <th>縣市</th>
@@ -106,32 +114,33 @@
             <td>{{ item.state }}</td>
             <td>{{ item.service }}</td>
             <td>
-              <Icon 
-                v-if="item.gender === 'M'" 
-                :iconUrl="require('../assets/icon-gender-male.svg')" 
-                :size="20"
-              />
-              <Icon 
-                v-if="item.gender === 'F'" 
-                :iconUrl="require('../assets/icon-gender-female.svg')" 
-                :size="20"
-              />
-              {{ item.name }}</td>
+              <div>
+                <Icon 
+                  v-if="item.gender === 'M'" 
+                  :iconUrl="require('../assets/icon-gender-male.svg')" 
+                  :size="20"
+                />
+                <Icon 
+                  v-if="item.gender === 'F'" 
+                  :iconUrl="require('../assets/icon-gender-female.svg')" 
+                  :size="20"
+                />
+                {{ item.name }}
+              </div>
+            </td>
             <td>{{ item.contact }}</td>
           </tr>
         </tbody>
       </IntroduceTable>
     </IntroduceLayout>
     <IntroduceLayout v-if="step == 1">
-      <FormInput inputBasis="100%">
-        <textarea></textarea>
-      </FormInput>
+      <Textarea width="100%"/>
     </IntroduceLayout>
     <IntroduceLayout v-if="step == 2">
       <IntroduceCheck />
     </IntroduceLayout>
     <ButtonWrapper>
-      <Button v-if="step > 0" @click="step -= 1">上一步</Button>
+      <Button v-if="step > 0" @click="step -= 1" bgColor="#fff" textColor="#05b077" borderColor="#05b077">上一步</Button>
       <Button v-if="step < 2" @click="step += 1">下一步</Button>
       <Button v-if="step === 2" @click="$router.push('../')">請客戶填寫預約單</Button>
     </ButtonWrapper>
@@ -145,7 +154,7 @@ import {
   Button, 
   CloseButton, 
   ButtonWrapper,
-  DropDown,
+  DropDownMenu,
   Header, 
   Table, 
   DropDownCheckbox, 
@@ -153,9 +162,23 @@ import {
   Icon } from "../style.js";
 import styled from "vue-styled-components";
 import IntroduceCheck from "./introduceCheck.vue";
+import Textarea from './ui/textarea.vue';
 
 const IntroduceTable = styled(Table)`
   text-align: center;
+  .consult tr th {
+    background: #f0fbee;
+  }
+  div {
+    display: inline-block;
+    vertical-align: top;
+  }
+  tr:nth-child(even) {
+    background: #f1f1f1;
+  }
+  td, th {
+    border: 1px solid rgba(51, 51, 51, 0.2);
+  }
 `
 
 const IntroduceLayout = styled.main`
@@ -200,12 +223,13 @@ export default {
     Button,
     ButtonWrapper,
     IntroduceTable,
-    DropDown,
+    DropDownMenu,
     DropDownCheckbox,
     IntroduceLayout,
     FormInput,
     Icon,
     IntroduceCheck,
+    Textarea
   },
   methods: {
 
@@ -213,6 +237,9 @@ export default {
   data() {
     return {
       step: 0,
+      isMenuOpen: false,
+      isListOpen: false,
+      noteInput: '',
       stepTitle: [{
         consult: {
           new: '配對顧問',

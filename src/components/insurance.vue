@@ -33,17 +33,33 @@
       <section v-for="(item, idx) in Object.keys(hottest)" :key="`section-${idx}`">
         <div class="section__title">{{ item }}</div>
         <p>註：{{ hottest[item].note }}</p>
-        <Product v-for="(product, idx) in hottest[item].products" :key="`hottest-${idx}`">
+        <Product 
+          v-for="(product, idx) in hottest[item].products" 
+          :key="`hottest-${idx}`" 
+          :class="idx === hottest[item].isShow ? 'active' : ''"
+        >
           <div class="item__name">{{ product.name }}</div>
           <p class="item__link">
-            <span>銷售 {{ product.volume }} 件</span>
+            <span>銷售 {{ toCurrency(product.volume) }} 件</span>
           </p>
           <StarIcon :iconUrl="require('../assets/star.svg')" 
             :word="String(product.rank)" :size="35" 
           />
           <div class="item__more">
-            <Icon :iconUrl="require('../assets/button_more.svg')" :size="30" :rotate="90"
-              @click="hottest[item].isShow = hottest[item].isShow === idx ? -1 : idx" />
+            <Icon 
+              :iconUrl="require('../assets/button_more.svg')" 
+              :size="30" 
+              :rotate="90"
+              v-if="hottest[item].isShow !== idx"
+              @click="hottest[item].isShow = hottest[item].isShow === idx ? -1 : idx" 
+            />
+            <Icon 
+              :iconUrl="require('../assets/button_more.svg')" 
+              :size="30" 
+              :rotate="-90"
+              v-if="hottest[item].isShow === idx"
+              @click="hottest[item].isShow = hottest[item].isShow === idx ? -1 : idx" 
+            />
           </div>
         </Product>
         <div class="section__show" v-if="hottest[item].isShow !== -1">
@@ -52,28 +68,49 @@
           </main>
           <Footer>
             <ButtonWrapper>
-              <Button bgColor="#05b077" @click="backTo()">接受</Button>
-              <Button bgColor="#3aafb1" @click="backTo()">沒時間</Button>
+              <Button :class="isEdit ? 'lock' : ''" bgColor="#05b077" @click="isAccept = !isAccept">接受</Button>
+              <Button :class="isEdit ? 'lock' : ''" bgColor="#efbd00" @click="backTo()">沒時間</Button>
               <Button bgColor="#616161" @click="isEdit = !isEdit">拒絕</Button>
             </ButtonWrapper>
+            <ScrollIn v-if="isAccept">
+              <p>請選擇轉介對象</p>
+              <ButtonWrapper>
+                <DropDown 
+                  text="配對顧問"
+                  :list="[{
+                    text: '原顧問',
+                    slug: 'introduce?type=current&cat=consult'
+                  }, {
+                    text: '新顧問',
+                    slug: 'introduce?type=new&cat=consult'
+                  }]" 
+                />
+                <DropDown 
+                  text="諮詢客服"
+                  :list="[{
+                    text: '客服顧問',
+                    slug: 'introduce?type=new&cat=service'
+                  }, {
+                    text: '本次客服',
+                    slug: 'introduce?type=current&cat=service'
+                  }]" 
+                />
+              </ButtonWrapper>
+            </ScrollIn>
             <ScrollIn v-if="isEdit">
-              <FormInput inputBasis="450">
-                <b-form-textarea
-                  id="textarea"
-                  v-model="noteInput"
-                  placeholder="輸入備註"
-                  rows="3"
-                  max-rows="6"
-                ></b-form-textarea>
-              </FormInput>
+              <Textarea />
               <div class="input__button">
                 <Button bgColor="#05b077">
-                  <router-link to="../">
+                  <router-link tag="div" to="../">
                     <LinkStyle>寄送預約</LinkStyle>
                   </router-link>
                 </Button>
-                <Button bgColor="#fff" textColor="#05b077">
-                  <router-link to="../">
+                <Button 
+                  bgColor="#fff" 
+                  textColor="#05b077"
+                  borderColor="#05b077"
+                >
+                  <router-link tag="div" to="../">
                     <LinkStyle textColor="#05b077">稍後再填</LinkStyle>
                   </router-link>
                 </Button>
@@ -102,13 +139,15 @@ import {
   Tab,
   LinkStyle,
   ScrollIn,
-  FormInput
 } from "../style";
 import InsuranceSection from "./insuranceSection";
 import styled from 'vue-styled-components';
 import Information from './information';
+import Textarea from './ui/textarea';
+import DropDown from './ui/dropdown';
 
-const productProps = { state: String } 
+
+const productProps = { state: String, isShow: Number } 
 const Product = styled('div', productProps)`
   position: relative;
   background: ${props => props.state == "suggest" ? "#e26c6c" : "#07c5c8"};
@@ -118,6 +157,9 @@ const Product = styled('div', productProps)`
   padding: 20px 20px 0 20px;
   border-radius: 10px;
   box-shadow: 0 2px 8px 0 rgba(226, 108, 108, 0.3);
+  &.active {
+    box-shadow: 0 4px 29px 0 rgba(0, 159, 161, 0.5);
+  }
   .item__name {
     font-weight: bold;
   }
@@ -134,6 +176,10 @@ const Product = styled('div', productProps)`
     left: 0;
     margin: 0;
     border-radius: 0px 0px 10px 10px;
+    opacity: .8;
+    & > * {
+      margin: 0 5px;
+    }
   } 
   .item__more {
     position: absolute;
@@ -196,17 +242,24 @@ export default {
     Information,
     LinkStyle,
     ScrollIn,
-    FormInput
+    Textarea,
+    DropDown
   },
   methods: {
     backTo() {
       this.$router.push('/')
+    },
+    toCurrency(num){
+      let parts = num.toString().split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return parts.join('.');
     }
   },
   data() {
     return {
       tab: "suggest",
       isEdit: false,
+      isAccept: false,
       noteInput: '',
       profile: {
         name: '林國泰',
@@ -344,7 +397,5 @@ export default {
       }
     }
   },
-  mounted: function(){
-  }
 }
 </script>
