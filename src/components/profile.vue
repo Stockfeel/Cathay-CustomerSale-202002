@@ -1,104 +1,227 @@
 <template>
-  <Modal>
-    <Header>
-      <router-link to='./'>
-        <CloseButton/>
-      </router-link>
-      <Title textAlign='center'>客戶輪廓</Title>
-    </Header>
-    <main>
-      <ProfileTable v-if="!isEdit">
-        <tr v-for="(userClass, idx) in Object.keys(user)" :key="`user-${idx}`">
-          <th>{{ user[userClass].class }}</th>
-          <td>
-            <List listDirection='row'>
-              <ListItem v-for="(item, idx) in user[userClass].data" :key="idx">{{ item }} </ListItem>
-            </List>
-          </td>
-          <td class='profile__service'>
-            <p>{{user[userClass].updateTime}}</p>
-            <p>{{user[userClass].author}} ({{user[userClass].place}})</p>
-          </td>
-        </tr>
-        <tr v-for="(interestKey, idx) in Object.keys(interests.data)" :key="`interests-${idx}`" class='profile__interest'>
-          <th v-if="!idx">{{ interestsOptions.class }}</th>
-          <th v-if="idx"></th>
-          <td>
-            <p>{{ interests.data[interestKey].class }}</p>
-            <List listDirection='row'>
-              <ListItem v-for="(item, idx) in interests.data[interestKey].data" 
-                listBasis="40%" :key="idx"> 
-            {{ item }} </ListItem>
-            </List>
-          </td>
-          <td class='profile__service'>
-            <p>{{ interests.data[interestKey].updateTime }}</p>
-            <p>{{ interests.data[interestKey].author }} ({{ interests.data[interestKey].place }})</p> 
-          </td>
-        </tr>
-      </ProfileTable>
-      <ProfileTable v-if="isEdit">
-        <tr>
-          <th>特殊狀況備註</th>
-          <td>
-            <FormWrapper>
-              <FormInput inputBasis="100%">
-                <input id="special-0" type="radio" name="special" />
-                <label for="special-0">無</label>
-              </FormInput>
-              <FormInput inputBasis="10%">
-                <input id="special-1" type="radio" name="special" />
-                <label for="special-1">有</label>
-              </FormInput>
-              <Textarea width="90%"/>
-            </FormWrapper>
-          </td>
-        </tr>
-        <tr v-for="(userClass, idx) in Object.keys(userOptions)" :key="`userOption-${idx}`">
-          <th>{{ userOptions[userClass].class }}</th>
-          <td>
-            <ProfileFormWrapper>
-              <FormInput v-for="(item, idx) in userOptions[userClass].data" 
-                inputBasis="33%" :key="idx">
-                <input :type="userOptions[userClass].type" :name="userClass" 
-                  :id="`${userClass}-${idx}`" :value="item" v-model="form[userClass]"/>
-                <label :for="`${userClass}-${idx}`" v-if="userOptions[userClass].type !== 'text'">{{ item }}</label>
-              </FormInput>
-            </ProfileFormWrapper>
-          </td>
-        </tr>
-        <tr v-for="(interestKey, idx) in Object.keys(interestsOptions.data)" 
-          :key="idx" class='profile__interest'>
-          <th v-if="!idx">{{ interestsOptions.class }}</th>
-          <th v-if="idx"></th>
-          <td>
-            <p>{{ interestsOptions.data[interestKey].class }}</p>
-            <ProfileFormWrapper>
-              <FormInput v-for="(item, idx) in interestsOptions.data[interestKey].data" 
-                inputBasis="33%" :key="`interestOption-${idx}`">
-                <input type="checkbox" :name="interestKey" 
-                  :id="`${interestKey}-${idx}`" :value="item" />
-                <label :for="`${interestKey}-${idx}`">{{ item }}</label>
-              </FormInput>
-            </ProfileFormWrapper>
-          </td>
-        </tr>
-      </ProfileTable>
-    </main>
-    <Footer>
-      <ButtonWrapper>
-        <Button v-on:click="isEdit = !isEdit" v-if="!isEdit" padding="50">編輯</Button>
-        <Button v-on:click="isEdit = !isEdit" v-if="isEdit" padding="50">儲存</Button>
-        <Button v-on:click="isEdit = !isEdit" v-if="isEdit" bgColor="#616161" padding="50">取消</Button>
-      </ButtonWrapper>
-    </Footer>
-  </Modal>
+  <div>
+    <Modal v-if="!isError">
+      <Header>
+        <router-link to='./'>
+          <CloseButton/>
+        </router-link>
+        <Title textAlign='center'>客戶輪廓</Title>
+      </Header>
+      <main>
+        <ProfileTable v-if="!isEdit && tableData != null">
+          <tr>
+            <th>特殊客戶</th>
+            <td><TableList :data="tableData.SPC_STRING.split('、')" direction="column"/></td>
+            <td class='profile__service'>
+              <p>108/12/26 10:36</p>
+              <p>陳世華 (世界服務中心)</p>
+            </td>
+          </tr>
+          <tr>
+            <th>特殊狀況備註</th>
+            <td><TableList :data="[...tableData.SPECIAL_REASON]" /></td>
+            <td class='profile__service'>
+              <p>108/12/26 10:36</p>
+              <p>陳世華 (世界服務中心)</p>
+            </td>
+          </tr>
+          <tr>
+            <th>特徵</th>
+            <td><TableList field="featureStr" :toggleEdit="toggleEdit" 
+              :data="tableData.FEATURE_STR.split('、')" /></td>
+            <td class='profile__service'>
+              <p>108/12/26 10:36</p>
+              <p>陳世華 (世界服務中心)</p>
+            </td>
+          </tr>
+          <tr>
+            <th>集團員工</th>
+            <td><TableList :data="[...tableData.EMPOLYEE]" /></td>
+            <td class='profile__service'>
+              <p>108/12/26 10:36</p>
+              <p>陳世華 (世界服務中心)</p>
+            </td>
+          </tr>
+          <tr>
+            <th>客戶標籤</th>
+            <td><TableList :data="tableData.TAG_STRING.split('、')" /></td>
+            <td class='profile__service'>
+              <p>108/12/26 10:36</p>
+              <p>陳世華 (世界服務中心)</p>
+            </td>
+          </tr>
+          <tr>
+            <th>婚姻</th>
+            <td><TableList field="marrige" :toggleEdit="toggleEdit" :data="[]" /></td>
+            <td class='profile__service'>
+              <p>108/12/26 10:36</p>
+              <p>陳世華 (世界服務中心)</p>
+            </td>
+          </tr>
+          <tr>
+            <th>子女</th>
+            <td><TableList field="child" :toggleEdit="toggleEdit" :data="[]" /></td>
+            <td class='profile__service'>
+              <p>108/12/26 10:36</p>
+              <p>陳世華 (世界服務中心)</p>
+            </td>
+          </tr>
+          <tr>
+            <th>年收入</th>
+            <td><TableList field="salary" :toggleEdit="toggleEdit" :data="[]" /></td>
+            <td class='profile__service'>
+              <p>108/12/26 10:36</p>
+              <p>陳世華 (世界服務中心)</p>
+            </td>
+          </tr>
+          <tr>
+            <th>學歷</th>
+            <td><TableList field="education" :toggleEdit="toggleEdit" :data="[]" /></td>
+            <td class='profile__service'>
+              <p>108/12/26 10:36</p>
+              <p>陳世華 (世界服務中心)</p>
+            </td>
+          </tr>
+          <tr v-for="(interestKey, idx) in Object.keys(interestsData)" :key="idx" class='profile__interest'>
+            <th v-if="!idx">興趣</th>
+            <th v-if="idx"></th>
+            <td>
+              <p>{{ interestKey }}</p>
+              <TableList :data="interestsData[interestKey]" />
+            </td>
+            <td class='profile__service'>
+              <p>108/12/26 10:36</p>
+              <p>陳世華 (世界服務中心)</p> 
+            </td>
+          </tr>
+        </ProfileTable>
+        <ProfileTable v-if="isEdit">
+          <tr>
+            <th>特殊狀況備註</th>
+            <td>
+              <FormWrapper>
+                <FormInput inputBasis="100%">
+                  <input id="special-0" type="radio" name="special" />
+                  <label for="special-0">無</label>
+                </FormInput>
+                <FormInput inputBasis="10%">
+                  <input id="special-1" type="radio" name="special" />
+                  <label for="special-1">有</label>
+                </FormInput>
+                <Textarea width="90%" v-model="form.spcString" />
+              </FormWrapper>
+            </td>
+          </tr>
+          <tr :class="`${highlightField === 'featureStr' ? 'highlight' : ''}`">
+            <th>特徵</th>
+            <td>
+              <ProfileFormWrapper>
+                <FormInput inputBasis="33%" v-for="(option, idx) in userFields.featureStr" :key="idx">
+                  <input :id="`featureStr-${idx}`" type="checkbox" :value="option" v-model="form.featureStr"/>
+                  <label :for="`featureStr-${idx}`">{{ option }}</label>
+                </FormInput> 
+              </ProfileFormWrapper>
+            </td>
+          </tr>
+          <tr :class="`${highlightField === 'marrige' ? 'highlight' : ''}`">
+            <th>婚姻</th>
+            <td>
+              <ProfileFormWrapper>
+                <FormInput inputBasis="33%" v-for="(option, idx) in userFields.marrige" :key="idx">
+                  <input :id="`marrige-${idx}`" type="radio" :value="option" v-model="form.marrige" />
+                  <label :for="`marrige-${idx}`">{{ option }}</label>
+                </FormInput> 
+              </ProfileFormWrapper>
+            </td>
+          </tr>
+          <tr :class="`${highlightField === 'child' ? 'highlight' : ''}`">
+            <th>子女</th>
+            <td>
+              <ProfileFormWrapper>
+                <FormInput inputBasis="33%">
+                  <input id="child-0" type="radio" :value="0" v-model="form.child" />
+                  <label for="child-0">無小孩</label>
+                </FormInput> 
+               <FormInput inputBasis="33%">
+                  <input id="child-1" type="radio" :value="1" v-model="form.child" />
+                  <label for="child-1">有小孩</label>
+                </FormInput> 
+              </ProfileFormWrapper>
+            </td>
+          </tr>
+          <tr :class="`${highlightField === 'salary' ? 'highlight' : ''}`">
+            <th>年收入</th>
+            <td>
+              <ProfileFormWrapper>
+                <FormInput inputBasis="33%" v-for="(option, idx) in userFields.salary" :key="idx">
+                  <input :id="`salary-${idx}`" type="radio" :value="option" v-model="form.salary" />
+                  <label :for="`salary-${idx}`">{{ option }}</label>
+                </FormInput> 
+              </ProfileFormWrapper>
+            </td>
+          </tr>
+          <tr :class="`${highlightField === 'education' ? 'highlight' : ''}`">
+            <th>學歷</th>
+            <td>
+              <ProfileFormWrapper>
+                <FormInput inputBasis="33%" v-for="(option, idx) in userFields.education" :key="idx">
+                  <input :id="`education-${idx}`" type="radio" :value="option" v-model="form.education"/>
+                  <label :for="`education-${idx}`">{{ option }}</label>
+                </FormInput> 
+              </ProfileFormWrapper>
+            </td>
+          </tr>
+          <tr v-for="(interestKey, idx) in Object.keys(interestFields)" 
+            :key="idx" 
+            class='profile__interest'
+          >
+            <th v-if="!idx">興趣</th>
+            <th v-if="idx"></th>
+            <td>
+              <p>{{ interestKey }}</p>
+              <ProfileFormWrapper>
+                <FormInput v-for="(option, idx) in interestFields[interestKey]" 
+                  inputBasis="33%" :key="`interests-${idx}`">
+                  <input type="checkbox" 
+                    :id="`${interestKey}-${idx}`" 
+                    :value="option" 
+                    v-model="form.hobbies" 
+                  />
+                  <label :for="`${interestKey}-${idx}`">{{ option }}</label>
+                </FormInput>
+              </ProfileFormWrapper>
+            </td>
+          </tr>
+        </ProfileTable>
+      </main>
+      <Footer>
+        <ButtonWrapper>
+          <Button v-if="!isEdit" :padding="50" @click="toggleEdit">編輯</Button>
+          <Button v-if="isEdit" :padding="50" @click="sendForm">儲存</Button>
+          <Button v-if="isEdit" bgColor="#616161" :padding="50" @click="toggleEdit">取消</Button>
+        </ButtonWrapper>
+      </Footer>
+    </Modal>
+    <ErrorModal v-if="isError">
+      <Header>
+        <router-link to='./'>
+          <CloseButton/>
+        </router-link>
+      </Header>
+      <main>
+        <img src="../assets/img-error.svg" />
+        <h2>Oops!</h2>
+        <h2>執行操作時發生錯誤！</h2>
+        <ButtonWrapper>
+          <Button @click="refreshPage">重新載入</Button>
+        </ButtonWrapper>
+      </main>
+    </ErrorModal>
+  </div>
 </template>
 
 <script>
 import { 
-  List, 
-  ListItem, 
   Modal, 
   Title, 
   FormWrapper, 
@@ -107,9 +230,12 @@ import {
   Button, 
   CloseButton, 
   Header, 
-  Footer } from '../style.js';
+  Footer,
+  ErrorModal } from '../style.js';
 import styled from 'vue-styled-components';
 import Textarea from './ui/textarea.vue';
+import TableList from './ui/tableList.vue';
+
 
 const profileTableProps = { isEdited: String }
 const ProfileTable = styled('table', profileTableProps)`
@@ -132,6 +258,9 @@ const ProfileTable = styled('table', profileTableProps)`
   }
   tr {
     vertical-align: top;
+    &.highlight {
+      background: rgba(227, 250, 250, 0.5);
+    }
   }
   th {
     padding: 10px 0;
@@ -182,170 +311,217 @@ export default {
     CloseButton,
     FormWrapper,
     FormInput,
-    List, 
-    ListItem,
     Header,
     Footer,
     ProfileFormWrapper,
-    Textarea
+    Textarea,
+    TableList,
+    ErrorModal
+  },
+  methods: {
+    getData() {
+      // fetch data in this function 
+      this.queryData = {
+        "AIE0_0500_bo": {
+          "ADDR_WITHDRAW": "Y", 
+          "IS_BRDY_IDENTICAL": "Y",
+          "NETINSR_LV": "1",
+          "NATION_CODE": "TW",
+          "NPS_DATA_STRING": "109/02/26網路服務",
+          "SPC_MARK": "Y",
+          "IS_CALLIN": "Y",
+          "RESN": "很不便利",
+          "MOBL_NUM_CHG": "Y",
+          "MEMO": "客戶於櫃檯詢問保單借款",
+          "FINGER": "否",
+          "ID": "E17434406C",
+          "IS_ACNT": "Y",
+          "FEATURE_STR": "慣用左手",
+          "IS_NETINSR": "Y",
+          "TAG_STRING": "旅遊族",
+          "ADDR": "台北市內湖區芝麻街",
+          "IS_INSD_SECOND": "N",
+          "NAME": "蔡○男",
+          "YK_BIRTHDAY": "1978-04-01",
+          "SECRET_CLIENT": "Y",
+          "IS_EASY_CALL": "Y",
+          "SPECIAL_DATE": "108/02/28",
+          "SPECIAL_RECORD": "Y",
+          "SIGNATURE_RCPT_NO": " N002811720 ",
+          "POLICY_NO": " 9122333539 ",
+          "POLICY_NO_DATA": [],
+          "SPC_STRING": "108/02/24法扣名單、108/01/26 申訴名單",
+          "HOBBIES": "游泳、健身、籃球",
+          "IS_BTWOC": "N",
+          "IS_W0_DATA_CHECK": "A",
+          "IS_NAME_IDENTICAL": "Y",
+          "IS_INSD": "N",
+          "LEVEL_CH": "高風險",
+          "IS_ATM": "是",
+          "ROLE": "A",
+          "IS_APPEAL": "Y",
+          "HTEL_NUM": "(02)26566999#9999",
+          "SPECIAL_REASON": "一串文字",
+          "EMAIL_WITHDRAW": "Y",
+          "IS_RCPT": "",
+          "mainList": [{
+            "DVD_KIND": 0,
+            "UN_CASH_TMS": 0,
+            "SCRT_IND": "0",
+            "INSD_ID": "E15366710L",
+            "SEC_ISD_AGE": 0,
+            "POL_PRD": 105,
+            "MNXT_PAY_DATE": "2020-08-26",
+            "ANTY_PAY_DATE": "1911-01-01",
+            "EXT_YYMM": "0000",
+            "PAY_TIMES": 1,
+            "JOB_ID": "1",
+            "MED_EXAM": 0,
+            "FACE_AMT": 260,
+            "PROD_ID": "U01",
+            "ANTY_PRD": 0,
+            "SEX": "1",
+            "PAY_PRD": 6,
+            "CLC_NO": "CU7A101",
+            "FACE_AMT_UNIT": 4,
+            "LST_CHG_DATE": "1911-01-01 00:00:00.0",
+            "SICK_Y": 0,
+            "LPS_DATE": "9999-12-31",
+            "AUTO_PREM_CODE": 1,
+            "RTN_TSO": "0",
+            "PRE_PAY_IND": 0,
+            "RPRT_TMS": 0,
+            "EFT_CODE": "00",
+            "LST_PAY_DATE": "2019-08-26",
+            "LST_CHG_KIND": "00    ",
+            "PAY_FREQ": 4,
+            "AGE": 18,
+            "RPRT_DATE": "1911-01-01",
+            "NB_APLY_NO": "NC02916995",
+            "ISSUE_DATE": "2019-08-26",
+            "POLICY_NO": "9183246221",
+            "ANTY_PAY_KIND": " ",
+            "APC_ID": "E17434406C",
+            "SALE_CHNL": "3",
+            "PREM_SPEC_KEY2": "-1",
+            "MAIN_PREM": 2086760,
+            "PREM_SPEC_KEY1": "-1",
+            "SETUP_DATE": "2019-08-27",
+            "PRCS_IND": "00"
+          }],
+          "EMAIL": "s5f4s5f@gmail.com",
+          "IS_ADDRESS_IDENTICAL": "Y",
+          "IS_SIGNATURE": "Y",
+          "CTEL_NUM": "(02)26566999#9999",
+          "VIPBO": {
+            "VIP": true,
+            "VIPOF": false,
+            "VIP_KIND": ["國泰世華銀行七星級VIP／本公司鑽石VIP(Hyper-VIP)"],
+            "VIP_LVL": ["7"],
+            "VIPF": false
+          },
+          "BIRTHDAY": "47/12/31", 
+          "EMPOLYEE": "國泰人壽-壽險資訊部-協理", 
+          "IS_ACNT_COUNT": 0,
+          "AGE": "61",
+          "IS_MOBILE_CNT_MORE_THAN_ONE": "1",
+          "HTEL_NUM_CHG": "Y",
+          "IS_EFT": "Y",
+          "REQUEST": "無",
+          "MOBL_NO": "0962513246",
+          "EMAIL_CHG": "Y",
+          "IS_MI": "Y",
+          "ZODIAC": "虎",
+          "IS_APC": "N",
+          "isBirthday": "N",
+          "CTEL_NUM_CHG": "N",
+          "CONSTELLATION": "水瓶"
+        },
+        "ErrMsg": {
+          "returnCode": 0,
+          "msgid": "",
+          "displayException": "",
+          "msgDesc": "",
+          "displayMsgDescs": "",
+          "length": 1,
+          "type": "",
+          "sysid": "",
+          "msgDescs": [""],
+          "url": ""
+        },
+          "eBAF_UserObject_Flag": "bC9ET3NaS0p4eE5WaFdFWmN3QWNOZz09",
+          "eBAF_loginSystemInfo": "a%2B%2FhFBbiquGH%2F1%2FUlm7W2qOIA8ZFukaslTfOJLKR24omGREBfdXQmPd542aw5PJr"
+      }
+      if(this.queryData.ErrMsg.returnCode === 0) {
+        this.tableData = this.queryData.AIE0_0500_bo
+        this.groupHobbies();
+        console.log(this.tableData)  
+      } else {
+        this.isError = true;
+      }
+    },
+    groupHobbies() {
+      this.interestsData = this.tableData.HOBBIES.split('、').reduce((acc, hobby) => {
+        let key = Object.keys(this.interestFields).filter(item => this.interestFields[item].includes(hobby))[0] || '其他';
+        (acc[key] = acc[key] || []).push(hobby);
+        return acc;
+      }, {});
+    },
+    sendForm() {
+      this.toggleEdit();
+    },
+    toggleEdit(field = null) {
+      if(field) {
+        this.highlightField = field;
+      } else {
+        this.highlightField = '';
+      }
+      this.isEdit = !this.isEdit;
+    },
+    refreshPage() {
+      this.$router.go({
+        path: '/',
+        force: true
+      })
+    }
   },
   data () {
     return {
-      isEdit: true,
+      isError: false,
+      isEdit: false,
+      highlightField: '',
+      tableData: null,
+      queryData: null,
+      interestsData: null,
       form: {
-        specialNotes: '情緒不穩定，於櫃檯咆哮並怒罵客服人員',
-        features: ['慣用左手', '慣用左手', '雙目失明'],
-        tags: ['旅遊愛好'],
-        marrige: '單身',
+        specialReason: '',
+        featureStr: [],
+        tagStr: '',
+        marrige: '',
         child: 0,
-        salary: '201 萬以上',
-        education: '研究所以上'
+        salary: '',
+        education: '',
+        hobbies: []
       },
-      userOptions: {
-        features: {
-          class: '特徵',
-          type: 'checkbox',
-          data: ['慣用左手','慣用左手', '雙目失明', '不識字', '失憶'], 
-        },
-        marrige: {
-          class: '婚姻',
-          type: 'radio',
-          data: ['單身', '已婚'],
-        },
-        child: {
-          class: '子女',
-          type: 'radio',
-          data: ['無小孩', '有小孩'],
-        },
-        salary: {
-          class: '年收入',
-          type: 'radio',
-          data: ['30萬以下', '31-60萬', '61-100萬', '101-200萬', '201 萬以上'],
-        },
-        education: {
-          class: '學歷',
-          type: 'radio',
-          data: ['國中以下', '高中職', '大學/專科', '研究所以上'],
-        }
+      userFields: {
+        'specialReason': '',
+        'featureStr': ['慣用左手','慣用右手', '雙目失明', '不識字', '失憶'],
+        'tagStr': ['旅遊愛好', '新手爸媽'],
+        'marrige': ['單身', '已婚'],
+        'salary': ['30萬以下', '31-60萬', '61-100萬', '101-200萬', '201 萬以上'],
+        'education': ['國中以下', '高中職', '大學/專科', '研究所以上']
       },
-      interestsOptions: {
-        class: '興趣',
-        data: {
-          exercises: {
-            type: 'checkbox',
-            class: '運動',
-            data: ['跑步', '登山', '健走', '健身', '登山', '健走', '籃球', '登山', '高爾夫']
-          },
-          entertainment: {
-            type: 'checkbox',
-            class: '休閒娛樂',
-            data: ['旅遊愛好', '文青藝文', '手遊電競', '音樂/電影/追劇', '寵物迷', '親子議題', '環保公益', '健身保健']
-          },
-          foods: {
-            type: 'checkbox',
-            class: '美食',
-            data: ['咖啡', '手搖飲', '酒', '甜點', '健康飲食', '吃貨'] 
-          },
-          shop: {
-            type: 'checkbox',
-            class: '購物',
-            data: ['網購族', '購物優惠', '精品', '美妝衣飾', '3C迷'] 
-          },
-          finance: {
-            type: 'checkbox',
-            class: '財富管理',
-            data: ['慈善樂捐', '保險保障規劃', '股票基金', '定存儲蓄', '外幣交易', '房地產', '稅務規劃'] 
-          },
-        },
-      },
-      user: {
-        specials: {
-          class: '特殊客戶',
-          author: '陳世華',
-          place: '世界服務中心',
-          updateTime: '108/12/26/10:36',
-          data: ['XXX/XX/XX 申訴名單'],
-        },
-        specialNotes: {
-          class: '特殊狀況備註',
-          author: '陳世華',
-          place: '世界服務中心',
-          updateTime: '108/12/26/10:36',
-          data: ['情緒不穩定，於櫃檯咆哮並怒罵客服人員'], 
-        },
-        features: {
-          class: '特徵',
-          author: '陳世華',
-          place: '世界服務中心',
-          updateTime: '108/12/26/10:36',
-          data: ['慣用左手','不識字'], 
-        },
-        employee: {
-          class: '集團員工',
-          author: '陳世華',
-          place: '世界服務中心',
-          updateTime: '108/12/26/10:36',
-          data: ['國壽副總'], 
-        },
-        tags: {
-          class: '客戶標籤',
-          author: '陳世華',
-          place: '世界服務中心',
-          updateTime: '108/12/26/10:36',
-          data: ['旅遊愛好','新手爸媽'],
-        },
-        marrige: {
-          class: '婚姻',
-          author: '陳世華',
-          place: '世界服務中心',
-          updateTime: '108/12/26/10:36',
-          data: ['單身'],
-        },
-        child: {
-          class: '子女',
-          author: '陳世華',
-          place: '世界服務中心',
-          updateTime: '108/12/26/10:36',
-          data: ['有小孩'],
-        },
-        salary: {
-          class: '年收入',
-          author: '陳世華',
-          place: '世界服務中心',
-          updateTime: '108/12/26/10:36',
-          data: ['201 萬以上'],
-        },
-        education: {
-          class: '學歷',
-          author: '陳世華',
-          place: '世界服務中心',
-          updateTime: '108/12/26/10:36',
-          data: ['研究所以上'],
-        }
-      },
-      interests: {
-        class: '興趣',
-        author: '陳世華',
-        place: '世界服務中心',
-        updateTime: '108/12/26/10:36',
-        data: {
-          foods: {
-            class: '美食',
-            author: '陳世華',
-            place: '世界服務中心',
-            updateTime: '108/12/26/10:36',
-            data: ['咖啡', '手搖飲', '酒', '甜點', '健康飲食', '吃貨'] 
-          },
-          exercises: {
-            class: '運動',
-            author: '陳世華',
-            place: '世界服務中心',
-            updateTime: '108/12/26/10:36',
-            data: ['籃球', '棒球']
-          }
-        },
-      },
+      interestFields: {
+        '運動': ['跑步','登山', '健走', '健身', '瑜伽', '跳舞', '籃球', '棒球', '高爾夫'],
+        '休閒娛樂': ['旅遊愛好', '文青藝文', '手遊電競', '音樂/電影/追劇', '寵物迷', '親子議題', '環保公益', '健身保健'],
+        '美食': ['咖啡', '手搖飲', '酒', '甜點', '健康飲食', '吃貨'],
+        '購物': ['網購族', '購物優惠', '精品', '美妝衣飾', '3C迷'],
+        '財富管理': ['慈善樂捐', '保險保障規劃', '股票基金', '定存儲蓄', '外幣交易', '房地產', '稅務規劃']
+      }
     }
   },
+  mounted: function(){
+    this.getData();
+  }
 }
 </script>

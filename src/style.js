@@ -665,8 +665,8 @@ export const Modal = styled('div', modalProps)`
     0 0 0 500px rgba(1,1,1,.3),
     0 0 0 500px rgba(1,1,1,.3)
     ` : `
-    0 0 0 100px rgba(1,1,1,.3),
-    0 0 0 100px rgba(1,1,1,.3)
+    0 0 0 1000px rgba(1,1,1,.3),
+    0 0 0 1000px rgba(1,1,1,.3)
   `};
 	height: ${props => props.autoHeight ? 'auto' : '90%'};
   max-height: 90%;
@@ -675,6 +675,26 @@ export const Modal = styled('div', modalProps)`
 		height: ${props => props.mainHeight || 82}%;
 		overflow-y: scroll;
 	}
+`
+
+export const ErrorModal = styled(Modal)`
+  height: 50%;
+  width: 90%;
+  main {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    h2 {
+      color: #324c5a;
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  }
 `
 
 
