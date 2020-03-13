@@ -3,7 +3,7 @@
     <Modal v-if="!isError">
       <Header>
         <router-link to='./'>
-          <CloseButton/>
+          <CloseButton />
         </router-link>
         <Title textAlign='center'>客戶輪廓</Title>
       </Header>
@@ -13,16 +13,16 @@
             <th>特殊客戶</th>
             <td><TableList :data="tableData.SPC_STRING.split('、')" direction="column"/></td>
             <td class='profile__service'>
-              <p>108/12/26 10:36</p>
-              <p>陳世華 (世界服務中心)</p>
+              <p>{{ dateParser(tableData.SPC_UPDATE_DTTM) }}</p>
+              <p>{{ tableData.SPC_UPDATE_NAME }} ({{ tableData.SPC_UPDATE_DIV_NAME }})</p>
             </td>
           </tr>
           <tr>
             <th>特殊狀況備註</th>
-            <td><TableList :data="[...tableData.SPECIAL_REASON]" /></td>
+            <td><TableList :data="tableData.SPECIAL_REASON" /></td>
             <td class='profile__service'>
-              <p>108/12/26 10:36</p>
-              <p>陳世華 (世界服務中心)</p>
+              <p>{{ dateParser(tableData.SPECIAL_REASON_UPDATE_DTTM) }}</p>
+              <p>{{ tableData.SPECIAL_REASON_UPDATE_NAME }} ({{ tableData.SPECIAL_REASON_UPDATE_DIV_NAME }})</p>
             </td>
           </tr>
           <tr>
@@ -30,56 +30,60 @@
             <td><TableList field="featureStr" :toggleEdit="toggleEdit" 
               :data="tableData.FEATURE_STR.split('、')" /></td>
             <td class='profile__service'>
-              <p>108/12/26 10:36</p>
-              <p>陳世華 (世界服務中心)</p>
+              <p>{{ dateParser(tableData.FEATURE_UPDATE_DTTM) }}</p>
+              <p>{{ tableData.FEATURE_UPDATE_NAME }} ({{ tableData.FEATURE_UPDATE_DIV_NAME }})</p>
             </td>
           </tr>
           <tr>
             <th>集團員工</th>
-            <td><TableList :data="[...tableData.EMPOLYEE]" /></td>
+            <td><TableList :data="tableData.EMPOLYEE" /></td>
             <td class='profile__service'>
-              <p>108/12/26 10:36</p>
-              <p>陳世華 (世界服務中心)</p>
+              <p>{{ dateParser(tableData.EMPOLYEE_UPDATE_DTTM) }}</p>
+              <p>{{ tableData.EMPOLYEE_UPDATE_NAME }} ({{ tableData.EMPOLYEE_UPDATE_DIV_NAME }})</p>
             </td>
           </tr>
           <tr>
             <th>客戶標籤</th>
             <td><TableList :data="tableData.TAG_STRING.split('、')" /></td>
             <td class='profile__service'>
-              <p>108/12/26 10:36</p>
-              <p>陳世華 (世界服務中心)</p>
+              <p>{{ dateParser(tableData.TAG_UPDATE_DTTM) }}</p>
+              <p>{{ tableData.TAG_UPDATE_NAME }} ({{ tableData.TAG_UPDATE_DIV_NAME }})</p>
             </td>
           </tr>
           <tr>
             <th>婚姻</th>
-            <td><TableList field="marrige" :toggleEdit="toggleEdit" :data="[]" /></td>
+            <td><TableList field="marrige" :toggleEdit="toggleEdit" 
+              :data="marrigeStatus[tableData.MARITAL_STATUS_CD]" /></td>
             <td class='profile__service'>
-              <p>108/12/26 10:36</p>
-              <p>陳世華 (世界服務中心)</p>
+              <p>{{ dateParser(tableData.MARITAL_UPDATE_DTTM) }}</p>
+              <p>{{ tableData.MARITAL_UPDATE_NAME }} ({{ tableData.MARITAL_UPDATE_DIV_NAME }})</p>
             </td>
           </tr>
           <tr>
             <th>子女</th>
-            <td><TableList field="child" :toggleEdit="toggleEdit" :data="[]" /></td>
+            <td><TableList field="child" :toggleEdit="toggleEdit" 
+              :data="Number(tableData.CHILDREN_CNT) ? '無小孩': `有小孩 ${tableData.CHILDREN_CNT} 位`" /></td>
             <td class='profile__service'>
-              <p>108/12/26 10:36</p>
-              <p>陳世華 (世界服務中心)</p>
+              <p>{{ dateParser(tableData.CHILDREN_UPDATE_DTTM) }}</p>
+              <p>{{ tableData.CHILDREN_UPDATE_NAME }} ({{ tableData.CHILDREN_UPDATE_DIV_NAME }})</p>
             </td>
           </tr>
           <tr>
             <th>年收入</th>
-            <td><TableList field="salary" :toggleEdit="toggleEdit" :data="[]" /></td>
+            <td><TableList field="salary" :toggleEdit="toggleEdit" 
+              :data="salaryTrans(tableData.ANNUAL_INCOME_AMT)" /></td>
             <td class='profile__service'>
-              <p>108/12/26 10:36</p>
-              <p>陳世華 (世界服務中心)</p>
+              <p>{{ dateParser(tableData.ANNUAL_INCOME_UPDATE_DTTM) }}</p>
+              <p>{{ tableData.ANNUAL_INCOME_UPDATE_NAME }} ({{ tableData.ANNUAL_INCOME_UPDATE_DIV_NAME }})</p>
             </td>
           </tr>
           <tr>
             <th>學歷</th>
-            <td><TableList field="education" :toggleEdit="toggleEdit" :data="[]" /></td>
+            <td><TableList field="education" :toggleEdit="toggleEdit" 
+              :data="educationStatus[tableData.EDUCATION_LEVEL_CD]" /></td>
             <td class='profile__service'>
-              <p>108/12/26 10:36</p>
-              <p>陳世華 (世界服務中心)</p>
+              <p>{{ dateParser(tableData.EDUCATION_UPDATE_DTTM) }}</p>
+              <p>{{ tableData.EDUCATION_UPDATE_NAME }} ({{ tableData.EDUCATION_UPDATE_DIV_NAME }})</p>
             </td>
           </tr>
           <tr v-for="(interestKey, idx) in Object.keys(interestsData)" :key="idx" class='profile__interest'>
@@ -90,15 +94,15 @@
               <TableList :data="interestsData[interestKey]" />
             </td>
             <td class='profile__service'>
-              <p>108/12/26 10:36</p>
-              <p>陳世華 (世界服務中心)</p> 
+              <p>{{ dateParser(tableData.HOBBIES_UPDATE_DTTM) }}</p>
+              <p>{{ tableData.HOBBIES_UPDATE_NAME }} ({{ tableData.HOBBIES_UPDATE_DIV_NAME }})</p>
             </td>
           </tr>
         </ProfileTable>
         <ProfileTable v-if="isEdit">
           <tr>
             <th>特殊狀況備註</th>
-            <td>
+            <td class='profile__form'>
               <FormWrapper>
                 <FormInput inputBasis="100%">
                   <input id="special-0" type="radio" name="special" />
@@ -108,13 +112,13 @@
                   <input id="special-1" type="radio" name="special" />
                   <label for="special-1">有</label>
                 </FormInput>
-                <Textarea width="90%" v-model="form.spcString" />
+                <Textarea width="80%" v-model="form.spcString" />
               </FormWrapper>
             </td>
           </tr>
           <tr :class="`${highlightField === 'featureStr' ? 'highlight' : ''}`">
             <th>特徵</th>
-            <td>
+            <td class='profile__form'>
               <ProfileFormWrapper>
                 <FormInput inputBasis="33%" v-for="(option, idx) in userFields.featureStr" :key="idx">
                   <input :id="`featureStr-${idx}`" type="checkbox" :value="option" v-model="form.featureStr"/>
@@ -125,7 +129,7 @@
           </tr>
           <tr :class="`${highlightField === 'marrige' ? 'highlight' : ''}`">
             <th>婚姻</th>
-            <td>
+            <td class='profile__form'>
               <ProfileFormWrapper>
                 <FormInput inputBasis="33%" v-for="(option, idx) in userFields.marrige" :key="idx">
                   <input :id="`marrige-${idx}`" type="radio" :value="option" v-model="form.marrige" />
@@ -136,7 +140,7 @@
           </tr>
           <tr :class="`${highlightField === 'child' ? 'highlight' : ''}`">
             <th>子女</th>
-            <td>
+            <td class='profile__form'>
               <ProfileFormWrapper>
                 <FormInput inputBasis="33%">
                   <input id="child-0" type="radio" :value="0" v-model="form.child" />
@@ -151,7 +155,7 @@
           </tr>
           <tr :class="`${highlightField === 'salary' ? 'highlight' : ''}`">
             <th>年收入</th>
-            <td>
+            <td class='profile__form'>
               <ProfileFormWrapper>
                 <FormInput inputBasis="33%" v-for="(option, idx) in userFields.salary" :key="idx">
                   <input :id="`salary-${idx}`" type="radio" :value="option" v-model="form.salary" />
@@ -162,7 +166,7 @@
           </tr>
           <tr :class="`${highlightField === 'education' ? 'highlight' : ''}`">
             <th>學歷</th>
-            <td>
+            <td class='profile__form'>
               <ProfileFormWrapper>
                 <FormInput inputBasis="33%" v-for="(option, idx) in userFields.education" :key="idx">
                   <input :id="`education-${idx}`" type="radio" :value="option" v-model="form.education"/>
@@ -177,7 +181,7 @@
           >
             <th v-if="!idx">興趣</th>
             <th v-if="idx"></th>
-            <td>
+            <td class='profile__form'>
               <p>{{ interestKey }}</p>
               <ProfileFormWrapper>
                 <FormInput v-for="(option, idx) in interestFields[interestKey]" 
@@ -242,6 +246,7 @@ const ProfileTable = styled('table', profileTableProps)`
   border-collapse: collapse;
   width: 90%;
   margin: 0 auto; 
+  table-layout: fixed;
   p{
     margin: 0;
   } 
@@ -277,6 +282,7 @@ const ProfileTable = styled('table', profileTableProps)`
     border-bottom: 1px solid grey;
     color: #324c5a;
     font-size: 16px;
+    max-width: 70%;
     & > p {
       font-size: 14px;
       color: #628ea7;
@@ -287,6 +293,9 @@ const ProfileTable = styled('table', profileTableProps)`
       p {
         margin: 0;
       }
+    }
+    &.profile__form {
+      max-width: 70%;
     }
   }
 `
@@ -320,7 +329,7 @@ export default {
   },
   methods: {
     getData() {
-      // fetch data in this function 
+      // fetch data in this method 
       this.queryData = {
         "AIE0_0500_bo": {
           "ADDR_WITHDRAW": "Y", 
@@ -337,8 +346,16 @@ export default {
           "ID": "E17434406C",
           "IS_ACNT": "Y",
           "FEATURE_STR": "慣用左手",
+          "FEATURE_UPDATE_DIV_NAME": "忠孝服務二",
+          "FEATURE_UPDATE_ID": "M12269641A", 
+          "FEATURE_UPDATE_NAME": "余○珍", 
+          "FEATURE_UPDATE_DTTM": "2019-11-21 00:00:00.0",
           "IS_NETINSR": "Y",
           "TAG_STRING": "旅遊族",
+          "TAG_UPDATE_DIV_NAME": "忠孝服務二",
+          "TAG_UPDATE_ID": "M12269641A", 
+          "TAG_UPDATE_NAME": "余○珍", 
+          "TAG_UPDATE_DTTM": "2019-11-21 00:00:00.0",
           "ADDR": "台北市內湖區芝麻街",
           "IS_INSD_SECOND": "N",
           "NAME": "蔡○男",
@@ -351,7 +368,15 @@ export default {
           "POLICY_NO": " 9122333539 ",
           "POLICY_NO_DATA": [],
           "SPC_STRING": "108/02/24法扣名單、108/01/26 申訴名單",
+          "SPC_UPDATE_DIV_NAME": "忠孝服務二",
+          "SPC_UPDATE_ID": "M12269641A", 
+          "SPC_UPDATE_NAME": "余○珍", 
+          "SPC_UPDATE_DTTM": "2019-11-21 00:00:00.0",
           "HOBBIES": "游泳、健身、籃球",
+          "HOBBIES_UPDATE_DIV_NAME": "忠孝服務二",
+          "HOBBIES_UPDATE_ID": "M12269641A", 
+          "HOBBIES_UPDATE_NAME": "余○珍", 
+          "HOBBIES_UPDATE_DTTM": "2019-11-21 00:00:00.0",
           "IS_BTWOC": "N",
           "IS_W0_DATA_CHECK": "A",
           "IS_NAME_IDENTICAL": "Y",
@@ -362,6 +387,10 @@ export default {
           "IS_APPEAL": "Y",
           "HTEL_NUM": "(02)26566999#9999",
           "SPECIAL_REASON": "一串文字",
+          "SPECIAL_REASON_UPDATE_DIV_NAME": "忠孝服務二",
+          "SPECIAL_REASON_UPDATE_ID": "M12269641A", 
+          "SPECIAL_REASON_UPDATE_NAME": "余○珍", 
+          "SPECIAL_REASON_UPDATE_DTTM": "2019-11-21 00:00:00.0",
           "EMAIL_WITHDRAW": "Y",
           "IS_RCPT": "",
           "mainList": [{
@@ -422,6 +451,10 @@ export default {
           },
           "BIRTHDAY": "47/12/31", 
           "EMPOLYEE": "國泰人壽-壽險資訊部-協理", 
+          "EMPOLYEE_UPDATE_DIV_NAME": "忠孝服務二",
+          "EMPOLYEE_UPDATE_ID": "M12269641A", 
+          "EMPOLYEE_UPDATE_NAME": "余○珍", 
+          "EMPOLYEE_UPDATE_DTTM": "2019-11-21 00:00:00.0",
           "IS_ACNT_COUNT": 0,
           "AGE": "61",
           "IS_MOBILE_CNT_MORE_THAN_ONE": "1",
@@ -435,7 +468,53 @@ export default {
           "IS_APC": "N",
           "isBirthday": "N",
           "CTEL_NUM_CHG": "N",
-          "CONSTELLATION": "水瓶"
+          "CONSTELLATION": "水瓶",
+          "CHILDREN_SOURCE_CD": "公司網站會員資料",
+          "RETURNCODE": "0000",
+          "MARITAL_KEY": "123",
+          "CHILDREN_UPDATE_DIV_NAME": "忠孝服務二", 
+          "CHILDREN_UPDATE_ID": "M12269641A", 
+          "CHILDREN_UPDATE_NAME": "余○珍", 
+          "ANNUAL_INCOME_UPDATE_DTTM": "2019-11-21 00:00:00.0", 
+          "ANNUAL_INCOME_AMT": "2500000",
+          "FIRST_NM": "無○",
+          "MARITAL_UPDATE_DIV_NAME": "忠孝服務二",
+          "MARITAL_UPDATE_ID": "M12269641A", 
+          "MARITAL_UPDATE_NAME": "余○珍", 
+          "MARITAL_UPDATE_DTTM": "2019-11-21 00:00:00.0",
+          "EDUCATION_KEY": "",
+          "STD_OCCUPATION_NM": "廚具商",
+          "PROCESSED_DTTM": "2019-11-21 00:00:00.0",
+          "OCCUPATION_UPDATE_ID": "",
+          "EDUCATION_UPDATE_DIV_NAME": "忠孝服務二",
+          "EDUCATION_UPDATE_ID": " M12269641A ",
+          "EDUCATION_UPDATE_NAME": "余○珍",
+          "MARITAL_STATUS_CD": "1",
+          "CHILDREN_POLICY_NO": "333",
+          "ANNUAL_INCOME_UPDATE_DIV_NAME": "忠孝服務二",
+          "ANNUAL_INCOME_UPDATE_ID": "M12269641A",
+          "ANNUAL_INCOME_UPDATE_NAME": "余○珍",
+          "MARITAL_POLICY_NO": "123",
+          "OCCUPATION_TITLE": "BOSS",
+          "CHILDREN_CNT": "3",
+          "OCCUPATION_UPDATE_DTTM": "2019-11-21 00:00:00.0",
+          "EDUCATION_SOURCE_CD": "保全變更(線上服務)",
+          "MARITAL_SOURCE_CD": "3",
+          "ANNUAL_INCOME_SOURCE_CD": "0800", 
+          "STD_OCCUPATION_CD": "15000010",
+          "ANNUAL_INCOME_POLICY_NO": "",
+          "EDUCATION_POLICY_NO": "",
+          "CHILDREN_KEY": "222",
+          "OCCUPATION_POLICY_NO": "",
+          "OCCUPATION_KEY": "",
+          "CODEMSG": "查詢成功",
+          "CHILDREN_UPDATE_DTTM": "2019-11-21 00:00:00.0",
+          "ANNUAL_INCOME_KEY": "",
+          "EDUCATION_UPDATE_DTTM": "2019-11-21 00:00:00.0",
+          "OCCUPATION_CLASS_CD": "4",
+          "OCCUPATION_COMPANY": "大數",
+          "OCCUPATION_SOURCE_CD": "4",
+          "EDUCATION_LEVEL_CD": "2"
         },
         "ErrMsg": {
           "returnCode": 0,
@@ -483,6 +562,18 @@ export default {
         path: '/',
         force: true
       })
+    },
+    salaryTrans(salaryStr) {
+      const salaryNum = Number(salaryStr);
+      if(salaryNum < 310000) return '30萬以下';
+      else if(salaryNum >= 310000 && salaryNum < 610000) return '31-60萬';
+      else if(salaryNum >= 610000 && salaryNum < 1010000) return '61-100萬';
+      else if(salaryNum >= 1010000 && salaryNum < 2010000) return '101-200萬';
+      else return '201 萬以上'; 
+    },
+    dateParser(timeStr) {
+      if(timeStr) return `${timeStr.split(' ')[0]} ${timeStr.split(' ')[1].split(':').slice(0, 2).join(':')}`;
+      else timeStr; 
     }
   },
   data () {
@@ -493,6 +584,17 @@ export default {
       tableData: null,
       queryData: null,
       interestsData: null,
+      educationStatus:{
+        "1": "國中及以下",
+        "2": "高中職",
+        "3": "大學專科",
+        "4": "研究所以上"
+      },
+      marrigeStatus: {
+        "0": "未婚",
+        "1": "已婚",
+        "2": "其他"
+      },
       form: {
         specialReason: '',
         featureStr: [],

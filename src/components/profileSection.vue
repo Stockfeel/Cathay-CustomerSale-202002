@@ -24,21 +24,21 @@
         <Title textAlign='left'>
           {{ user.name }} ({{ user.age }} 歲)
           <span class="icon__wrapper"> 
-            <Icon :iconUrl="require('../assets/icon-profile-birth.svg')" :size="25"/>
-            <Icon :iconUrl="require('../assets/icon-profile-secret.svg')" :size="25"/>
-            <Icon :iconUrl="require('../assets/icon-profile-vip.svg')" :size="25"/>
+            <Icon v-if="isSecret === Y ? true : false" :iconUrl="require('../assets/icon-profile-birth.svg')" :size="25"/>
+            <Icon v-if="isBirthday === Y ? true : false" :iconUrl="require('../assets/icon-profile-secret.svg')" :size="25"/>
+            <Icon v-if="isVip" :iconUrl="require('../assets/icon-profile-vip.svg')" :size="25"/>
           </span>
         </Title>
         <List listDirection='column'>
           <ListItem>特殊客戶：
-            <span v-for="(special, idx) in user.specials" :key="idx">{{ idx ? '、': ''}} {{ special }}</span>
+            <span>{{ user.specials }}</span>
           </ListItem>
           <ListItem>特徵： 
-            <span v-for="(tag, idx) in user.features" :key="idx">{{ idx ? '、': ''}}{{ tag }}</span>
+            <span>{{ user.features }}</span>
           </ListItem>
           <ListItem>集團員工： {{ user.employee }}</ListItem>
           <ListItem>客戶標籤：
-            <span v-for="(tag, idx) in user.tags" :key="idx">{{ idx ? '、': ''}}{{ tag }}</span>
+            <span>{{ user.tags }}</span>
           </ListItem>
         </List>
         <router-link tag="div" to='./profile'>

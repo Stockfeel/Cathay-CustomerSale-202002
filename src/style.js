@@ -13,11 +13,23 @@ export const InitialLayout = injectGlobal`
 	  font-family: 'Lato', 'Noto Sans TC';
 	  padding: 0;
 	  margin: 0;
+    scrollbar-base-color: #000;
+    scrollbar-face-color: rgba(147, 209, 209, 0.3);
+    scrollbar-highlight-color: white;
+    scrollbar-track-color: white;
+    scrollbar-arrow-color: white;
+    scrollbar-shadow-color: white;
+    scrollbar-dark-shadow-color: white;
 	}
 	#app, html, body {
 	  width: 100%;
 	  margin: 0;
 	}
+
+  *::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: rgba(147, 209, 209, 0.3);
+  }
 `
 
 // Atoms
@@ -130,7 +142,7 @@ export const FormInput = styled('div', formInputProps)`
   position: relative;
 	display: flex;
 	align-items: center;
-	width: ${props => props.inputBasis};
+	width: ${props => props.inputBasis || '100%'};
 	margin: 0;
 	font-size: 14px;
 	input {
@@ -174,24 +186,32 @@ export const FormInput = styled('div', formInputProps)`
 		}
 	}
 	input[type="checkbox"] {
-		position: relative;
+    position: relative;
+    display: none;
     -webkit-appearance: none;
-    vertical-align: middle;
-    background: #fff;
-    border: ${color.primary} solid 1px;
-    border-radius: 3px;
-    min-height: 12px;
-    min-width: 12px;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    background-color: white;
+    box-shadow: 0 0 0 3px white, 0 0 0 4px ${color.primary};
+    width: 100%;
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    cursor: pointer;
     &:focus {
     	outline: none;
     }
     &:checked {
-    	background: ${color.primary};	    	
-    	&::after {
+    	background: ${color.primary};	  
+      box-shadow: 0 0 0 3px ${color.primary}, 0 0 0 4px ${color.primary}; 	
+    	& + label::before {
 		    content: '';
-		    top: 2px;
-		    left: 1px;
+		    margin-left: -12px;
+        margin-top: 11px;
 		    z-index: 2;
+        border: 1px solid black;
 		    position: absolute;
 		    background: transparent;
 		    border: #fff solid 2px;
@@ -199,11 +219,14 @@ export const FormInput = styled('div', formInputProps)`
 		    border-right: none;
 		    height: 4px;
 		    width: 8px;
-		    -moz-transform: rotate(-45deg);
-		    -ms-transform: rotate(-45deg);
-		    -webkit-transform: rotate(-45deg); 
-		    transform: rotate(-45deg);	
+		    -moz-transform: translate(-50%, -50%) rotate(-45deg);
+		    -ms-transform: translate(-50%, -50%) rotate(-45deg);
+		    -webkit-transform: translate(-50%, -50%) rotate(-45deg); 
+		    transform: translate(-50%, -50%) rotate(-45deg);	
     	}
+    }
+    &::-ms-check {
+      display: none;
     }
 	}
 	input[type='radio'] {
@@ -294,15 +317,11 @@ export const CloseButton = styled.div`
   width: 30px;
   height: 30px;
   cursor: pointer;
-  position: fixed;
-  right: 10px;
-  top: 10px;
 `
 
 export const DropDownButton = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+  display: inline-block;
+  text-align: center;
   background: #05b077;
   box-shadow: 0 4px 12px 0 #85cbcb;
   border-radius: 20px;
@@ -310,6 +329,9 @@ export const DropDownButton = styled.div`
   width: 105px;
   padding: 5px 0;
   cursor: pointer;
+  & > * {
+    margin: 0 5px;
+  }
 `
 
 const moreProps = { align: String };
@@ -453,10 +475,15 @@ export const Header = styled.div`
 	align-items: center;
 	width: 100%;
 	height: 8%; 
+  a {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
 `
 
 export const Footer = styled.div`
-  position: fixed;
+  position: absolute;
   display: flex;
   z-index: 1;
   flex-direction: column;

@@ -1,7 +1,10 @@
 <template>
   <div>
-    <List v-if='data.length > 0' :listDirection="direction || 'row'">
+    <List v-if="data.length > 0 && Array.isArray(data)" :listDirection="direction || 'row'">
       <ListItem v-for="(item, idx) in data" :key="idx">{{ item }}</ListItem>
+    </List>
+    <List v-if="data.length > 0 && !Array.isArray(data)" :listDirection="direction || 'row'">
+      <ListItem>{{ data }}</ListItem>
     </List>
     <WarningText v-if='data.length === 0'>
       尚無資料，詢問搜集輪廓吧！
@@ -28,12 +31,7 @@ const WarningText = styled.div`
 
 export default {
   name: 'TableList',
-  props: {
-    field: String,
-    data: Array, 
-    toggleEdit: Function,
-    direction: String
-  },
+  props: ['field', 'data', 'toggleEdit', 'direction'],
   components: {
     List,
     ListItem,

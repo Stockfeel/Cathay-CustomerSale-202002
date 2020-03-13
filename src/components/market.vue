@@ -79,7 +79,7 @@
               </FormInput>
               <div class="input__date">
                 <FormInput>
-                  <input type="checkbox" v-if="item.edit" :checked="item.note.date ? true : false" v-model="item.note.isBook" />
+                  <input type="checkbox" v-if="item.edit" v-model="item.note.isBook" />
                   <span v-if="!item.edit && item.note.date">•</span>
                   <span v-if="item.note.date || item.edit">預約聯絡</span>
                 </FormInput>
