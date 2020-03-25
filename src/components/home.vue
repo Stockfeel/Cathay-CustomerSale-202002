@@ -1,13 +1,16 @@
 <template>
-  <HomeLayout>
-    <div class="time">
-      00:08:14
-      <div class="time__tooltip">已服務時間</div>
-    </div>
-    <ProfileSection v-if="user !== null" :user="user" :service="service"/>
-    <MarketSection :market="market" />
-    <SuggestSection :service="suggest.service" :product="suggest.product"/>
-  </HomeLayout>
+  <div>
+    <Loading v-if="isLoading" />
+    <HomeLayout v-if="!isLoading">
+      <div class="time">
+        00:08:14
+        <div class="time__tooltip">已服務時間</div>
+      </div>
+      <ProfileSection v-if="user !== null" :user="user" :service="service"/>
+      <MarketSection :market="market" />
+      <SuggestSection :service="suggest.service" :product="suggest.product"/>
+    </HomeLayout>
+  </div>
 </template>
 
 <script>
@@ -15,10 +18,13 @@ import ProfileSection from './profileSection.vue';
 import MarketSection from './marketSection.vue';
 import SuggestSection from './suggestSection.vue';
 import styled from 'vue-styled-components';
+import homeProfile from '../data/homeProfile.json';
+import Loading from "./ui/loading.vue";
 
 const HomeLayout = styled.div`
   background: #d2f8f3;
   width: 100%;
+  height: 100%;
   border: solid 1px #000;
   display: flex;
   flex-direction: column;
@@ -63,220 +69,47 @@ export default {
   name: 'Home',
   methods: {
     getData() {
-      this.queryData = {
-        "AIE0_0500_bo": {
-          "ADDR_WITHDRAW": "Y", 
-          "IS_BRDY_IDENTICAL": "Y",
-          "NETINSR_LV": "1",
-          "NATION_CODE": "TW",
-          "NPS_DATA_STRING": "109/02/26網路服務",
-          "SPC_MARK": "Y",
-          "IS_CALLIN": "Y",
-          "RESN": "很不便利",
-          "MOBL_NUM_CHG": "Y",
-          "MEMO": "客戶於櫃檯詢問保單借款",
-          "FINGER": "否",
-          "ID": "E17434406C",
-          "IS_ACNT": "Y",
-          "FEATURE_STR": "慣用左手",
-          "FEATURE_UPDATE_DIV_NAME": "忠孝服務二",
-          "FEATURE_UPDATE_ID": "M12269641A", 
-          "FEATURE_UPDATE_NAME": "余○珍", 
-          "FEATURE_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "IS_NETINSR": "Y",
-          "TAG_STRING": "旅遊族",
-          "TAG_UPDATE_DIV_NAME": "忠孝服務二",
-          "TAG_UPDATE_ID": "M12269641A", 
-          "TAG_UPDATE_NAME": "余○珍", 
-          "TAG_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "ADDR": "台北市內湖區芝麻街",
-          "IS_INSD_SECOND": "N",
-          "NAME": "蔡○男",
-          "YK_BIRTHDAY": "1978-04-01",
-          "SECRET_CLIENT": "Y",
-          "IS_EASY_CALL": "Y",
-          "SPECIAL_DATE": "108/02/28",
-          "SPECIAL_RECORD": "Y",
-          "SIGNATURE_RCPT_NO": " N002811720 ",
-          "POLICY_NO": " 9122333539 ",
-          "POLICY_NO_DATA": [],
-          "SPC_STRING": "108/02/24法扣名單、108/01/26 申訴名單",
-          "SPC_UPDATE_DIV_NAME": "忠孝服務二",
-          "SPC_UPDATE_ID": "M12269641A", 
-          "SPC_UPDATE_NAME": "余○珍", 
-          "SPC_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "HOBBIES": "游泳、健身、籃球",
-          "HOBBIES_UPDATE_DIV_NAME": "忠孝服務二",
-          "HOBBIES_UPDATE_ID": "M12269641A", 
-          "HOBBIES_UPDATE_NAME": "余○珍", 
-          "HOBBIES_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "IS_BTWOC": "N",
-          "IS_W0_DATA_CHECK": "A",
-          "IS_NAME_IDENTICAL": "Y",
-          "IS_INSD": "N",
-          "LEVEL_CH": "高風險",
-          "IS_ATM": "是",
-          "ROLE": "A",
-          "IS_APPEAL": "Y",
-          "HTEL_NUM": "(02)26566999#9999",
-          "SPECIAL_REASON": "一串文字",
-          "SPECIAL_REASON_UPDATE_DIV_NAME": "忠孝服務二",
-          "SPECIAL_REASON_UPDATE_ID": "M12269641A", 
-          "SPECIAL_REASON_UPDATE_NAME": "余○珍", 
-          "SPECIAL_REASON_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "EMAIL_WITHDRAW": "Y",
-          "IS_RCPT": "",
-          "mainList": [{
-            "DVD_KIND": 0,
-            "UN_CASH_TMS": 0,
-            "SCRT_IND": "0",
-            "INSD_ID": "E15366710L",
-            "SEC_ISD_AGE": 0,
-            "POL_PRD": 105,
-            "MNXT_PAY_DATE": "2020-08-26",
-            "ANTY_PAY_DATE": "1911-01-01",
-            "EXT_YYMM": "0000",
-            "PAY_TIMES": 1,
-            "JOB_ID": "1",
-            "MED_EXAM": 0,
-            "FACE_AMT": 260,
-            "PROD_ID": "U01",
-            "ANTY_PRD": 0,
-            "SEX": "1",
-            "PAY_PRD": 6,
-            "CLC_NO": "CU7A101",
-            "FACE_AMT_UNIT": 4,
-            "LST_CHG_DATE": "1911-01-01 00:00:00.0",
-            "SICK_Y": 0,
-            "LPS_DATE": "9999-12-31",
-            "AUTO_PREM_CODE": 1,
-            "RTN_TSO": "0",
-            "PRE_PAY_IND": 0,
-            "RPRT_TMS": 0,
-            "EFT_CODE": "00",
-            "LST_PAY_DATE": "2019-08-26",
-            "LST_CHG_KIND": "00    ",
-            "PAY_FREQ": 4,
-            "AGE": 18,
-            "RPRT_DATE": "1911-01-01",
-            "NB_APLY_NO": "NC02916995",
-            "ISSUE_DATE": "2019-08-26",
-            "POLICY_NO": "9183246221",
-            "ANTY_PAY_KIND": " ",
-            "APC_ID": "E17434406C",
-            "SALE_CHNL": "3",
-            "PREM_SPEC_KEY2": "-1",
-            "MAIN_PREM": 2086760,
-            "PREM_SPEC_KEY1": "-1",
-            "SETUP_DATE": "2019-08-27",
-            "PRCS_IND": "00"
-          }],
-          "EMAIL": "s5f4s5f@gmail.com",
-          "IS_ADDRESS_IDENTICAL": "Y",
-          "IS_SIGNATURE": "Y",
-          "CTEL_NUM": "(02)26566999#9999",
-          "VIPBO": {
-            "VIP": true,
-            "VIPOF": false,
-            "VIP_KIND": ["國泰世華銀行七星級VIP／本公司鑽石VIP(Hyper-VIP)"],
-            "VIP_LVL": ["7"],
-            "VIPF": false
-          },
-          "BIRTHDAY": "47/12/31", 
-          "EMPOLYEE": "國泰人壽-壽險資訊部-協理", 
-          "EMPOLYEE_UPDATE_DIV_NAME": "忠孝服務二",
-          "EMPOLYEE_UPDATE_ID": "M12269641A", 
-          "EMPOLYEE_UPDATE_NAME": "余○珍", 
-          "EMPOLYEE_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "IS_ACNT_COUNT": 0,
-          "AGE": "61",
-          "IS_MOBILE_CNT_MORE_THAN_ONE": "1",
-          "HTEL_NUM_CHG": "Y",
-          "IS_EFT": "Y",
-          "REQUEST": "無",
-          "MOBL_NO": "0962513246",
-          "EMAIL_CHG": "Y",
-          "IS_MI": "Y",
-          "ZODIAC": "虎",
-          "IS_APC": "N",
-          "isBirthday": "N",
-          "CTEL_NUM_CHG": "N",
-          "CONSTELLATION": "水瓶",
-          "CHILDREN_SOURCE_CD": "公司網站會員資料",
-          "RETURNCODE": "0000",
-          "MARITAL_KEY": "123",
-          "CHILDREN_UPDATE_DIV_NAME": "忠孝服務二", 
-          "CHILDREN_UPDATE_ID": "M12269641A", 
-          "CHILDREN_UPDATE_NAME": "余○珍", 
-          "ANNUAL_INCOME_UPDATE_DTTM": "2019-11-21 00:00:00.0", 
-          "ANNUAL_INCOME_AMT": "2500000",
-          "FIRST_NM": "無○",
-          "MARITAL_UPDATE_DIV_NAME": "忠孝服務二",
-          "MARITAL_UPDATE_ID": "M12269641A", 
-          "MARITAL_UPDATE_NAME": "余○珍", 
-          "MARITAL_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "EDUCATION_KEY": "",
-          "STD_OCCUPATION_NM": "廚具商",
-          "PROCESSED_DTTM": "2019-11-21 00:00:00.0",
-          "OCCUPATION_UPDATE_ID": "",
-          "EDUCATION_UPDATE_DIV_NAME": "忠孝服務二",
-          "EDUCATION_UPDATE_ID": " M12269641A ",
-          "EDUCATION_UPDATE_NAME": "余○珍",
-          "MARITAL_STATUS_CD": "1",
-          "CHILDREN_POLICY_NO": "333",
-          "ANNUAL_INCOME_UPDATE_DIV_NAME": "忠孝服務二",
-          "ANNUAL_INCOME_UPDATE_ID": "M12269641A",
-          "ANNUAL_INCOME_UPDATE_NAME": "余○珍",
-          "MARITAL_POLICY_NO": "123",
-          "OCCUPATION_TITLE": "BOSS",
-          "CHILDREN_CNT": "3",
-          "OCCUPATION_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "EDUCATION_SOURCE_CD": "保全變更(線上服務)",
-          "MARITAL_SOURCE_CD": "3",
-          "ANNUAL_INCOME_SOURCE_CD": "0800", 
-          "STD_OCCUPATION_CD": "15000010",
-          "ANNUAL_INCOME_POLICY_NO": "",
-          "EDUCATION_POLICY_NO": "",
-          "CHILDREN_KEY": "222",
-          "OCCUPATION_POLICY_NO": "",
-          "OCCUPATION_KEY": "",
-          "CODEMSG": "查詢成功",
-          "CHILDREN_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "ANNUAL_INCOME_KEY": "",
-          "EDUCATION_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "OCCUPATION_CLASS_CD": "4",
-          "OCCUPATION_COMPANY": "大數",
-          "OCCUPATION_SOURCE_CD": "4",
-          "EDUCATION_LEVEL_CD": "2"
-        },
-        "ErrMsg": {
-          "returnCode": 0,
-          "msgid": "",
-          "displayException": "",
-          "msgDesc": "",
-          "displayMsgDescs": "",
-          "length": 1,
-          "type": "",
-          "sysid": "",
-          "msgDescs": [""],
-          "url": ""
-        },
-          "eBAF_UserObject_Flag": "bC9ET3NaS0p4eE5WaFdFWmN3QWNOZz09",
-          "eBAF_loginSystemInfo": "a%2B%2FhFBbiquGH%2F1%2FUlm7W2qOIA8ZFukaslTfOJLKR24omGREBfdXQmPd542aw5PJr"
+      this.queryData = homeProfile;
+      const educationStatus = {
+        "1": "國中及以下",
+        "2": "高中職",
+        "3": "大學專科",
+        "4": "研究所以上"
       }
+      const marrigeStatus = {
+        "0": "未婚",
+        "1": "已婚",
+        "2": "其他"
+      }
+
       if(this.queryData.ErrMsg.returnCode === 0) {
+        // profile data show order 
+        const data = {
+            "特殊客戶": this.queryData.AIE0_0500_bo.SPC_STRING,
+            "特殊狀態備註": this.queryData.AIE0_0500_bo.SPECIAL_RECORD === "Y" ? "有" : "沒有",
+            "客戶特徵": this.queryData.AIE0_0500_bo.FEATURE_STR,
+            "集團員工": this.queryData.AIE0_0500_bo.EMPOLYEE,
+            "客戶標籤": this.queryData.AIE0_0500_bo.TAG_STRING,
+            "婚姻": marrigeStatus[this.queryData.AIE0_0500_bo.MARITAL_STATUS_CD],
+            "子女": this.queryData.AIE0_0500_bo.CHILDREN_CNT,
+            "年收入": this.queryData.AIE0_0500_bo.ANNUAL_INCOME_AMT,
+            "學歷": educationStatus[this.queryData.AIE0_0500_bo.EDUCATION_LEVEL_CD],
+            "興趣": this.queryData.AIE0_0500_bo.HOBBIES,
+          }
+
+        const info = Object.keys(data).filter(item => data[item]).slice(0, 4).reduce((acc, item) => {
+              acc[item] = data[item];
+              return acc;
+            }, {})
+
         this.user = {
           name: this.queryData.AIE0_0500_bo.NAME,
           age: this.queryData.AIE0_0500_bo.AGE,
-          specials: this.queryData.AIE0_0500_bo.SPC_STRING,
-          features: this.queryData.AIE0_0500_bo.FEATURE_STR,
-          employee: this.queryData.AIE0_0500_bo.EMPOLYEE,
-          tags: this.queryData.AIE0_0500_bo.TAG_STRING,
+          info,
           isSecret: this.queryData.AIE0_0500_bo.SECRET_CLIENT,
           isBirthday: this.queryData.AIE0_0500_bo.isBirthday,
           isVip: this.queryData.AIE0_0500_bo.VIPBO.VIP,
         }
-        console.log(this.user)  
       } else {
         this.isError = true;
       }
@@ -284,6 +117,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       queryData: null,
       user: null,
       service: {
@@ -384,7 +218,8 @@ export default {
     ProfileSection,
     MarketSection,
     SuggestSection,
-    HomeLayout
+    HomeLayout,
+    Loading
   },
   mounted: function(){
     this.getData();

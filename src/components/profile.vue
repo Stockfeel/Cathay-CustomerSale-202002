@@ -1,226 +1,223 @@
 <template>
   <div>
-    <Modal v-if="!isError">
-      <Header>
-        <router-link to='./'>
-          <CloseButton />
-        </router-link>
-        <Title textAlign='center'>客戶輪廓</Title>
-      </Header>
-      <main>
-        <ProfileTable v-if="!isEdit && tableData != null">
-          <tr>
-            <th>特殊客戶</th>
-            <td><TableList :data="tableData.SPC_STRING.split('、')" direction="column"/></td>
-            <td class='profile__service'>
-              <p>{{ dateParser(tableData.SPC_UPDATE_DTTM) }}</p>
-              <p>{{ tableData.SPC_UPDATE_NAME }} ({{ tableData.SPC_UPDATE_DIV_NAME }})</p>
-            </td>
-          </tr>
-          <tr>
-            <th>特殊狀況備註</th>
-            <td><TableList :data="tableData.SPECIAL_REASON" /></td>
-            <td class='profile__service'>
-              <p>{{ dateParser(tableData.SPECIAL_REASON_UPDATE_DTTM) }}</p>
-              <p>{{ tableData.SPECIAL_REASON_UPDATE_NAME }} ({{ tableData.SPECIAL_REASON_UPDATE_DIV_NAME }})</p>
-            </td>
-          </tr>
-          <tr>
-            <th>特徵</th>
-            <td><TableList field="featureStr" :toggleEdit="toggleEdit" 
-              :data="tableData.FEATURE_STR.split('、')" /></td>
-            <td class='profile__service'>
-              <p>{{ dateParser(tableData.FEATURE_UPDATE_DTTM) }}</p>
-              <p>{{ tableData.FEATURE_UPDATE_NAME }} ({{ tableData.FEATURE_UPDATE_DIV_NAME }})</p>
-            </td>
-          </tr>
-          <tr>
-            <th>集團員工</th>
-            <td><TableList :data="tableData.EMPOLYEE" /></td>
-            <td class='profile__service'>
-              <p>{{ dateParser(tableData.EMPOLYEE_UPDATE_DTTM) }}</p>
-              <p>{{ tableData.EMPOLYEE_UPDATE_NAME }} ({{ tableData.EMPOLYEE_UPDATE_DIV_NAME }})</p>
-            </td>
-          </tr>
-          <tr>
-            <th>客戶標籤</th>
-            <td><TableList :data="tableData.TAG_STRING.split('、')" /></td>
-            <td class='profile__service'>
-              <p>{{ dateParser(tableData.TAG_UPDATE_DTTM) }}</p>
-              <p>{{ tableData.TAG_UPDATE_NAME }} ({{ tableData.TAG_UPDATE_DIV_NAME }})</p>
-            </td>
-          </tr>
-          <tr>
-            <th>婚姻</th>
-            <td><TableList field="marrige" :toggleEdit="toggleEdit" 
-              :data="marrigeStatus[tableData.MARITAL_STATUS_CD]" /></td>
-            <td class='profile__service'>
-              <p>{{ dateParser(tableData.MARITAL_UPDATE_DTTM) }}</p>
-              <p>{{ tableData.MARITAL_UPDATE_NAME }} ({{ tableData.MARITAL_UPDATE_DIV_NAME }})</p>
-            </td>
-          </tr>
-          <tr>
-            <th>子女</th>
-            <td><TableList field="child" :toggleEdit="toggleEdit" 
-              :data="Number(tableData.CHILDREN_CNT) ? '無小孩': `有小孩 ${tableData.CHILDREN_CNT} 位`" /></td>
-            <td class='profile__service'>
-              <p>{{ dateParser(tableData.CHILDREN_UPDATE_DTTM) }}</p>
-              <p>{{ tableData.CHILDREN_UPDATE_NAME }} ({{ tableData.CHILDREN_UPDATE_DIV_NAME }})</p>
-            </td>
-          </tr>
-          <tr>
-            <th>年收入</th>
-            <td><TableList field="salary" :toggleEdit="toggleEdit" 
-              :data="salaryTrans(tableData.ANNUAL_INCOME_AMT)" /></td>
-            <td class='profile__service'>
-              <p>{{ dateParser(tableData.ANNUAL_INCOME_UPDATE_DTTM) }}</p>
-              <p>{{ tableData.ANNUAL_INCOME_UPDATE_NAME }} ({{ tableData.ANNUAL_INCOME_UPDATE_DIV_NAME }})</p>
-            </td>
-          </tr>
-          <tr>
-            <th>學歷</th>
-            <td><TableList field="education" :toggleEdit="toggleEdit" 
-              :data="educationStatus[tableData.EDUCATION_LEVEL_CD]" /></td>
-            <td class='profile__service'>
-              <p>{{ dateParser(tableData.EDUCATION_UPDATE_DTTM) }}</p>
-              <p>{{ tableData.EDUCATION_UPDATE_NAME }} ({{ tableData.EDUCATION_UPDATE_DIV_NAME }})</p>
-            </td>
-          </tr>
-          <tr v-for="(interestKey, idx) in Object.keys(interestsData)" :key="idx" class='profile__interest'>
-            <th v-if="!idx">興趣</th>
-            <th v-if="idx"></th>
-            <td>
-              <p>{{ interestKey }}</p>
-              <TableList :data="interestsData[interestKey]" />
-            </td>
-            <td class='profile__service'>
-              <p>{{ dateParser(tableData.HOBBIES_UPDATE_DTTM) }}</p>
-              <p>{{ tableData.HOBBIES_UPDATE_NAME }} ({{ tableData.HOBBIES_UPDATE_DIV_NAME }})</p>
-            </td>
-          </tr>
-        </ProfileTable>
-        <ProfileTable v-if="isEdit">
-          <tr>
-            <th>特殊狀況備註</th>
-            <td class='profile__form'>
-              <FormWrapper>
-                <FormInput inputBasis="100%">
-                  <input id="special-0" type="radio" name="special" />
-                  <label for="special-0">無</label>
-                </FormInput>
-                <FormInput inputBasis="10%">
-                  <input id="special-1" type="radio" name="special" />
-                  <label for="special-1">有</label>
-                </FormInput>
-                <Textarea width="80%" v-model="form.spcString" />
-              </FormWrapper>
-            </td>
-          </tr>
-          <tr :class="`${highlightField === 'featureStr' ? 'highlight' : ''}`">
-            <th>特徵</th>
-            <td class='profile__form'>
-              <ProfileFormWrapper>
-                <FormInput inputBasis="33%" v-for="(option, idx) in userFields.featureStr" :key="idx">
-                  <input :id="`featureStr-${idx}`" type="checkbox" :value="option" v-model="form.featureStr"/>
-                  <label :for="`featureStr-${idx}`">{{ option }}</label>
-                </FormInput> 
-              </ProfileFormWrapper>
-            </td>
-          </tr>
-          <tr :class="`${highlightField === 'marrige' ? 'highlight' : ''}`">
-            <th>婚姻</th>
-            <td class='profile__form'>
-              <ProfileFormWrapper>
-                <FormInput inputBasis="33%" v-for="(option, idx) in userFields.marrige" :key="idx">
-                  <input :id="`marrige-${idx}`" type="radio" :value="option" v-model="form.marrige" />
-                  <label :for="`marrige-${idx}`">{{ option }}</label>
-                </FormInput> 
-              </ProfileFormWrapper>
-            </td>
-          </tr>
-          <tr :class="`${highlightField === 'child' ? 'highlight' : ''}`">
-            <th>子女</th>
-            <td class='profile__form'>
-              <ProfileFormWrapper>
-                <FormInput inputBasis="33%">
-                  <input id="child-0" type="radio" :value="0" v-model="form.child" />
-                  <label for="child-0">無小孩</label>
-                </FormInput> 
-               <FormInput inputBasis="33%">
-                  <input id="child-1" type="radio" :value="1" v-model="form.child" />
-                  <label for="child-1">有小孩</label>
-                </FormInput> 
-              </ProfileFormWrapper>
-            </td>
-          </tr>
-          <tr :class="`${highlightField === 'salary' ? 'highlight' : ''}`">
-            <th>年收入</th>
-            <td class='profile__form'>
-              <ProfileFormWrapper>
-                <FormInput inputBasis="33%" v-for="(option, idx) in userFields.salary" :key="idx">
-                  <input :id="`salary-${idx}`" type="radio" :value="option" v-model="form.salary" />
-                  <label :for="`salary-${idx}`">{{ option }}</label>
-                </FormInput> 
-              </ProfileFormWrapper>
-            </td>
-          </tr>
-          <tr :class="`${highlightField === 'education' ? 'highlight' : ''}`">
-            <th>學歷</th>
-            <td class='profile__form'>
-              <ProfileFormWrapper>
-                <FormInput inputBasis="33%" v-for="(option, idx) in userFields.education" :key="idx">
-                  <input :id="`education-${idx}`" type="radio" :value="option" v-model="form.education"/>
-                  <label :for="`education-${idx}`">{{ option }}</label>
-                </FormInput> 
-              </ProfileFormWrapper>
-            </td>
-          </tr>
-          <tr v-for="(interestKey, idx) in Object.keys(interestFields)" 
-            :key="idx" 
-            class='profile__interest'
-          >
-            <th v-if="!idx">興趣</th>
-            <th v-if="idx"></th>
-            <td class='profile__form'>
-              <p>{{ interestKey }}</p>
-              <ProfileFormWrapper>
-                <FormInput v-for="(option, idx) in interestFields[interestKey]" 
-                  inputBasis="33%" :key="`interests-${idx}`">
-                  <input type="checkbox" 
-                    :id="`${interestKey}-${idx}`" 
-                    :value="option" 
-                    v-model="form.hobbies" 
-                  />
-                  <label :for="`${interestKey}-${idx}`">{{ option }}</label>
-                </FormInput>
-              </ProfileFormWrapper>
-            </td>
-          </tr>
-        </ProfileTable>
-      </main>
-      <Footer>
-        <ButtonWrapper>
-          <Button v-if="!isEdit" :padding="50" @click="toggleEdit">編輯</Button>
-          <Button v-if="isEdit" :padding="50" @click="sendForm">儲存</Button>
-          <Button v-if="isEdit" bgColor="#616161" :padding="50" @click="toggleEdit">取消</Button>
-        </ButtonWrapper>
-      </Footer>
-    </Modal>
-    <ErrorModal v-if="isError">
-      <Header>
-        <router-link to='./'>
-          <CloseButton/>
-        </router-link>
-      </Header>
-      <main>
-        <img src="../assets/img-error.svg" />
-        <h2>Oops!</h2>
-        <h2>執行操作時發生錯誤！</h2>
-        <ButtonWrapper>
-          <Button @click="refreshPage">重新載入</Button>
-        </ButtonWrapper>
-      </main>
-    </ErrorModal>
+    <Loading v-if="isLoading" />
+    <div v-if="!isLoading">
+      <Modal v-if="!isError">
+        <Header>
+          <router-link to='./'>
+            <CloseButton />
+          </router-link>
+          <Title textAlign='center'>客戶輪廓</Title>
+        </Header>
+        <main>
+          <ProfileTable v-if="!isEdit && tableData != null">
+            <tr>
+              <th>特殊客戶</th>
+              <td><TableList :data="Object.keys(tableData.spcMap).map(item => `${tableData.spcMap[item].SPC_NAME} ${spcStatus[item]}`)" direction="column"/></td>
+              <td class='profile__service'>
+              </td>
+            </tr>
+            <tr>
+              <th>特殊狀況備註</th>
+              <td><TableList :data="tableData.spcMemoMap.MEMO" /></td>
+              <td class='profile__service'>
+                <p>{{ dateParser(tableData.spcMemoMap.INPUT_DATE) }}</p>
+                <p>{{ tableData.spcMemoMap.INPUT_NAME }} ({{ tableData.spcMemoMap.SER_DIV_NAME }})</p>
+              </td>
+            </tr>
+            <tr>
+              <th>特徵</th>
+              <td><TableList field="featureStr" :toggleEdit="toggleEdit" 
+                :data="tableData.featureList.map(item => featuresStauts[item])" /></td>
+              <td class='profile__service'>
+                <p>{{ dateParser(tableData.latestFeatureMap.INPUT_DATE) }}</p>
+                <p>{{ tableData.latestFeatureMap.INPUT_NAME }} ({{ tableData.latestFeatureMap.SER_DIV_NAME }})</p>
+              </td>
+            </tr>
+            <tr>
+              <th>集團員工</th>
+              <td><TableList :data="tableData.EMPOLYEE" /></td>
+              <td class='profile__service'>
+              </td>
+            </tr>
+            <tr>
+              <th>客戶標籤</th>
+              <td><TableList :data="tableData.tagList.map(item => item.TAG_NAME)" direction="column"/></td>
+              <td class='profile__service'>
+              </td>
+            </tr>
+            <tr>
+              <th>婚姻</th>
+              <td><TableList field="marrige" :toggleEdit="toggleEdit" 
+                :data="marrigeStatus[tableData.indivInfoMap.MARITAL_STATUS_CD]" /></td>
+              <td class='profile__service'>
+                <p>{{ dateParser(tableData.indivInfoMap.MARITAL_UPDATE_DTTM) }}</p>
+                <p>{{ tableData.indivInfoMap.MARITAL_UPDATE_NAME }} ({{ tableData.indivInfoMap.MARITAL_UPDATE_DIV_NAME }})</p>
+              </td>
+            </tr>
+            <tr>
+              <th>子女</th>
+              <td><TableList field="child" :toggleEdit="toggleEdit" 
+                :data="Number(tableData.indivInfoMap.CHILDREN_CNT) ? '無小孩': `有小孩 ${tableData.indivInfoMap.CHILDREN_CNT} 位`" /></td>
+              <td class='profile__service'>
+                <p>{{ dateParser(tableData.indivInfoMap.CHILDREN_UPDATE_DTTM) }}</p>
+                <p>{{ tableData.indivInfoMap.CHILDREN_UPDATE_NAME }} ({{ tableData.indivInfoMap.CHILDREN_UPDATE_DIV_NAME }})</p>
+              </td>
+            </tr>
+            <tr>
+              <th>年收入</th>
+              <td><TableList field="salary" :toggleEdit="toggleEdit" 
+                :data="salaryTrans(tableData.indivInfoMap.ANNUAL_INCOME_AMT)" /></td>
+              <td class='profile__service'>
+                <p>{{ dateParser(tableData.indivInfoMap.ANNUAL_INCOME_UPDATE_DTTM) }}</p>
+                <p>{{ tableData.indivInfoMap.ANNUAL_INCOME_UPDATE_NAME }} ({{ tableData.indivInfoMap.ANNUAL_INCOME_UPDATE_DIV_NAME }})</p>
+              </td>
+            </tr>
+            <tr>
+              <th>學歷</th>
+              <td><TableList field="education" :toggleEdit="toggleEdit" 
+                :data="educationStatus[tableData.indivInfoMap.EDUCATION_LEVEL_CD]" /></td>
+              <td class='profile__service'>
+                <p>{{ dateParser(tableData.indivInfoMap.EDUCATION_UPDATE_DTTM) }}</p>
+                <p>{{ tableData.indivInfoMap.EDUCATION_UPDATE_NAME }} ({{ tableData.indivInfoMap.EDUCATION_UPDATE_DIV_NAME }})</p>
+              </td>
+            </tr>
+            <tr v-for="(interestKey, idx) in Object.keys(interestsData)" :key="idx" class='profile__interest'>
+              <th v-if="!idx">興趣</th>
+              <th v-if="idx"></th>
+              <td>
+                <p>{{ interestKey }}</p>
+                <TableList :data="interestsData[interestKey]" />
+              </td>
+              <td class='profile__service'>
+                <p>{{ dateParser(tableData.latestHobbiesMap.INPUT_DATE) }}</p>
+                <p>{{ tableData.latestHobbiesMap.INPUT_NAME }} ({{ tableData.latestHobbiesMap.SER_DIV_NAME }})</p>
+              </td>
+            </tr>
+          </ProfileTable>
+          <ProfileTable v-if="isEdit">
+            <tr>
+              <th>特殊狀況備註</th>
+              <td class='profile__form'>
+                <FormWrapper>
+                  <FormInput inputBasis="100%">
+                    <input id="special-0" type="radio" name="special" />
+                    <label for="special-0">無</label>
+                  </FormInput>
+                  <FormInput inputBasis="10%">
+                    <input id="special-1" type="radio" name="special" />
+                    <label for="special-1">有</label>
+                  </FormInput>
+                  <Textarea width="80%" v-model="form.spcString" />
+                </FormWrapper>
+              </td>
+            </tr>
+            <tr :class="`${highlightField === 'featureStr' ? 'highlight' : ''}`">
+              <th>特徵</th>
+              <td class='profile__form'>
+                <ProfileFormWrapper>
+                  <FormInput inputBasis="33%" v-for="(option, idx) in userFields.featureStr" :key="idx">
+                    <input :id="`featureStr-${idx}`" type="checkbox" :value="option" v-model="form.featureStr"/>
+                    <label :for="`featureStr-${idx}`">{{ option }}</label>
+                  </FormInput> 
+                </ProfileFormWrapper>
+              </td>
+            </tr>
+            <tr :class="`${highlightField === 'marrige' ? 'highlight' : ''}`">
+              <th>婚姻</th>
+              <td class='profile__form'>
+                <ProfileFormWrapper>
+                  <FormInput inputBasis="33%" v-for="(option, idx) in userFields.marrige" :key="idx">
+                    <input :id="`marrige-${idx}`" type="radio" :value="option" v-model="form.marrige" />
+                    <label :for="`marrige-${idx}`">{{ option }}</label>
+                  </FormInput> 
+                </ProfileFormWrapper>
+              </td>
+            </tr>
+            <tr :class="`${highlightField === 'child' ? 'highlight' : ''}`">
+              <th>子女</th>
+              <td class='profile__form'>
+                <ProfileFormWrapper>
+                  <FormInput inputBasis="33%">
+                    <input id="child-0" type="radio" :value="0" v-model="form.child" />
+                    <label for="child-0">無小孩</label>
+                  </FormInput> 
+                 <FormInput inputBasis="33%">
+                    <input id="child-1" type="radio" :value="1" v-model="form.child" />
+                    <label for="child-1">有小孩</label>
+                  </FormInput> 
+                </ProfileFormWrapper>
+              </td>
+            </tr>
+            <tr :class="`${highlightField === 'salary' ? 'highlight' : ''}`">
+              <th>年收入</th>
+              <td class='profile__form'>
+                <ProfileFormWrapper>
+                  <FormInput inputBasis="33%" v-for="(option, idx) in userFields.salary" :key="idx">
+                    <input :id="`salary-${idx}`" type="radio" :value="option" v-model="form.salary" />
+                    <label :for="`salary-${idx}`">{{ option }}</label>
+                  </FormInput> 
+                </ProfileFormWrapper>
+              </td>
+            </tr>
+            <tr :class="`${highlightField === 'education' ? 'highlight' : ''}`">
+              <th>學歷</th>
+              <td class='profile__form'>
+                <ProfileFormWrapper>
+                  <FormInput inputBasis="33%" v-for="(option, idx) in userFields.education" :key="idx">
+                    <input :id="`education-${idx}`" type="radio" :value="option" v-model="form.education"/>
+                    <label :for="`education-${idx}`">{{ option }}</label>
+                  </FormInput> 
+                </ProfileFormWrapper>
+              </td>
+            </tr>
+            <tr v-for="(interestKey, idx) in Object.keys(interestFields)" 
+              :key="idx" 
+              class='profile__interest'
+            >
+              <th v-if="!idx">興趣</th>
+              <th v-if="idx"></th>
+              <td class='profile__form'>
+                <p>{{ interestKey }}</p>
+                <ProfileFormWrapper>
+                  <FormInput v-for="(option, idx) in interestFields[interestKey]" 
+                    inputBasis="33%" :key="`interests-${idx}`">
+                    <input type="checkbox" 
+                      :id="`${interestKey}-${idx}`" 
+                      :value="option" 
+                      v-model="form.hobbies" 
+                    />
+                    <label :for="`${interestKey}-${idx}`">{{ option }}</label>
+                  </FormInput>
+                </ProfileFormWrapper>
+              </td>
+            </tr>
+          </ProfileTable>
+        </main>
+        <Footer>
+          <ButtonWrapper>
+            <Button v-if="!isEdit" :padding="50" @click="toggleEdit">編輯</Button>
+            <Button v-if="isEdit" :padding="50" @click="sendForm">儲存</Button>
+            <Button v-if="isEdit" bgColor="#616161" :padding="50" @click="toggleEdit">取消</Button>
+          </ButtonWrapper>
+        </Footer>
+      </Modal>
+      <ErrorModal v-if="isError">
+        <Header>
+          <router-link to='./'>
+            <CloseButton/>
+          </router-link>
+        </Header>
+        <main>
+          <img src="../assets/img-error.svg" />
+          <h2>Oops!</h2>
+          <h2>執行操作時發生錯誤！</h2>
+          <ButtonWrapper>
+            <Button @click="refreshPage">重新載入</Button>
+          </ButtonWrapper>
+        </main>
+      </ErrorModal>
+    </div>
   </div>
 </template>
 
@@ -239,7 +236,8 @@ import {
 import styled from 'vue-styled-components';
 import Textarea from './ui/textarea.vue';
 import TableList from './ui/tableList.vue';
-
+import Loading from './ui/loading.vue';
+import data from '../data/profile.json';
 
 const profileTableProps = { isEdited: String }
 const ProfileTable = styled('table', profileTableProps)`
@@ -325,226 +323,66 @@ export default {
     ProfileFormWrapper,
     Textarea,
     TableList,
-    ErrorModal
+    ErrorModal,
+    Loading
   },
   methods: {
     getData() {
-      // fetch data in this method 
-      this.queryData = {
-        "AIE0_0500_bo": {
-          "ADDR_WITHDRAW": "Y", 
-          "IS_BRDY_IDENTICAL": "Y",
-          "NETINSR_LV": "1",
-          "NATION_CODE": "TW",
-          "NPS_DATA_STRING": "109/02/26網路服務",
-          "SPC_MARK": "Y",
-          "IS_CALLIN": "Y",
-          "RESN": "很不便利",
-          "MOBL_NUM_CHG": "Y",
-          "MEMO": "客戶於櫃檯詢問保單借款",
-          "FINGER": "否",
-          "ID": "E17434406C",
-          "IS_ACNT": "Y",
-          "FEATURE_STR": "慣用左手",
-          "FEATURE_UPDATE_DIV_NAME": "忠孝服務二",
-          "FEATURE_UPDATE_ID": "M12269641A", 
-          "FEATURE_UPDATE_NAME": "余○珍", 
-          "FEATURE_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "IS_NETINSR": "Y",
-          "TAG_STRING": "旅遊族",
-          "TAG_UPDATE_DIV_NAME": "忠孝服務二",
-          "TAG_UPDATE_ID": "M12269641A", 
-          "TAG_UPDATE_NAME": "余○珍", 
-          "TAG_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "ADDR": "台北市內湖區芝麻街",
-          "IS_INSD_SECOND": "N",
-          "NAME": "蔡○男",
-          "YK_BIRTHDAY": "1978-04-01",
-          "SECRET_CLIENT": "Y",
-          "IS_EASY_CALL": "Y",
-          "SPECIAL_DATE": "108/02/28",
-          "SPECIAL_RECORD": "Y",
-          "SIGNATURE_RCPT_NO": " N002811720 ",
-          "POLICY_NO": " 9122333539 ",
-          "POLICY_NO_DATA": [],
-          "SPC_STRING": "108/02/24法扣名單、108/01/26 申訴名單",
-          "SPC_UPDATE_DIV_NAME": "忠孝服務二",
-          "SPC_UPDATE_ID": "M12269641A", 
-          "SPC_UPDATE_NAME": "余○珍", 
-          "SPC_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "HOBBIES": "游泳、健身、籃球",
-          "HOBBIES_UPDATE_DIV_NAME": "忠孝服務二",
-          "HOBBIES_UPDATE_ID": "M12269641A", 
-          "HOBBIES_UPDATE_NAME": "余○珍", 
-          "HOBBIES_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "IS_BTWOC": "N",
-          "IS_W0_DATA_CHECK": "A",
-          "IS_NAME_IDENTICAL": "Y",
-          "IS_INSD": "N",
-          "LEVEL_CH": "高風險",
-          "IS_ATM": "是",
-          "ROLE": "A",
-          "IS_APPEAL": "Y",
-          "HTEL_NUM": "(02)26566999#9999",
-          "SPECIAL_REASON": "一串文字",
-          "SPECIAL_REASON_UPDATE_DIV_NAME": "忠孝服務二",
-          "SPECIAL_REASON_UPDATE_ID": "M12269641A", 
-          "SPECIAL_REASON_UPDATE_NAME": "余○珍", 
-          "SPECIAL_REASON_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "EMAIL_WITHDRAW": "Y",
-          "IS_RCPT": "",
-          "mainList": [{
-            "DVD_KIND": 0,
-            "UN_CASH_TMS": 0,
-            "SCRT_IND": "0",
-            "INSD_ID": "E15366710L",
-            "SEC_ISD_AGE": 0,
-            "POL_PRD": 105,
-            "MNXT_PAY_DATE": "2020-08-26",
-            "ANTY_PAY_DATE": "1911-01-01",
-            "EXT_YYMM": "0000",
-            "PAY_TIMES": 1,
-            "JOB_ID": "1",
-            "MED_EXAM": 0,
-            "FACE_AMT": 260,
-            "PROD_ID": "U01",
-            "ANTY_PRD": 0,
-            "SEX": "1",
-            "PAY_PRD": 6,
-            "CLC_NO": "CU7A101",
-            "FACE_AMT_UNIT": 4,
-            "LST_CHG_DATE": "1911-01-01 00:00:00.0",
-            "SICK_Y": 0,
-            "LPS_DATE": "9999-12-31",
-            "AUTO_PREM_CODE": 1,
-            "RTN_TSO": "0",
-            "PRE_PAY_IND": 0,
-            "RPRT_TMS": 0,
-            "EFT_CODE": "00",
-            "LST_PAY_DATE": "2019-08-26",
-            "LST_CHG_KIND": "00    ",
-            "PAY_FREQ": 4,
-            "AGE": 18,
-            "RPRT_DATE": "1911-01-01",
-            "NB_APLY_NO": "NC02916995",
-            "ISSUE_DATE": "2019-08-26",
-            "POLICY_NO": "9183246221",
-            "ANTY_PAY_KIND": " ",
-            "APC_ID": "E17434406C",
-            "SALE_CHNL": "3",
-            "PREM_SPEC_KEY2": "-1",
-            "MAIN_PREM": 2086760,
-            "PREM_SPEC_KEY1": "-1",
-            "SETUP_DATE": "2019-08-27",
-            "PRCS_IND": "00"
-          }],
-          "EMAIL": "s5f4s5f@gmail.com",
-          "IS_ADDRESS_IDENTICAL": "Y",
-          "IS_SIGNATURE": "Y",
-          "CTEL_NUM": "(02)26566999#9999",
-          "VIPBO": {
-            "VIP": true,
-            "VIPOF": false,
-            "VIP_KIND": ["國泰世華銀行七星級VIP／本公司鑽石VIP(Hyper-VIP)"],
-            "VIP_LVL": ["7"],
-            "VIPF": false
-          },
-          "BIRTHDAY": "47/12/31", 
-          "EMPOLYEE": "國泰人壽-壽險資訊部-協理", 
-          "EMPOLYEE_UPDATE_DIV_NAME": "忠孝服務二",
-          "EMPOLYEE_UPDATE_ID": "M12269641A", 
-          "EMPOLYEE_UPDATE_NAME": "余○珍", 
-          "EMPOLYEE_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "IS_ACNT_COUNT": 0,
-          "AGE": "61",
-          "IS_MOBILE_CNT_MORE_THAN_ONE": "1",
-          "HTEL_NUM_CHG": "Y",
-          "IS_EFT": "Y",
-          "REQUEST": "無",
-          "MOBL_NO": "0962513246",
-          "EMAIL_CHG": "Y",
-          "IS_MI": "Y",
-          "ZODIAC": "虎",
-          "IS_APC": "N",
-          "isBirthday": "N",
-          "CTEL_NUM_CHG": "N",
-          "CONSTELLATION": "水瓶",
-          "CHILDREN_SOURCE_CD": "公司網站會員資料",
-          "RETURNCODE": "0000",
-          "MARITAL_KEY": "123",
-          "CHILDREN_UPDATE_DIV_NAME": "忠孝服務二", 
-          "CHILDREN_UPDATE_ID": "M12269641A", 
-          "CHILDREN_UPDATE_NAME": "余○珍", 
-          "ANNUAL_INCOME_UPDATE_DTTM": "2019-11-21 00:00:00.0", 
-          "ANNUAL_INCOME_AMT": "2500000",
-          "FIRST_NM": "無○",
-          "MARITAL_UPDATE_DIV_NAME": "忠孝服務二",
-          "MARITAL_UPDATE_ID": "M12269641A", 
-          "MARITAL_UPDATE_NAME": "余○珍", 
-          "MARITAL_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "EDUCATION_KEY": "",
-          "STD_OCCUPATION_NM": "廚具商",
-          "PROCESSED_DTTM": "2019-11-21 00:00:00.0",
-          "OCCUPATION_UPDATE_ID": "",
-          "EDUCATION_UPDATE_DIV_NAME": "忠孝服務二",
-          "EDUCATION_UPDATE_ID": " M12269641A ",
-          "EDUCATION_UPDATE_NAME": "余○珍",
-          "MARITAL_STATUS_CD": "1",
-          "CHILDREN_POLICY_NO": "333",
-          "ANNUAL_INCOME_UPDATE_DIV_NAME": "忠孝服務二",
-          "ANNUAL_INCOME_UPDATE_ID": "M12269641A",
-          "ANNUAL_INCOME_UPDATE_NAME": "余○珍",
-          "MARITAL_POLICY_NO": "123",
-          "OCCUPATION_TITLE": "BOSS",
-          "CHILDREN_CNT": "3",
-          "OCCUPATION_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "EDUCATION_SOURCE_CD": "保全變更(線上服務)",
-          "MARITAL_SOURCE_CD": "3",
-          "ANNUAL_INCOME_SOURCE_CD": "0800", 
-          "STD_OCCUPATION_CD": "15000010",
-          "ANNUAL_INCOME_POLICY_NO": "",
-          "EDUCATION_POLICY_NO": "",
-          "CHILDREN_KEY": "222",
-          "OCCUPATION_POLICY_NO": "",
-          "OCCUPATION_KEY": "",
-          "CODEMSG": "查詢成功",
-          "CHILDREN_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "ANNUAL_INCOME_KEY": "",
-          "EDUCATION_UPDATE_DTTM": "2019-11-21 00:00:00.0",
-          "OCCUPATION_CLASS_CD": "4",
-          "OCCUPATION_COMPANY": "大數",
-          "OCCUPATION_SOURCE_CD": "4",
-          "EDUCATION_LEVEL_CD": "2"
-        },
-        "ErrMsg": {
-          "returnCode": 0,
-          "msgid": "",
-          "displayException": "",
-          "msgDesc": "",
-          "displayMsgDescs": "",
-          "length": 1,
-          "type": "",
-          "sysid": "",
-          "msgDescs": [""],
-          "url": ""
-        },
-          "eBAF_UserObject_Flag": "bC9ET3NaS0p4eE5WaFdFWmN3QWNOZz09",
-          "eBAF_loginSystemInfo": "a%2B%2FhFBbiquGH%2F1%2FUlm7W2qOIA8ZFukaslTfOJLKR24omGREBfdXQmPd542aw5PJr"
-      }
+      this.queryData = data;
       if(this.queryData.ErrMsg.returnCode === 0) {
-        this.tableData = this.queryData.AIE0_0500_bo
+        this.tableData = this.queryData.perDataMoreMap
         this.groupHobbies();
-        console.log(this.tableData)  
       } else {
         this.isError = true;
       }
     },
     groupHobbies() {
-      this.interestsData = this.tableData.HOBBIES.split('、').reduce((acc, hobby) => {
-        let key = Object.keys(this.interestFields).filter(item => this.interestFields[item].includes(hobby))[0] || '其他';
-        (acc[key] = acc[key] || []).push(hobby);
+      const hobbies = {
+        "L010001": "籃球",
+        "L010002": "棒球",
+        "L010003": "高爾夫",
+        "L010004": "健身瑜珈跳舞",
+        "L010005": "跑步登山健走",
+        "L020001": "旅遊愛好",
+        "L020002": "文青藝文",
+        "L020003": "手遊電競",
+        "L020004": "音樂電影追劇",
+        "L020005": "寵物迷",
+        "L020006": "親子議題",
+        "L020007": "環保公益",
+        "L020008": "養身保健",
+        "L030001": "咖啡",
+        "L030002": "手搖飲",
+        "L030003": "酒",
+        "L030004": "甜點",
+        "L030005": "吃貨",
+        "L030006": "美食烹飪",
+        "L040001": "購物信用卡優惠",
+        "L040002": "3C迷",
+        "L040003": "汽機車迷",
+        "L050001": "保險",
+        "L050002": "活/定存",
+        "L050003": "股票",
+        "L050004": "民間互助會",
+        "L050005": "基金",
+        "L050006": "不動產",
+        "L050007": "期貨外匯",
+        "L050008": "其他"
+      }
+      const category = {
+        "L01": "運動",
+        "L02": "休閒娛樂",
+        "L03": "美食",
+        "L04": "購物",
+        "L05": "理財工具",
+      }
+      this.interestsData = this.tableData.hobbiesList.reduce((acc, hobby) => {
+        let key = category[hobby.slice(0,3)];
+        (acc[key] = acc[key] || []).push(hobbies[hobby]);
         return acc;
       }, {});
+
+      console.log(this.interestsData)
     },
     sendForm() {
       this.toggleEdit();
@@ -578,6 +416,7 @@ export default {
   },
   data () {
     return {
+      isLoading: false,
       isError: false,
       isEdit: false,
       highlightField: '',
@@ -594,6 +433,21 @@ export default {
         "0": "未婚",
         "1": "已婚",
         "2": "其他"
+      },
+      featuresStauts: {
+        "S030001": "慣用左手",
+        "S030002": "慣用右手",
+        "S030003": "失聰",
+        "S030004": "不識字",
+        "S030005": "雙目失明",
+      },
+      spcStatus: {
+        "B99001Map": "特殊保戶群組",
+        "B99010Map": "拒絕行銷名單",
+        "B99013Map": "申訴名單", 
+        "B99004Map": "新契約不受歡迎名單",
+        "B99009Map": "理賠控管保戶名單",
+        "B99005Map": "法扣名單"
       },
       form: {
         specialReason: '',
