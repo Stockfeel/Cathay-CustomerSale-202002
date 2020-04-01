@@ -23,7 +23,10 @@
     </ProductLayout>
     <InsuranceLayout>
       <div>
-        <Title>保障缺口</Title>
+        <Title id="insurance__tooltip">保障缺口</Title>
+        <b-tooltip target="insurance__tooltip" custom-class="custom__tooltip" triggers="hover" placement="top">
+          公司現在有提供保單缺口檢視服務（投放保障缺口）您看一下畫面中紅色的部分是你和同年齡層保戶保障比較不足的地方，需要我進一步說名或請專人到府解釋嗎？
+        </b-tooltip>
         <ButtonWrapper>
           <SwitchButton :word="isSync == 'on' ? '同步中 ●' : '同步畫面'">
             <input type="checkbox" v-model="isSync" value="on"/>

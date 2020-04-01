@@ -6,32 +6,6 @@ import yes from './assets/btn-icon-yes.svg';
 import calendar from './assets/icon-calendar.svg';
 import { injectGlobal } from 'vue-styled-components';
 
-// Intial
-export const InitialLayout = injectGlobal`
-	*{
-	  box-sizing: border-box;
-	  font-family: 'Lato', 'Noto Sans TC';
-	  padding: 0;
-	  margin: 0;
-    scrollbar-base-color: #000;
-    scrollbar-face-color: rgba(147, 209, 209, 0.3);
-    scrollbar-highlight-color: white;
-    scrollbar-track-color: white;
-    scrollbar-arrow-color: white;
-    scrollbar-shadow-color: white;
-    scrollbar-dark-shadow-color: white;
-	}
-	#app, html, body {
-	  width: 100%;
-	  margin: 0;
-	}
-
-  *::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-color: rgba(147, 209, 209, 0.3);
-  }
-`
-
 // Atoms
 const color = {
 	text: "#324c5a",
@@ -47,6 +21,66 @@ const font = {
 	h3: "14px",
 	text: "12px"
 }
+
+// Intial
+export const InitialLayout = injectGlobal`
+  *{
+    box-sizing: border-box;
+    font-family: 'Lato', 'Noto Sans TC';
+    padding: 0;
+    margin: 0;
+    scrollbar-base-color: #000;
+    scrollbar-face-color: rgba(147, 209, 209, 0.3);
+    scrollbar-highlight-color: white;
+    scrollbar-track-color: white;
+    scrollbar-arrow-color: white;
+    scrollbar-shadow-color: white;
+    scrollbar-dark-shadow-color: white;
+  }
+  #app, html, body {
+    width: 100%;
+    margin: 0;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: rgba(147, 209, 209, 0.3);
+  }
+
+  p.warning {
+    color: red;
+    font-weight: normal;
+    font-size: 12px;
+  }
+
+  .custom__tooltip .tooltip-inner {
+     background-color: #fff !important;
+     color: ${color.text} !important;
+     box-shadow: 0 0 8px 2px rgba(210, 70, 95, 0.5);
+  }
+
+  .custom__tooltip .arrow::before {
+     border-top-color: #fff !important;
+  }
+
+  .page-item.custom__pagination {
+    .page-link {
+      color: ${color.text};
+      background-color: white;
+      border-radius: 50%;
+      border: none;
+    } 
+    &.active .page-link{
+      background-color: white;
+      color: ${color.primary}
+      &:focus {
+        outline: none;
+        border: none;
+        box-shadow: none;
+      }
+    }
+  }
+`
 
 const LinkProps = { textColor: String };
 export const LinkStyle = styled('span', LinkProps)`
@@ -158,6 +192,9 @@ export const FormInput = styled('div', formInputProps)`
 		cursor: pointer;
 		margin: 0;
 		margin-left: 10px;
+    &.inline-label {
+      font-size: 14px;
+    }
 	}
 	textarea {
 		height: 150px;
@@ -184,6 +221,10 @@ export const FormInput = styled('div', formInputProps)`
 			outline: none;
 			border-bottom: ${color.primary} 1px solid;
 		}
+    &.inline-input {
+      width: 30%;
+      padding: 0;
+    }
 	}
 	input[type="checkbox"] {
     position: relative;

@@ -140,9 +140,9 @@
       <IntroduceCheck />
     </IntroduceLayout>
     <ButtonWrapper>
-      <Button v-if="step > 0" @click="step -= 1" bgColor="#fff" textColor="#05b077" borderColor="#05b077">上一步</Button>
+      <Button v-if="step > 0" @click="step -= 1" bgColor="#fff" textColor="#05b077" borderColor="#05b077">刪除</Button>
       <Button v-if="step < 2" @click="step += 1">下一步</Button>
-      <Button v-if="step === 2" @click="$router.push('../')">請客戶填寫預約單</Button>
+      <Button v-if="step === 2" @click="$router.push('../')">送出</Button>
     </ButtonWrapper>
   </Modal>
 </template>

@@ -69,7 +69,6 @@ export default {
   name: 'Home',
   methods: {
     getData() {
-      this.queryData = homeProfile;
       const educationStatus = {
         "1": "國中及以下",
         "2": "高中職",
@@ -81,7 +80,56 @@ export default {
         "1": "已婚",
         "2": "其他"
       }
+      
 
+      // ajax demo
+
+      // this.isLoading = true;
+      // fetch("http://localhost:3000/homeProfile")
+      //   .then(res => res.json())
+      //   .then(data => {
+      //     this.queryData = data;
+      //     if(this.queryData.ErrMsg.returnCode === 0) {
+      //       // profile data show order 
+      //       const data = {
+      //           "特殊客戶": this.queryData.AIE0_0500_bo.SPC_STRING,
+      //           "特殊狀態備註": this.queryData.AIE0_0500_bo.SPECIAL_RECORD === "Y" ? "有" : "沒有",
+      //           "客戶特徵": this.queryData.AIE0_0500_bo.FEATURE_STR,
+      //           "集團員工": this.queryData.AIE0_0500_bo.EMPOLYEE,
+      //           "客戶標籤": this.queryData.AIE0_0500_bo.TAG_STRING,
+      //           "婚姻": marrigeStatus[this.queryData.AIE0_0500_bo.MARITAL_STATUS_CD],
+      //           "子女": this.queryData.AIE0_0500_bo.CHILDREN_CNT,
+      //           "年收入": this.queryData.AIE0_0500_bo.ANNUAL_INCOME_AMT,
+      //           "學歷": educationStatus[this.queryData.AIE0_0500_bo.EDUCATION_LEVEL_CD],
+      //           "興趣": this.queryData.AIE0_0500_bo.HOBBIES,
+      //         }
+
+      //       const info = Object.keys(data).filter(item => data[item]).slice(0, 4).reduce((acc, item) => {
+      //             acc[item] = data[item];
+      //             return acc;
+      //           }, {})
+
+      //       this.user = {
+      //         name: this.queryData.AIE0_0500_bo.NAME,
+      //         age: this.queryData.AIE0_0500_bo.AGE,
+      //         info,
+      //         isSecret: this.queryData.AIE0_0500_bo.SECRET_CLIENT,
+      //         isBirthday: this.queryData.AIE0_0500_bo.isBirthday,
+      //         isVip: this.queryData.AIE0_0500_bo.VIPBO.VIP,
+      //       }
+      //     } else {
+      //       this.isError = true;
+      //     }
+      //     this.isLoading = false;
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //     this.isError = true;
+      //     this.isLoading = false;
+      //   }) 
+
+      // static json demo 
+      this.queryData = homeProfile;
       if(this.queryData.ErrMsg.returnCode === 0) {
         // profile data show order 
         const data = {

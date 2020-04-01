@@ -4,9 +4,9 @@
       <router-link to='./'>
         <CloseButton/>
       </router-link>
-      <Title textAlign='center'>服務歷程</Title>
+      <Title textAlign='center'>近一個月服務歷程</Title>
     </Header>
-    <ServiceSection>
+<!--     <ServiceSection>
       <FormWrapper wrapperAlign='center'>
         <span>時間</span>
         <FormInput><input type='date'
@@ -42,7 +42,7 @@
         </FormInput>
       </ServiceFormWrapper>
       <p>服務歷程平台無法查詢大於 6 個月以上的簡訊事件</p>
-    </ServiceSection>
+    </ServiceSection> -->
     <main>
       <Table>
         <thead>
@@ -77,18 +77,18 @@
         </thead>
         <tbody>
           <tr v-for="(record, idx) in tableData" :key="`record-${idx}`">
-            <td align="center"><p>{{ record.id }}</p></td>
+            <td align="center"><p>{{ idx }}</p></td>
             <td align="center">
-              <p>{{ record.date }}</p>
-              <p>{{ record.time }}</p>
+              <p>{{ record.CONTACT_DATE }}</p>
+              <p>{{ record.CONTACT_TIME }}</p>
             </td>
-            <td align="center"><p>{{ record.event }}</p></td>
-            <td align="center"><p>{{ record.route }}</p></td>
+            <td align="center"><p>{{ record.EVENT_NM }}</p></td>
+            <td align="center"><p>{{ record.CHANNEL }}</p></td>
             <td align="center">
-              <p>{{ record.owner }}</p>
-              <p>{{ record.num }}</p>
+              <p>{{ record.CONTACT_NM }}</p>
+              <p>{{ record.CONTACT_PHONE }}</p>
             </td>
-            <td align="center"><p>{{ record.key }}</p></td>
+            <td align="center"><p>{{ record.KEY_S1 }}</p></td>
           </tr>
         </tbody>
       </Table>
@@ -98,6 +98,9 @@
         v-model="page"
         :total-rows="filterData.length"
         :per-page="10"
+        page-class="custom__pagination"
+        prev-class="custom__pagination"
+        next-class="custom__pagination"
         next-text=">"
         prev-text="<"
         first-number
@@ -110,65 +113,67 @@
 
 <script>
 import { 
-  Button, 
   Modal, 
   Title, 
   CloseButton, 
-  FormInput, 
-  FormWrapper, 
   Icon, 
   Footer, 
   Table, 
   Header } from '../style.js';
-import styled from 'vue-styled-components';
+import data from '../data/service';
+// import styled from 'vue-styled-components';
 
-const ServiceSection = styled.section`
-  width: 90%;
-  margin: 0 auto;
-  & > div {
-    margin-bottom: 20px;
-    &:first-child > * {
-      margin-right: 8px;
-    }
-  }
-  & > p {
-    color: #628ea7;
-    font-size: 14px;
-    margin-left: 10px;
-    &::before {
-      content: "•"; 
-      color: #05b077;
-      display: inline-block; 
-      width: 1em;
-      margin-left: -.8em
-    }
-  }
-`
+// const ServiceSection = styled.section`
+//   width: 90%;
+//   margin: 0 auto;
+//   & > div {
+//     margin-bottom: 20px;
+//     &:first-child > * {
+//       margin-right: 8px;
+//     }
+//   }
+//   & > p {
+//     color: #628ea7;
+//     font-size: 14px;
+//     margin-left: 10px;
+//     &::before {
+//       content: "•"; 
+//       color: #05b077;
+//       displady: inline-block; 
+//       width: 1em;
+//       margin-left: -.8em
+//     }
+//   }
+// `
 
-const ServiceFormWrapper = styled(FormWrapper)`
-  & > * {
-    margin: 5px 0;
-  }
+// const ServiceFormWrapper = styled(FormWrapper)`
+//   & > * {
+//     margin: 5px 0;
+//   }
 
-`
+// `
 
 export default {
   name: 'Service',
   components: {
-    Button,
-    FormInput,
-    FormWrapper,
     Modal,
     Title,
     CloseButton,
-    ServiceSection,
     Icon,
     Footer,
     Table,
     Header,
-    ServiceFormWrapper
   },
   methods: {
+    getData() {
+      this.queryData = data;
+      if(this.queryData.ErrMsg.returnCode === 0) {
+        this.tableData = this.queryData.serviceRecords.slice(0, 10);
+        this.handleChangeAll();
+      } else {
+        this.isError = true;
+      }
+    },
     changePage (page = this.page) {
       this.page = page;
       this.tableData = this.filterData.slice((this.page - 1)*10, this.page*10 )
@@ -201,7 +206,8 @@ export default {
       return data.filter(item => this.checkedRoutes.includes(item.route));
     },
     handleChangeData() {
-      this.filterData = this.filtData(this.filtDate(this.records));
+      // this.filterData = this.filtData(this.filtDate(this.records));
+      this.filterData = this.queryData.serviceRecords;
       this.changePage();
     },
     handleChangeAll() {
@@ -218,6 +224,7 @@ export default {
   },
   data () {
     return {
+      queryData: null,
       field: {
         option: '',
       },
@@ -235,124 +242,11 @@ export default {
       filterData: [],
       page: 1,
       routeOptions: ['0800', '0900', '直效', '保費', '服務中心櫃台', '業務員_行動', '業務員_一般', '醫院', '保代', '官網', '電話_其他', '簡訊', 'MML', '機場櫃檯', '內部作業', '其他', '傳真', '電話_服務中心', '申訴'],
-      records: [
-        {
-          id: 1,
-          date: '2019-01-02',
-          time: '10:00',
-          event: '申請網路服務',
-          route: '簡訊',
-          owner: '曹心慈 襄理',
-          num: '#1123',
-          key: 'ABB10173671763'
-        },
-        {
-          id: 2,
-          date: '2019-01-02',
-          time: '10:00',
-          event: '申請網路服務',
-          route: '0800',
-          owner: '曹心慈 襄理',
-          num: '#1123',
-          key: 'ABB10173671763'
-        },
-        {
-          id: 3,
-          date: '2019-01-02',
-          time: '10:00',
-          event: '申請網路服務',
-          route: '0800',
-          owner: '曹心慈 襄理',
-          num: '#1123',
-          key: 'ABB10173671763'
-        },
-        {
-          id: 4,
-          date: '2019-01-02',
-          time: '10:00',
-          event: '申請網路服務',
-          route: '簡訊',
-          owner: '曹心慈 襄理',
-          num: '#1123',
-          key: 'ABB10173671763'
-        },
-        {
-          id: 5,
-          date: '2019-01-02',
-          time: '10:00',
-          event: '申請網路服務',
-          route: '0800',
-          owner: '鍾肇政 襄理',
-          num: '#1123',
-          key: 'ABB10173671763'
-        },
-        {
-          id: 6,
-          date: '2019-03-02',
-          time: '10:00',
-          event: '申請網路服務',
-          route: '簡訊',
-          owner: '郭松棻 襄理',
-          num: '#1123',
-          key: 'ABB10173671763'
-        },
-        {
-          id: 7,
-          date: '2019-03-02',
-          time: '10:00',
-          event: '申請網路服務',
-          route: '簡訊',
-          owner: '曹心慈 襄理',
-          num: '#1123',
-          key: 'ABB10173671763'
-        },
-        {
-          id: 8,
-          date: '2019-01-02',
-          time: '10:00',
-          event: '申請網路服務',
-          route: '簡訊',
-          owner: '曹心慈 襄理',
-          num: '#1123',
-          key: 'ABB10173671763'
-        },
-        {
-          id: 9,
-          date: '2019-01-08',
-          time: '10:00',
-          event: '申請網路服務',
-          route: '簡訊',
-          owner: '曹心慈 襄理',
-          num: '#1123',
-          key: 'ABB10173671763'
-        }, 
-        {
-          id: 10,
-          date: '2019-01-02',
-          time: '10:00',
-          event: '申請網路服務',
-          route: '簡訊',
-          owner: '曹心慈 襄理',
-          num: '#1123',
-          key: 'ABB10173671763'
-        },   
-        {
-          id: 11,
-          date: '2019-01-09',
-          time: '10:00',
-          event: '申請網路服務',
-          route: '簡訊',
-          owner: '曹心慈 襄理',
-          num: '#1123',
-          key: 'ABB10173671763'
-        },                                            
-      ],
     }
   },
   mounted: function(){
     this.page = 1;
-    this.tableData = this.records.slice(0, 10);
-    this.handleChangeAll();
+    this.getData();
   }
 }
 </script>

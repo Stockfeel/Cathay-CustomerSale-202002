@@ -74,7 +74,10 @@
         </td>
       </tr>
       <tr rowspan="2">
-        <th>方便時間</th>
+        <th>
+          <p>方便時間</p>
+          <p class="warning">(可複選)</p>
+        </th>
         <td>
           <CheckFormWrapper>
             <FormInput inputBasis="25%" v-for="(date, idx) in formDate" :key="`date-${idx}`">

@@ -6,9 +6,10 @@
         <img src='../assets/info_avatar.png'>
       </div>
       <DropDown 
+        id="dropdown__interaction"
         text="互動"
         :list="[{
-          text: '搜資遊戲', 
+          text: '蒐資遊戲', 
           slug: ''
         }, {
           text: '問卷 1',
@@ -18,6 +19,9 @@
           slug: ''
         }]" 
       />
+      <b-tooltip custom-class="custom__tooltip" target="dropdown__interaction" triggers="hover" placement="top">
+        在您等待時間可以玩一下 30 秒左右小遊戲，不會花您太多時間喔！
+      </b-tooltip>
     </AvatarLayout>
     <IntroLayout>
       <section>

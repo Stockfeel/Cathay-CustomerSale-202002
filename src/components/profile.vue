@@ -142,9 +142,17 @@
                     <input id="child-0" type="radio" :value="0" v-model="form.child" />
                     <label for="child-0">無小孩</label>
                   </FormInput> 
-                 <FormInput inputBasis="33%">
+                 <FormInput inputBasis="20%">
                     <input id="child-1" type="radio" :value="1" v-model="form.child" />
                     <label for="child-1">有小孩</label>
+                  </FormInput> 
+                 <FormInput inputBasis="23%">
+                    <label class="inline-label" for="child-nonadult">成年</label>
+                    <input class="inline-input" id="child-nonadult" type="text" />
+                  </FormInput> 
+                 <FormInput inputBasis="23%">
+                    <label class="inline-label" for="child-adult">未成年</label>
+                    <input class="inline-input" id="child-adult" type="text" />
                   </FormInput> 
                 </ProfileFormWrapper>
               </td>
@@ -286,7 +294,7 @@ const ProfileTable = styled('table', profileTableProps)`
       color: #628ea7;
     }
     &.profile__service {
-      width: 180px;
+      width: 140px;
       vertical-align: middle;
       p {
         margin: 0;
@@ -381,8 +389,6 @@ export default {
         (acc[key] = acc[key] || []).push(hobbies[hobby]);
         return acc;
       }, {});
-
-      console.log(this.interestsData)
     },
     sendForm() {
       this.toggleEdit();
