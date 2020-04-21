@@ -69,17 +69,17 @@ export default {
   name: 'Home',
   methods: {
     getData() {
-      const educationStatus = {
-        "1": "國中及以下",
-        "2": "高中職",
-        "3": "大學專科",
-        "4": "研究所以上"
-      }
-      const marrigeStatus = {
-        "0": "未婚",
-        "1": "已婚",
-        "2": "其他"
-      }
+      // const educationStatus = {
+      //   "1": "國中及以下",
+      //   "2": "高中職",
+      //   "3": "大學專科",
+      //   "4": "研究所以上"
+      // }
+      // const marrigeStatus = {
+      //   "0": "未婚",
+      //   "1": "已婚",
+      //   "2": "其他"
+      // }
       
 
       // ajax demo
@@ -135,14 +135,14 @@ export default {
         const data = {
             "特殊客戶": this.queryData.AIE0_0500_bo.SPC_STRING,
             "特殊狀態備註": this.queryData.AIE0_0500_bo.SPECIAL_RECORD === "Y" ? "有" : "沒有",
-            "客戶特徵": this.queryData.AIE0_0500_bo.FEATURE_STR,
-            "集團員工": this.queryData.AIE0_0500_bo.EMPOLYEE,
-            "客戶標籤": this.queryData.AIE0_0500_bo.TAG_STRING,
-            "婚姻": marrigeStatus[this.queryData.AIE0_0500_bo.MARITAL_STATUS_CD],
-            "子女": this.queryData.AIE0_0500_bo.CHILDREN_CNT,
-            "年收入": this.queryData.AIE0_0500_bo.ANNUAL_INCOME_AMT,
-            "學歷": educationStatus[this.queryData.AIE0_0500_bo.EDUCATION_LEVEL_CD],
-            "興趣": this.queryData.AIE0_0500_bo.HOBBIES,
+            // "客戶特徵": this.queryData.AIE0_0500_bo.FEATURE_STR,
+            // "集團員工": this.queryData.AIE0_0500_bo.EMPOLYEE,
+            // "客戶標籤": this.queryData.AIE0_0500_bo.TAG_STRING,
+            // "婚姻": marrigeStatus[this.queryData.AIE0_0500_bo.MARITAL_STATUS_CD],
+            // "子女": this.queryData.AIE0_0500_bo.CHILDREN_CNT,
+            // "年收入": this.queryData.AIE0_0500_bo.ANNUAL_INCOME_AMT,
+            // "學歷": educationStatus[this.queryData.AIE0_0500_bo.EDUCATION_LEVEL_CD],
+            // "興趣": this.queryData.AIE0_0500_bo.HOBBIES,
           }
 
         const info = Object.keys(data).filter(item => data[item]).slice(0, 4).reduce((acc, item) => {
@@ -196,36 +196,36 @@ export default {
       },
       suggest: {
         service: [
-          {
-            id: 1,
-            title: '申辦網路服務',
-            state: 1,
-          },
-          {
-            id: 2,
-            title: '申辦電子單據',
-            state: 2,
-          },
-          {
-            id: 3,
-            title: '申辦網路服務',
-            state: 3,
-          },
-          {
-            id: 4,
-            title: '申辦網路服務',
-            state: 1,
-          },
-          {
-            id: 5,
-            title: '申辦電子單據',
-            state: 2,
-          },
-          {
-            id: 6,
-            title: '申辦電子單據',
-            state: 0,
-          }
+          // {
+          //   id: 1,
+          //   title: '申辦網路服務',
+          //   state: 1,
+          // },
+          // {
+          //   id: 2,
+          //   title: '申辦電子單據',
+          //   state: 2,
+          // },
+          // {
+          //   id: 3,
+          //   title: '申辦網路服務',
+          //   state: 3,
+          // },
+          // {
+          //   id: 4,
+          //   title: '申辦網路服務',
+          //   state: 1,
+          // },
+          // {
+          //   id: 5,
+          //   title: '申辦電子單據',
+          //   state: 2,
+          // },
+          // {
+          //   id: 6,
+          //   title: '申辦電子單據',
+          //   state: 0,
+          // }
         ],
         product: [
           {

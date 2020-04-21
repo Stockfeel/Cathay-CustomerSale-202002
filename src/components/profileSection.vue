@@ -2,8 +2,10 @@
   <Card>
     <AvatarLayout>
       <div class='avatar__picture'>
-        <div class='avatar__annotation'>70% 相似</div>
-        <img src='../assets/info_avatar.png'>
+        <div :class='`avatar__annotation ${similarity >= 90 ? "match" : similarity === 0 ? "nomatch" : ""}`'>
+          {{ similarity === 0 ? "無相似度資料" : `${similarity}% 相似`}}
+        </div>
+        <img :class='`${similarity >= 90 ? "match" : ""}`' src='../assets/info_avatar.png'>
       </div>
       <DropDown 
         id="dropdown__interaction"
@@ -37,6 +39,20 @@
           <ListItem v-for="(item, key) in Object.keys(user.info)" :key="`key-${key}`">{{item}}:
             <span>{{ user.info[item] }}</span>
           </ListItem>
+          <div class="intro__nodata all" v-if="Object.keys(user.info).length === 0">
+            保戶尚未建立輪廓
+            <DropDownButton bgColor="#05b077" @click="goToProfile">
+              <p>新增輪廓</p>
+              <Icon :iconUrl="require('../assets/icon-edit-edit-white.svg')" :size="20"/>
+            </DropDownButton>
+          </div>
+          <div class="intro__nodata" v-else-if="Object.keys(user.info).length < 4">
+            輪廓尚未建立完整
+            <DropDownButton bgColor="#05b077" @click="goToProfile">
+              <p>新增輪廓</p>
+              <Icon :iconUrl="require('../assets/icon-edit-edit-white.svg')" :size="20"/>
+            </DropDownButton>
+          </div>
         </List>
         <router-link tag="div" to='./profile'>
           <MoreButton>
@@ -67,6 +83,7 @@ import {
   Card, 
   Icon, 
   MoreButton, 
+  DropDownButton,
   Title } from '../style.js';
 import styled from 'vue-styled-components';
 import DropDown from './ui/dropdown.vue';
@@ -98,6 +115,12 @@ const AvatarLayout = styled.div`
     padding: 5px;
     width: 45px;
     height: 45px;
+    &.match {
+      background: #3aafb1
+    }
+    &.nomatch {
+      padding: 2px;
+    }
   }
   img {
     width: 100px;
@@ -107,7 +130,13 @@ const AvatarLayout = styled.div`
     box-shadow: 
       0 0 0 5px white,
       0 0 0 10px #dd7b7b,
-      0 0 12px 8px #80c5ca;
+      0 0 12px 8px #dd7b7b;
+    &.match {
+      box-shadow: 
+        0 0 0 5px white,
+        0 0 0 10px #3aafb1,
+        0 0 12px 8px #3aafb1;
+    }
   }
 `
 
@@ -130,6 +159,20 @@ const IntroLayout = styled.div`
   section > p {
     margin-top: 5px;
   }
+  .intro__nodata {
+    background: rgba(227, 250, 250, 0.5);
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & > * {
+      margin: 10px;
+    }
+    &.all {
+      flex-direction: column;
+    }
+  }
 `
 
 export default {
@@ -144,14 +187,21 @@ export default {
     AvatarLayout,
     Icon,
     MoreButton,
+    DropDownButton,
     Title,
     ListItem,
     List,
-    DropDown
+    DropDown,
+  },
+  methods: {
+    goToProfile() {
+      this.$router.push('/profile?edit=true')
+    }
   },
   data () {
     return {
       isMenuOpen: false,
+      similarity: 80
     }
   },
 }

@@ -7,12 +7,20 @@
           <SuggestButton v-for="(item, idx) in serviceTable" :key="`service-${idx}`" :state="item.state">
             <router-link :to="`./suggest?id=${item.id}`"> {{ item.title }} </router-link>
           </SuggestButton>
+          <div v-if="serviceTable.length === 0" class="nodata">
+            <img src="../assets/img-empty.svg" />
+            <div>查無資料</div>
+          </div>
         </div>
         <div class="product__type">
           <Title>商機推薦</Title>
           <SuggestButton v-for="(item, idx) in productTable" :key="`product-${idx}`" :state="item.state">
             <router-link :to="`./suggest?id=${item.id}`"> {{ item.title }} </router-link>
           </SuggestButton>
+          <div v-if="productTable.length === 0" class="nodata">
+            <img src="../assets/img-empty.svg" />
+            <div>查無資料</div>
+          </div>
         </div>
       </section>
       <MoreButton align="center" @click="showMore">
@@ -96,6 +104,17 @@ const ProductLayout = styled.section`
   .product__type {
     display: flex; 
     flex-direction: column;
+  }
+  .nodata {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    img {
+      width: 50%;
+      height: 50%;
+      margin-right: 20px;
+    }
   }
 `
 

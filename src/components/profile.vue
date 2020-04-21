@@ -13,13 +13,33 @@
           <ProfileTable v-if="!isEdit && tableData != null">
             <tr>
               <th>特殊客戶</th>
-              <td><TableList :data="Object.keys(tableData.spcMap).map(item => `${tableData.spcMap[item].SPC_NAME} ${spcStatus[item]}`)" direction="column"/></td>
+              <td v-if="Object.keys(tableData.spcMap).length > 0">
+                <TableList :data="Object.keys(tableData.spcMap).map(item => `${tableData.spcMap[item].SPC_NAME} ${spcStatus[item]}`)" direction="column"/>
+              </td>
+              <td v-else>
+                <p class="nodata">尚無資料，詢問搜集輪廓吧！
+                  <Icon 
+                    :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
+                    :size="20" 
+                    @click="() => isEdit = !isEdit"
+                  />
+                </p>
+              </td>
               <td class='profile__service'>
               </td>
             </tr>
             <tr>
               <th>特殊狀況備註</th>
-              <td><TableList :data="tableData.spcMemoMap.MEMO" /></td>
+              <td v-if="tableData.spcMemoMap.MEMO"><TableList :data="tableData.spcMemoMap.MEMO" /></td>
+              <td v-else>
+                <p class="nodata">尚無資料，詢問搜集輪廓吧！
+                  <Icon 
+                    :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
+                    :size="20" 
+                    @click="() => isEdit = !isEdit"
+                  />
+                </p>
+              </td>
               <td class='profile__service'>
                 <p>{{ dateParser(tableData.spcMemoMap.INPUT_DATE) }}</p>
                 <p>{{ tableData.spcMemoMap.INPUT_NAME }} ({{ tableData.spcMemoMap.SER_DIV_NAME }})</p>
@@ -27,8 +47,17 @@
             </tr>
             <tr>
               <th>特徵</th>
-              <td><TableList field="featureStr" :toggleEdit="toggleEdit" 
+              <td v-if="tableData.featureList"><TableList field="featureStr" :toggleEdit="toggleEdit" 
                 :data="tableData.featureList.map(item => featuresStauts[item])" /></td>
+              <td v-else>
+                <p class="nodata">尚無資料，詢問搜集輪廓吧！
+                  <Icon 
+                    :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
+                    :size="20" 
+                    @click="() => isEdit = !isEdit"
+                  />
+                </p>
+              </td>
               <td class='profile__service'>
                 <p>{{ dateParser(tableData.latestFeatureMap.INPUT_DATE) }}</p>
                 <p>{{ tableData.latestFeatureMap.INPUT_NAME }} ({{ tableData.latestFeatureMap.SER_DIV_NAME }})</p>
@@ -36,20 +65,51 @@
             </tr>
             <tr>
               <th>集團員工</th>
-              <td><TableList :data="tableData.EMPOLYEE" /></td>
+              <td v-if="tableData.EMPOLYEE"><TableList :data="tableData.EMPOLYEE" /></td>
+              <td v-else>
+                <p class="nodata">尚無資料，詢問搜集輪廓吧！
+                  <Icon 
+                    :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
+                    :size="20" 
+                    @click="() => isEdit = !isEdit"
+                  />
+                </p>
+              </td>
               <td class='profile__service'>
               </td>
             </tr>
             <tr>
               <th>客戶標籤</th>
-              <td><TableList :data="tableData.tagList.map(item => item.TAG_NAME)" direction="column"/></td>
+              <td v-if="tableData.tagList"><TableList :data="tableData.tagList.map(item => item.TAG_NAME)" direction="column"/></td>
+              <td v-else>
+                <p class="nodata">尚無資料，詢問搜集輪廓吧！
+                  <Icon 
+                    :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
+                    :size="20" 
+                    @click="() => isEdit = !isEdit"
+                  />
+                </p>
+              </td>
               <td class='profile__service'>
               </td>
             </tr>
             <tr>
               <th>婚姻</th>
-              <td><TableList field="marrige" :toggleEdit="toggleEdit" 
-                :data="marrigeStatus[tableData.indivInfoMap.MARITAL_STATUS_CD]" /></td>
+              <td v-if="marrigeStatus[tableData.indivInfoMap.MARITAL_STATUS_CD]">
+                <TableList 
+                  field="marrige" 
+                  :toggleEdit="toggleEdit" 
+                  :data="marrigeStatus[tableData.indivInfoMap.MARITAL_STATUS_CD]" 
+                /></td>
+              <td v-else>
+                <p class="nodata">尚無資料，詢問搜集輪廓吧！
+                  <Icon 
+                    :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
+                    :size="20" 
+                    @click="() => isEdit = !isEdit"
+                  />
+                </p>
+              </td>
               <td class='profile__service'>
                 <p>{{ dateParser(tableData.indivInfoMap.MARITAL_UPDATE_DTTM) }}</p>
                 <p>{{ tableData.indivInfoMap.MARITAL_UPDATE_NAME }} ({{ tableData.indivInfoMap.MARITAL_UPDATE_DIV_NAME }})</p>
@@ -57,8 +117,17 @@
             </tr>
             <tr>
               <th>子女</th>
-              <td><TableList field="child" :toggleEdit="toggleEdit" 
+              <td v-if="tableData.indivInfoMap.CHILDREN_CNT"><TableList field="child" :toggleEdit="toggleEdit" 
                 :data="Number(tableData.indivInfoMap.CHILDREN_CNT) ? '無小孩': `有小孩 ${tableData.indivInfoMap.CHILDREN_CNT} 位`" /></td>
+              <td v-else>
+                <p class="nodata">尚無資料，詢問搜集輪廓吧！
+                  <Icon 
+                    :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
+                    :size="20" 
+                    @click="() => isEdit = !isEdit"
+                  />
+                </p>
+              </td>
               <td class='profile__service'>
                 <p>{{ dateParser(tableData.indivInfoMap.CHILDREN_UPDATE_DTTM) }}</p>
                 <p>{{ tableData.indivInfoMap.CHILDREN_UPDATE_NAME }} ({{ tableData.indivInfoMap.CHILDREN_UPDATE_DIV_NAME }})</p>
@@ -66,8 +135,17 @@
             </tr>
             <tr>
               <th>年收入</th>
-              <td><TableList field="salary" :toggleEdit="toggleEdit" 
+              <td v-if="tableData.indivInfoMap.ANNUAL_INCOME_AMT"><TableList field="salary" :toggleEdit="toggleEdit" 
                 :data="salaryTrans(tableData.indivInfoMap.ANNUAL_INCOME_AMT)" /></td>
+              <td v-else>
+                <p class="nodata">尚無資料，詢問搜集輪廓吧！
+                  <Icon 
+                    :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
+                    :size="20" 
+                    @click="() => isEdit = !isEdit"
+                  />
+                </p>
+              </td>
               <td class='profile__service'>
                 <p>{{ dateParser(tableData.indivInfoMap.ANNUAL_INCOME_UPDATE_DTTM) }}</p>
                 <p>{{ tableData.indivInfoMap.ANNUAL_INCOME_UPDATE_NAME }} ({{ tableData.indivInfoMap.ANNUAL_INCOME_UPDATE_DIV_NAME }})</p>
@@ -75,8 +153,19 @@
             </tr>
             <tr>
               <th>學歷</th>
-              <td><TableList field="education" :toggleEdit="toggleEdit" 
-                :data="educationStatus[tableData.indivInfoMap.EDUCATION_LEVEL_CD]" /></td>
+              <td v-if="educationStatus[tableData.indivInfoMap.EDUCATION_LEVEL_CD]">
+                <TableList field="education" :toggleEdit="toggleEdit" 
+                :data="educationStatus[tableData.indivInfoMap.EDUCATION_LEVEL_CD]" />
+              </td>
+              <td v-else>
+                <p class="nodata">尚無資料，詢問搜集輪廓吧！
+                  <Icon 
+                    :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
+                    :size="20" 
+                    @click="() => isEdit = !isEdit"
+                  />
+                </p>
+              </td>
               <td class='profile__service'>
                 <p>{{ dateParser(tableData.indivInfoMap.EDUCATION_UPDATE_DTTM) }}</p>
                 <p>{{ tableData.indivInfoMap.EDUCATION_UPDATE_NAME }} ({{ tableData.indivInfoMap.EDUCATION_UPDATE_DIV_NAME }})</p>
@@ -85,9 +174,18 @@
             <tr v-for="(interestKey, idx) in Object.keys(interestsData)" :key="idx" class='profile__interest'>
               <th v-if="!idx">興趣</th>
               <th v-if="idx"></th>
-              <td>
+              <td v-if="interestsData[interestKey]" >
                 <p>{{ interestKey }}</p>
                 <TableList :data="interestsData[interestKey]" />
+              </td>
+              <td v-else>
+                <p class="nodata interst">尚無資料，詢問搜集輪廓吧！
+                  <Icon 
+                    :iconUrl="require('../assets/icon-edit-edit-green.svg')" 
+                    :size="20" 
+                    @click="() => isEdit = !isEdit"
+                  />
+                </p>
               </td>
               <td class='profile__service'>
                 <p>{{ dateParser(tableData.latestHobbiesMap.INPUT_DATE) }}</p>
@@ -240,7 +338,8 @@ import {
   CloseButton, 
   Header, 
   Footer,
-  ErrorModal } from '../style.js';
+  ErrorModal,
+  Icon } from '../style.js';
 import styled from 'vue-styled-components';
 import Textarea from './ui/textarea.vue';
 import TableList from './ui/tableList.vue';
@@ -253,6 +352,11 @@ const ProfileTable = styled('table', profileTableProps)`
   width: 90%;
   margin: 0 auto; 
   table-layout: fixed;
+  .nodata {
+    color: #05b077;
+    display: flex;
+    align-items: center;
+  }
   p{
     margin: 0;
   } 
@@ -332,7 +436,8 @@ export default {
     Textarea,
     TableList,
     ErrorModal,
-    Loading
+    Loading,
+    Icon
   },
   methods: {
     getData() {
@@ -484,6 +589,7 @@ export default {
   },
   mounted: function(){
     this.getData();
+    this.isEdit = this.$route.query.edit;
   }
 }
 </script>

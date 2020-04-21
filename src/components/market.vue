@@ -99,18 +99,24 @@
             </td>
           </tr>
         </tbody>
+        <div v-if="tableData.length === 0" class="nodata">
+          <img src="../assets/img-empty.svg" />
+          <div>近一個月無資料</div>
+        </div>
       </MarketTable>
     </main>
-    <Footer>
+    <Footer v-if="tableData.length > 0">
       <b-pagination
         v-model="page"
         :total-rows="filterData.length"
-        :per-page="3"
+        :per-page="10"
+        page-class="custom__pagination"
+        prev-class="custom__pagination"
+        next-class="custom__pagination"
         next-text=">"
         prev-text="<"
         first-number
         last-number
-        @change="showTable"
       ></b-pagination>
     </Footer>
   </Modal>
@@ -132,6 +138,21 @@ import {
 import styled from 'vue-styled-components';
 
 const MarketTable = styled(Table)`
+  .nodata {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 200px;
+      height: 200px;
+      margin-bottom: 30px;
+    }
+  }
   .input__date {
     p {
       padding-left: 1rem;
@@ -221,6 +242,7 @@ export default {
         state: false
       },
       page: 1,
+      // records: [], 
       records: [
         {
           date: '108-12-26',

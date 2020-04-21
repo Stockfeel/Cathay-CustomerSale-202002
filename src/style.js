@@ -367,11 +367,13 @@ export const DropDownButton = styled.div`
   box-shadow: 0 4px 12px 0 #85cbcb;
   border-radius: 20px;
   color: white;
-  width: 105px;
+  width: 110px;
   padding: 5px 0;
   cursor: pointer;
   & > * {
     margin: 0 5px;
+    display: inline-block;
+    vertical-align: middle;
   }
 `
 

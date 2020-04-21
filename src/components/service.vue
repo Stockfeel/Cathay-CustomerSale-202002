@@ -44,7 +44,7 @@
       <p>服務歷程平台無法查詢大於 6 個月以上的簡訊事件</p>
     </ServiceSection> -->
     <main>
-      <Table>
+      <ServiceTable>
         <thead>
           <tr>
             <th>序號</th>
@@ -91,7 +91,11 @@
             <td align="center"><p>{{ record.KEY_S1 }}</p></td>
           </tr>
         </tbody>
-      </Table>
+        <div v-if="tableData.length === 0" class="nodata">
+          <img src="../assets/img-empty.svg" />
+          <div>近三個月無資料</div>
+        </div>
+      </ServiceTable>
     </main>
     <Footer v-if="filterData.length > 10">
       <b-pagination
@@ -121,7 +125,25 @@ import {
   Table, 
   Header } from '../style.js';
 import data from '../data/service';
-// import styled from 'vue-styled-components';
+import styled from 'vue-styled-components';
+
+const ServiceTable = styled(Table)`
+  .nodata {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 200px;
+      height: 200px;
+      margin-bottom: 30px;
+    }
+  }
+`
 
 // const ServiceSection = styled.section`
 //   width: 90%;
@@ -161,8 +183,8 @@ export default {
     CloseButton,
     Icon,
     Footer,
-    Table,
     Header,
+    ServiceTable
   },
   methods: {
     getData() {
