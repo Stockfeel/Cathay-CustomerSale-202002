@@ -4,6 +4,7 @@ import noTime from './assets/btn-icon-notime.svg';
 import no from './assets/btn-icon-no.svg';
 import yes from './assets/btn-icon-yes.svg';
 import calendar from './assets/icon-calendar.svg';
+import arrowRight from './assets/icon-arrow-white-right.svg';
 import { injectGlobal } from 'vue-styled-components';
 
 // Atoms
@@ -39,7 +40,78 @@ export const InitialLayout = injectGlobal`
   }
   #app, html, body {
     width: 100%;
+    height: 100%;
     margin: 0;
+  }
+
+  #app {
+    display: flex;
+  }
+
+  .app {
+    width: 33.33%;
+    overflow: scroll;
+    position: relative;
+    &.hidden {
+      width: 0;
+    }
+  }
+
+  iframe {
+    width: 66.66%;
+    height: 100%;
+    &.open {
+      width: 100%;
+    }
+  }
+
+  .tab {
+    position: fixed;
+    z-index: 10;
+    left: 66.66%;
+    top: 50%;
+    transform: translate(-100%, -50%);
+    height: 110px;
+    width: 40px;
+    background: #00bdbf;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    &::after {
+      content: "收合";
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      letter-spacing: 10px;
+      writing-mode: vertical-lr;
+    }
+    &::before {
+      content: "";
+      background-image: url('${arrowRight}');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      left: 50%;
+      top: 75%;
+      transform: translate(-50%) rotate(0);
+    }
+    &.open {
+      left: 100%;
+      &::after {
+        content: "展開";
+      }
+      &::before {
+        transform: translate(-50%) rotate(180deg);
+      } 
+    }
   }
 
   *::-webkit-scrollbar-thumb {
@@ -722,7 +794,7 @@ export const Card = styled('div', cardProps)`
 const modalProps = { mainHeight: Number, autoHeight: Boolean };
 export const Modal = styled('div', modalProps)`
 	padding: 20px 0;
-	position: fixed;
+	position: absolute;
 	left: 50%
 	top: 50%;
 	transform: translate(-50%, -50%);

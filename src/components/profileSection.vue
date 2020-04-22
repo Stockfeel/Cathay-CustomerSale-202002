@@ -5,7 +5,7 @@
         <div :class='`avatar__annotation ${similarity >= 90 ? "match" : similarity === 0 ? "nomatch" : ""}`'>
           {{ similarity === 0 ? "無相似度資料" : `${similarity}% 相似`}}
         </div>
-        <img :class='`${similarity >= 90 ? "match" : ""}`' src='../assets/info_avatar.png'>
+        <img :class='`${similarity >= 90 ? "match" : ""}`' :src='require(`../assets/${transformAvatar()}.svg`)' />
       </div>
       <DropDown 
         id="dropdown__interaction"
@@ -196,12 +196,30 @@ export default {
   methods: {
     goToProfile() {
       this.$router.push('/profile?edit=true')
+    },
+    transformAvatar() {
+      if(this.user.id) {
+        switch(this.user.id[1]) {
+          case '1': 
+            if(this.similarity < 90) return 'img-photo-man-warning';
+            else return  'img-photo-man';
+          case '2': 
+            if(this.similarity < 90) return 'img-photo-woman-warning';
+            else return  'img-photo-woman';
+          default: 
+            if(this.similarity < 90) return 'img-photo-neutral-warning';
+            else return  'img-photo-neutral';
+        }
+      } else {
+        if(this.similarity < 90) return 'img-photo-nodata-warning';
+        else return 'img-photo-nodata';        
+      }
     }
   },
   data () {
     return {
       isMenuOpen: false,
-      similarity: 80
+      similarity: 50
     }
   },
 }

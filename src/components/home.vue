@@ -12,7 +12,6 @@
     </HomeLayout>
   </div>
 </template>
-
 <script>
 import ProfileSection from './profileSection.vue';
 import MarketSection from './marketSection.vue';
@@ -22,6 +21,7 @@ import homeProfile from '../data/homeProfile.json';
 import Loading from "./ui/loading.vue";
 
 const HomeLayout = styled.div`
+  position: relative;
   background: #d2f8f3;
   width: 100%;
   height: 100%;
@@ -152,6 +152,7 @@ export default {
 
         this.user = {
           name: this.queryData.AIE0_0500_bo.NAME,
+          id: this.queryData.AIE0_0500_bo.ID,
           age: this.queryData.AIE0_0500_bo.AGE,
           info,
           isSecret: this.queryData.AIE0_0500_bo.SECRET_CLIENT,

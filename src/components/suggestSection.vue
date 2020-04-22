@@ -109,10 +109,10 @@ const ProductLayout = styled.section`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 50px;
     img {
-      width: 50%;
-      height: 50%;
+      width: 100px;
+      height: 100px;
       margin-right: 20px;
     }
   }
