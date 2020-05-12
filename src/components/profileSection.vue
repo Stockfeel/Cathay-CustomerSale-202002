@@ -95,10 +95,19 @@ const AvatarLayout = styled.div`
   justify-content: center;
   flex: 0 1 160px;
   box-shadow: 0 6px 15px 0 rgba(128, 197, 197, 0.72);
+  @media (max-width: 1280px) {
+    flex: 0 1 230px;
+    padding: 20px 0;
+    justify-content: space-around;
+  }
   .avatar__picture {
     position: relative;
     margin-bottom: 20px;
     margin-top: -50px;
+    @media (max-width: 1280px) {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
   }
   .avatar__annotation {
     position: absolute;

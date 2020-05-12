@@ -40,7 +40,8 @@ const HomeLayout = styled.div`
     color: white;
     padding: 3px 3px 3px 10px;
     border-bottom-left-radius: 15px;
-    cursor: pointer;   
+    cursor: pointer; 
+    z-index: 10;  
     .time__tooltip {
       visibility: hidden;
       position: absolute;

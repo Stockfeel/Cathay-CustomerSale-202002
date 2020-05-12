@@ -1,5 +1,5 @@
 <template>
-  <InsuranceLayout>
+  <InsuranceLayout v-if="insurances.length > 0">
     <Insurance v-for="(insurance, idx) in insurances" 
       :key="`insurance-${idx}`" 
       :average="insurance.average" 
@@ -21,7 +21,13 @@
         </div>
       </div>
     </Insurance>
-    <span>註：深色數字為相較於用戶</span>
+    <span>註：深色數字為相較於保戶平均值</span>
+  </InsuranceLayout>
+  <InsuranceLayout v-else>
+    <div class="nodata">
+      <img src="../assets/img-nodata.svg" />
+      <div>無法查詢保障缺口</div>
+    </div>
   </InsuranceLayout>
 </template>
 
@@ -36,6 +42,23 @@ const InsuranceLayout = styled.section`
     text-align: right;
     width: 100%;
   } 
+  @media (max-width: 1280px) {
+    flex-direction: column;
+  }
+  .nodata {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 50px;
+    margin: 0 auto;
+    img {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 20px;
+      margin-left: 20px;
+    }
+  }
 `
 
 const InsuranceProps = {
@@ -46,10 +69,13 @@ const Insurance = styled('div', InsuranceProps)`
   display: flex;
   justify-content: space-around;
   width: 50%;
-  height: 60px;
+  height: 70px;
   cursor: pointer;
   border-radius: 12px;
   padding: 5px 10px;
+  @media (max-width: 1280px) {
+    width: 100%;
+  }
   &.active {
     box-shadow: 0 0 0 3px #ffcbcb, 0 0 0 4px #feecec;
   }
@@ -88,6 +114,7 @@ const Insurance = styled('div', InsuranceProps)`
     .bar__side {
       width: 100%;
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       & > *:first-child {
         color: ${props => props.difference < 0 ? '#93d1d1' : '#dd7b7b'};

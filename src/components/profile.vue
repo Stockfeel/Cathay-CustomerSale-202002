@@ -198,14 +198,6 @@
               <th>特殊狀況備註</th>
               <td class='profile__form'>
                 <FormWrapper>
-                  <FormInput inputBasis="100%">
-                    <input id="special-0" type="radio" name="special" />
-                    <label for="special-0">無</label>
-                  </FormInput>
-                  <FormInput inputBasis="10%">
-                    <input id="special-1" type="radio" name="special" />
-                    <label for="special-1">有</label>
-                  </FormInput>
                   <Textarea width="80%" v-model="form.spcString" />
                 </FormWrapper>
               </td>
@@ -301,7 +293,7 @@
           </ProfileTable>
         </main>
         <Footer>
-          <ButtonWrapper>
+          <ButtonWrapper wrapperAlign="center">
             <Button v-if="!isEdit" :padding="50" @click="toggleEdit">編輯</Button>
             <Button v-if="isEdit" :padding="50" @click="sendForm">儲存</Button>
             <Button v-if="isEdit" bgColor="#616161" :padding="50" @click="toggleEdit">取消</Button>

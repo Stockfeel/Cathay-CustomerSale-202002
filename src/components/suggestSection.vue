@@ -58,6 +58,10 @@
               text: '本次客服',
               slug: 'introduce?type=current&cat=service'
             }]" />
+          <div class="suggest__notrans">
+            拒絕轉介
+            <div>X</div>
+          </div>
         </ButtonWrapper>
       </div>
       <InsuranceSection :insurances="insurances" :class="`${isSync == 'on' ? 'active' : ''}`" />
@@ -84,7 +88,7 @@ import DropDown from './ui/dropdown.vue';
 import styled from 'vue-styled-components';
 
 const ProductLayout = styled.section`
-  padding: 10px 30px;
+  padding: 10px 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -100,6 +104,9 @@ const ProductLayout = styled.section`
   section {
     display: flex;
     justify-content: space-between;
+    @media (max-width: 1280px) {
+      flex-direction: column;
+    }
   }
   .product__type {
     display: flex; 
@@ -109,22 +116,31 @@ const ProductLayout = styled.section`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 50px;
+    margin-top: 20px;
     img {
       width: 100px;
       height: 100px;
+      margin-bottom: 20px;
       margin-right: 20px;
     }
   }
 `
 
 const InsuranceLayout = styled.section`
-  padding: 30px;
+  padding: 30px 20px;
   & > div {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     & > div {
-      margin-left: 25px;
+      margin-top: 10px;
+    }
+    @media (max-width: 1280px) {
+      flex-direction: column;
+      align-items: flex-start;
+      & > div {
+        margin-left: 0;
+      }
     }
   }
   section {
@@ -138,16 +154,15 @@ const InsuranceLayout = styled.section`
       box-shadow: 0 0 0 5px #ffcbcb, 0 0 0 10px #feecec;
     }
   }
-  .suggest__notime {
-    position: absolute; 
-    margin-top: 15px;
-    left: 50%; 
-    transform: translateX(-50%);
+  .suggest__notrans {
     color: white;
     background: #616161;
     border-radius: 20px;
     font-size: 16px; 
     padding: 2px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     div {
       background: rgba(255, 255, 255, 0.2);
       border-radius: 10px;
@@ -156,6 +171,32 @@ const InsuranceLayout = styled.section`
       display: flex;
       justify-content: center;
       align-items: center;
+      margin: 5px;
+    }
+  }
+  .suggest__notime {
+    position: absolute; 
+    top: -5px;
+    right: -5px; 
+    color: white;
+    background: #f5bd32;
+    border-radius: 20px;
+    font-size: 16px; 
+    padding: 5px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    div {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: 10px;
     }
   }
 `

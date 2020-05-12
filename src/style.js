@@ -78,17 +78,12 @@ export const InitialLayout = injectGlobal`
     border-bottom-left-radius: 10px;
     &::after {
       content: "收合";
-      width: 100%;
-      height: 100%;
       position: absolute;
-      left: 0;
-      top: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       color: white;
-      letter-spacing: 10px;
-      writing-mode: vertical-lr;
+      margin-left: 1px;
     }
     &::before {
       content: "";
@@ -269,7 +264,7 @@ export const FormInput = styled('div', formInputProps)`
     }
 	}
 	textarea {
-		height: 150px;
+		height: 60px;
 		border: #d9dbdb 1px solid;
 		border-radius: 8px;
 		width: 100%;
@@ -501,9 +496,15 @@ export const SuggestButton = styled('div', suggestProps)`
   background: ${props => styleButton(props.state).color};
   box-shadow: 0 2px 6px 0 #93d1d1;
   margin: 8px 0;
+  @media (max-width: 1280px) {
+    width: 90%;
+    margin: 8px auto;
+  }
   &:after {
     position: absolute; 
     right: 10px; 
+    top: 50%;
+    transform: translateY(-50%);
     content: '';
     width: 30px;
     height: 30px;
@@ -612,15 +613,24 @@ export const Footer = styled.div`
   box-shadow: 0 2px 8px 0 rgba(128, 197, 197, 0.5);
 `
 
-export const ButtonWrapper = styled.div`
+const wrapperProps = { wrapperAlign: String, wrapperMargin: Number };
+export const ButtonWrapper = styled('div', wrapperProps)`
   display: flex;
-  justify-content: center;
+  justify-content: ${props => props.wrapperAlign || 'flex-start'};
+  flex-wrap: wrap;
+  width: 100%;
   & > * {
-    margin: 10px;
+    margin: 5px;
+  }
+  @media (max-width: 1280px) {
+    flex-wrap: wrap;
+    justify-content: ${props => props.wrapperAlign || 'flex-start'};
+    & > * {
+      margin: 5px;
+    }
   }
 `
 
-const wrapperProps = { wrapperAlign: String, wrapperMargin: Number };
 export const FormWrapper = styled('div', wrapperProps)`
 	display: flex;
 	flex-wrap: wrap;
@@ -781,6 +791,7 @@ export const Tab = styled.div`
 // Templates
 const cardProps = { cardDirection: String };
 export const Card = styled('div', cardProps)`
+  position: relative;
 	display: flex;
 	flex-direction: ${props => props.cardDirection || 'row'}
 	border-radius: 12px;
@@ -789,12 +800,15 @@ export const Card = styled('div', cardProps)`
 	background: ${color.bg};
 	width: 97%;
 	margin: 8px 10px;
+  @media (max-width: 1280px) {
+    flex-direction: column;
+  }
 `;
 
 const modalProps = { mainHeight: Number, autoHeight: Boolean };
 export const Modal = styled('div', modalProps)`
 	padding: 20px 0;
-	position: absolute;
+	position: fixed;
 	left: 50%
 	top: 50%;
 	transform: translate(-50%, -50%);
@@ -802,7 +816,7 @@ export const Modal = styled('div', modalProps)`
 	width: 90%;
 	border-radius: 8px;
 	background: ${color.bg};
-	z-index: 1;
+	z-index: 10;
 	box-shadow: ${props => props.autoHeight ? `
     0 0 0 500px rgba(1,1,1,.3),
     0 0 0 500px rgba(1,1,1,.3)

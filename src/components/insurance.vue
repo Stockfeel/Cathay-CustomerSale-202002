@@ -28,46 +28,51 @@
           />
         </Product>
       </section>
+      <ButtonWrapper wrapperAlign="center">
+        <Button>官網更多商品</Button>
+      </ButtonWrapper>
     </InsuranceLayout>
     <InsuranceLayout v-if="tab == 'hottest'">
       <section v-for="(item, idx) in Object.keys(hottest)" :key="`section-${idx}`">
         <div class="section__title">{{ item }}</div>
         <p>註：{{ hottest[item].note }}</p>
-        <Product 
-          v-for="(product, idx) in hottest[item].products" 
-          :key="`hottest-${idx}`" 
-          :class="idx === hottest[item].isShow ? 'active' : ''"
-        >
-          <div class="item__name">{{ product.name }}</div>
-          <p class="item__link">
-            <span>銷售 {{ toCurrency(product.volume) }} 件</span>
-          </p>
-          <StarIcon :iconUrl="require('../assets/star.svg')" 
-            :word="String(product.rank)" :size="35" 
-          />
-          <div class="item__more">
-            <Icon 
-              :iconUrl="require('../assets/button_more.svg')" 
-              :size="30" 
-              :rotate="90"
-              v-if="hottest[item].isShow !== idx"
-              @click="hottest[item].isShow = hottest[item].isShow === idx ? -1 : idx" 
+        <div class="section__products">
+          <Product 
+            v-for="(product, idx) in hottest[item].products" 
+            :key="`hottest-${idx}`" 
+            :class="idx === hottest[item].isShow ? 'active' : ''"
+          >
+            <div class="item__name">{{ product.name }}</div>
+            <p class="item__link">
+              <span>銷售 {{ toCurrency(product.volume) }} 件</span>
+            </p>
+            <StarIcon :iconUrl="require('../assets/star.svg')" 
+              :word="String(product.rank)" :size="35" 
             />
-            <Icon 
-              :iconUrl="require('../assets/button_more.svg')" 
-              :size="30" 
-              :rotate="-90"
-              v-if="hottest[item].isShow === idx"
-              @click="hottest[item].isShow = hottest[item].isShow === idx ? -1 : idx" 
-            />
-          </div>
-        </Product>
+            <div class="item__more">
+              <Icon 
+                :iconUrl="require('../assets/button_more.svg')" 
+                :size="30" 
+                :rotate="90"
+                v-if="hottest[item].isShow !== idx"
+                @click="hottest[item].isShow = hottest[item].isShow === idx ? -1 : idx" 
+              />
+              <Icon 
+                :iconUrl="require('../assets/button_more.svg')" 
+                :size="30" 
+                :rotate="-90"
+                v-if="hottest[item].isShow === idx"
+                @click="hottest[item].isShow = hottest[item].isShow === idx ? -1 : idx" 
+              />
+            </div>
+          </Product>
+        </div>
         <div class="section__show" v-if="hottest[item].isShow !== -1">
           <main>
             <Information :profile="profile" :product="hottest[item].products[hottest[item].isShow]"/>
           </main>
           <Footer>
-            <ButtonWrapper>
+            <ButtonWrapper wrapperAlign="center">
               <Button :class="isEdit ? 'lock' : ''" bgColor="#05b077" @click="isAccept = !isAccept">接受</Button>
               <Button :class="isEdit ? 'lock' : ''" bgColor="#efbd00" @click="backTo()">沒時間</Button>
               <Button bgColor="#616161" @click="isEdit = !isEdit">拒絕</Button>
@@ -119,10 +124,10 @@
           </Footer>
         </div>
       </section>
+      <ButtonWrapper wrapperAlign="center">
+        <Button>官網更多商品</Button>
+      </ButtonWrapper>
     </InsuranceLayout>
-    <ButtonWrapper>
-      <Button>官網更多商品</Button>
-    </ButtonWrapper>
   </Modal>
 </template>
 
@@ -139,6 +144,7 @@ import {
   Tab,
   LinkStyle,
   ScrollIn,
+  Footer
 } from "../style";
 import InsuranceSection from "./insuranceSection";
 import styled from 'vue-styled-components';
@@ -156,6 +162,7 @@ const Product = styled('div', productProps)`
   height: 150px;
   padding: 20px 20px 0 20px;
   border-radius: 10px;
+  margin: 10px;
   box-shadow: 0 2px 8px 0 rgba(226, 108, 108, 0.3);
   &.active {
     box-shadow: 0 4px 29px 0 rgba(0, 159, 161, 0.5);
@@ -192,9 +199,13 @@ const Product = styled('div', productProps)`
 const InsuranceLayout = styled.main`
   section {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: wrap;
     padding: 20px;
+    .section__products {
+      width: 100%;
+      display: flex;
+    }
     p {
       color: #628ea7;
       font-size: 14px;
@@ -243,7 +254,8 @@ export default {
     LinkStyle,
     ScrollIn,
     Textarea,
-    DropDown
+    DropDown,
+    Footer
   },
   methods: {
     backTo() {
