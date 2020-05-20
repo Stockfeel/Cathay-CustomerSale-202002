@@ -1,5 +1,5 @@
 <template>
-  <Modal>
+  <Modal :scroll="true">
     <Header>
       <router-link to="../">
         <CloseButton/>

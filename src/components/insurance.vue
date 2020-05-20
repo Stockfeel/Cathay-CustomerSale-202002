@@ -1,5 +1,5 @@
 <template>
-  <Modal :autoHeight="true">
+  <Modal :autoHeight="true" :scroll="false">
     <Header>
       <router-link to='./'>
         <CloseButton/>
@@ -15,18 +15,89 @@
       <section>
         <Product 
           :state="tab"
-          v-for="(item, idx) in suggest" :key="`product-${idx}`" 
-          class="insurance__item">
+          v-for="(item, idx) in suggest" :key="`product-${idx}`"
+          :class="idx === id ? 'active' : ''">
           <div class="item__name">{{ item.name }}</div>
           <p class="item__link">
             <span>詳細資訊</span>
-            <Icon :iconUrl="require('../assets/icon-arrow-dark-down.svg')"/>
+            <Icon v-if="id !== idx" :iconUrl="require('../assets/icon-arrow-dark-down.svg')"
+              @click="showSuggest" 
+              :data-id="idx"
+            />
+            <Icon v-if="id === idx" :iconUrl="require('../assets/icon-arrow-dark-up.svg')"
+              @click="showSuggest" 
+              :data-id="idx"
+            />
           </p>
           <StarIcon v-if="item.word" 
             :iconUrl="require('../assets/star.svg')" 
             :word="item.word" :size="30" 
           />
         </Product>
+        <div class="section__show" v-if="id !== -1">
+          <main>
+            <Information :profile="profile" :product="suggest[id]"/>
+          </main>
+          <ButtonWrapper wrapperAlign="center">
+            <Button :class="isEdit ? 'lock' : ''" bgColor="#05b077" @click="isAccept = !isAccept">接受</Button>
+            <Button :class="isEdit ? 'lock' : ''" bgColor="#efbd00" @click="backTo()">沒時間</Button>
+            <Button bgColor="#616161" @click="isEdit = !isEdit">拒絕</Button>
+          </ButtonWrapper>
+          <ScrollIn v-if="isAccept">
+            <p>請選擇轉介對象</p>
+            <ButtonWrapper wrapperAlign="center">
+              <DropDown 
+                text="配對顧問"
+                :list="[{
+                  text: '原顧問',
+                  slug: 'introduce?type=current&cat=consult'
+                }, {
+                  text: '新顧問',
+                  slug: 'introduce?type=new&cat=consult'
+                }]" 
+              />
+              <DropDown 
+                text="諮詢客服"
+                :list="[{
+                  text: '客服顧問',
+                  slug: 'introduce?type=new&cat=service'
+                }, {
+                  text: '本次客服',
+                  slug: 'introduce?type=current&cat=service'
+                }]" 
+              />
+            </ButtonWrapper>
+          </ScrollIn>
+          <ScrollIn v-if="isEdit">
+            <Textarea />
+            <div class="input__button">
+              <Button bgColor="#05b077">
+                <router-link tag="div" to="../">
+                  <LinkStyle>寄送預約</LinkStyle>
+                </router-link>
+              </Button>
+              <Button 
+                bgColor="#fff" 
+                textColor="#05b077"
+                borderColor="#05b077"
+              >
+                <router-link tag="div" to="../">
+                  <LinkStyle textColor="#05b077">稍後再填</LinkStyle>
+                </router-link>
+              </Button>
+            </div>
+          </ScrollIn>
+          <div class="section__close">
+            <span>收合</span>
+            <Icon 
+              :iconUrl="require('../assets/button_more.svg')" 
+              :size="30" 
+              :rotate="-90"
+              :data-id="id"
+              @click="showSuggest" 
+            />
+          </div>
+        </div>
       </section>
       <ButtonWrapper wrapperAlign="center">
         <Button>官網更多商品</Button>
@@ -71,57 +142,65 @@
           <main>
             <Information :profile="profile" :product="hottest[item].products[hottest[item].isShow]"/>
           </main>
-          <Footer>
+          <ButtonWrapper wrapperAlign="center">
+            <Button :class="isEdit ? 'lock' : ''" bgColor="#05b077" @click="isAccept = !isAccept">接受</Button>
+            <Button :class="isEdit ? 'lock' : ''" bgColor="#efbd00" @click="backTo()">沒時間</Button>
+            <Button bgColor="#616161" @click="isEdit = !isEdit">拒絕</Button>
+          </ButtonWrapper>
+          <ScrollIn v-if="isAccept">
+            <p>請選擇轉介對象</p>
             <ButtonWrapper wrapperAlign="center">
-              <Button :class="isEdit ? 'lock' : ''" bgColor="#05b077" @click="isAccept = !isAccept">接受</Button>
-              <Button :class="isEdit ? 'lock' : ''" bgColor="#efbd00" @click="backTo()">沒時間</Button>
-              <Button bgColor="#616161" @click="isEdit = !isEdit">拒絕</Button>
+              <DropDown 
+                text="配對顧問"
+                :list="[{
+                  text: '原顧問',
+                  slug: 'introduce?type=current&cat=consult'
+                }, {
+                  text: '新顧問',
+                  slug: 'introduce?type=new&cat=consult'
+                }]" 
+              />
+              <DropDown 
+                text="諮詢客服"
+                :list="[{
+                  text: '客服顧問',
+                  slug: 'introduce?type=new&cat=service'
+                }, {
+                  text: '本次客服',
+                  slug: 'introduce?type=current&cat=service'
+                }]" 
+              />
             </ButtonWrapper>
-            <ScrollIn v-if="isAccept">
-              <p>請選擇轉介對象</p>
-              <ButtonWrapper>
-                <DropDown 
-                  text="配對顧問"
-                  :list="[{
-                    text: '原顧問',
-                    slug: 'introduce?type=current&cat=consult'
-                  }, {
-                    text: '新顧問',
-                    slug: 'introduce?type=new&cat=consult'
-                  }]" 
-                />
-                <DropDown 
-                  text="諮詢客服"
-                  :list="[{
-                    text: '客服顧問',
-                    slug: 'introduce?type=new&cat=service'
-                  }, {
-                    text: '本次客服',
-                    slug: 'introduce?type=current&cat=service'
-                  }]" 
-                />
-              </ButtonWrapper>
-            </ScrollIn>
-            <ScrollIn v-if="isEdit">
-              <Textarea />
-              <div class="input__button">
-                <Button bgColor="#05b077">
-                  <router-link tag="div" to="../">
-                    <LinkStyle>寄送預約</LinkStyle>
-                  </router-link>
-                </Button>
-                <Button 
-                  bgColor="#fff" 
-                  textColor="#05b077"
-                  borderColor="#05b077"
-                >
-                  <router-link tag="div" to="../">
-                    <LinkStyle textColor="#05b077">稍後再填</LinkStyle>
-                  </router-link>
-                </Button>
-              </div>
-            </ScrollIn>
-          </Footer>
+          </ScrollIn>
+          <ScrollIn v-if="isEdit">
+            <Textarea />
+            <div class="input__button">
+              <Button bgColor="#05b077">
+                <router-link tag="div" to="../">
+                  <LinkStyle>寄送預約</LinkStyle>
+                </router-link>
+              </Button>
+              <Button 
+                bgColor="#fff" 
+                textColor="#05b077"
+                borderColor="#05b077"
+              >
+                <router-link tag="div" to="../">
+                  <LinkStyle textColor="#05b077">稍後再填</LinkStyle>
+                </router-link>
+              </Button>
+            </div>
+          </ScrollIn>
+          <div class="section__close">
+            <span>收合</span>
+            <Icon 
+              :iconUrl="require('../assets/button_more.svg')" 
+              :size="30" 
+              :rotate="-90"
+              :data-id="id"
+              @click="hottest[item].isShow = hottest[item].isShow === idx ? -1 : idx"
+            />
+          </div>
         </div>
       </section>
       <ButtonWrapper wrapperAlign="center">
@@ -144,7 +223,7 @@ import {
   Tab,
   LinkStyle,
   ScrollIn,
-  Footer
+  // Footer
 } from "../style";
 import InsuranceSection from "./insuranceSection";
 import styled from 'vue-styled-components';
@@ -165,7 +244,7 @@ const Product = styled('div', productProps)`
   margin: 10px;
   box-shadow: 0 2px 8px 0 rgba(226, 108, 108, 0.3);
   &.active {
-    box-shadow: 0 4px 29px 0 rgba(0, 159, 161, 0.5);
+    box-shadow: 0 4px 29px 0 rgba(${props => props.state == "suggest" ? "226,108,108" : "7,197,200"}, 0.5);
   }
   .item__name {
     font-weight: bold;
@@ -226,11 +305,38 @@ const InsuranceLayout = styled.main`
       }
     }
     .section__show {
+      position: relative;
       margin-top: 50px;
       height: 50%;
       background: rgba(227, 250, 250, 0.5);
       width: 100%;
       padding: 20px;
+      main {
+        margin: 50px 0;
+      }
+      .section__close {
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translate(-50%, 50%);
+        display: flex;
+        align-items: center;
+        justify-content: center; 
+        &::before, &::after {
+          content: '';
+          width: 100px;
+          height: 1px;
+          background: #c3e3e3;
+          top: 50%;
+        }
+        &::before {
+          left: calc(-100%-50px);
+        }
+        &::after {
+          right: 50px;
+        }
+      }
+
     }
   }
 `
@@ -255,7 +361,7 @@ export default {
     ScrollIn,
     Textarea,
     DropDown,
-    Footer
+    // Footer
   },
   methods: {
     backTo() {
@@ -265,6 +371,13 @@ export default {
       let parts = num.toString().split('.');
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       return parts.join('.');
+    },
+    showSuggest(evt) {
+      if(Number(evt.target.dataset.id) === this.id) {
+        this.id = -1;
+      } else {
+        this.id = Number(evt.target.dataset.id);
+      }
     }
   },
   data() {
@@ -273,6 +386,7 @@ export default {
       isEdit: false,
       isAccept: false,
       noteInput: '',
+      id: -1,
       profile: {
         name: '林國泰',
         email: 'djfosi@gmail.com',
@@ -283,12 +397,33 @@ export default {
         name: "國泰人壽新留學御守傷害保險(IG3)", 
         id: 0,
         word: "1",
+        note: `
+請問您有信用卡嗎? 公司有個新活動，一通電話就可以 投保旅平險，保費可享77折比櫃台 投保還便宜，現在辦理完全免費，如果方便現在馬上幫你申辦開通資格好嗎？
+一通電話就能讓您FUN心旅遊 
+1.省力－只要塡申請書，不需任何手續費。 
+2.省錢－一人申辦，約定之配偶、父母、子女電話投保同享77折費率 。
+3.省時－出發前1小時撥打0800-036-599輕鬆投保。
+4.貼心－365天24小時全年無休，一通電話即可享旅平險保障。`
       }, {
         name: "國泰人壽新留學御守傷害保險(IG3)", 
         id: 1,
+        note: `
+請問您有信用卡嗎? 公司有個新活動，一通電話就可以 投保旅平險，保費可享77折比櫃台 投保還便宜，現在辦理完全免費，如果方便現在馬上幫你申辦開通資格好嗎？
+一通電話就能讓您FUN心旅遊 
+1.省力－只要塡申請書，不需任何手續費。 
+2.省錢－一人申辦，約定之配偶、父母、子女電話投保同享77折費率 。
+3.省時－出發前1小時撥打0800-036-599輕鬆投保。
+4.貼心－365天24小時全年無休，一通電話即可享旅平險保障。`
       }, {
         name: "國泰人壽新留學御守傷害保險(IG3)", 
         id: 2,
+        note: `
+請問您有信用卡嗎? 公司有個新活動，一通電話就可以 投保旅平險，保費可享77折比櫃台 投保還便宜，現在辦理完全免費，如果方便現在馬上幫你申辦開通資格好嗎？
+一通電話就能讓您FUN心旅遊 
+1.省力－只要塡申請書，不需任何手續費。 
+2.省錢－一人申辦，約定之配偶、父母、子女電話投保同享77折費率 。
+3.省時－出發前1小時撥打0800-036-599輕鬆投保。
+4.貼心－365天24小時全年無休，一通電話即可享旅平險保障。`
       }],
       hottest: {
         "保障規劃類型保險(主約)": {

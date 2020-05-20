@@ -41,6 +41,8 @@ const MarketLayout = styled.section`
   padding: 10px 25px;
   .market__list {
     width: 100%;
+    display: flex; 
+    flex-wrap: wrap;
   }
   .market__item {
     margin-right: 40px;

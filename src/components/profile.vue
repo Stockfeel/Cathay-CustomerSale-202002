@@ -2,7 +2,7 @@
   <div>
     <Loading v-if="isLoading" />
     <div v-if="!isLoading">
-      <Modal v-if="!isError">
+      <Modal v-if="!isError" :scroll="true">
         <Header>
           <router-link to='./'>
             <CloseButton />

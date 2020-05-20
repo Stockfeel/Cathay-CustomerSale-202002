@@ -206,7 +206,7 @@ export const ListItem = styled('li', listItemProps)`
     content: "•"; 
     color: #05b077;
     display: inline-block; 
-    width: 1em;
+    width: .8em;
     margin-left: -.8em
   }
 `
@@ -688,7 +688,6 @@ export const DropDownMenu = styled.div`
 	width: 100px;
 	border-radius: 12px;
 	overflow: hidden;
-  margin-top: 10px;
   text-align: left;
 	div {
     cursor: pointer; 
@@ -757,9 +756,11 @@ export const PopUp = styled.div`
 `
 
 export const ScrollIn = styled.div`
-  display: flex;
-  flex-direction: column; 
-  margin-top: 20px;
+  width: 60%;
+  margin: 0 auto;
+  & > * {
+    margin: 20px 0;
+  }
   .input__button {
     display: flex;
     flex-direction: row;
@@ -805,7 +806,7 @@ export const Card = styled('div', cardProps)`
   }
 `;
 
-const modalProps = { mainHeight: Number, autoHeight: Boolean };
+const modalProps = { mainHeight: Number, autoHeight: Boolean, scroll: Boolean };
 export const Modal = styled('div', modalProps)`
 	padding: 20px 0;
 	position: fixed;
@@ -829,7 +830,7 @@ export const Modal = styled('div', modalProps)`
 	main {
 		width: 100%;
 		height: ${props => props.mainHeight || 82}%;
-		overflow-y: scroll;
+		${props => props.scroll ? 'overflow-y: scroll;' : ''}
 	}
 `
 

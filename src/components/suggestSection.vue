@@ -35,7 +35,7 @@
         <b-tooltip target="insurance__tooltip" custom-class="custom__tooltip" triggers="hover" placement="top">
           公司現在有提供保單缺口檢視服務（投放保障缺口）您看一下畫面中紅色的部分是你和同年齡層保戶保障比較不足的地方，需要我進一步說名或請專人到府解釋嗎？
         </b-tooltip>
-        <ButtonWrapper>
+        <ButtonWrapper wrapperAlign="center">
           <SwitchButton :word="isSync == 'on' ? '同步中 ●' : '同步畫面'">
             <input type="checkbox" v-model="isSync" value="on"/>
             <span class="slider"></span>
@@ -59,7 +59,7 @@
               slug: 'introduce?type=current&cat=service'
             }]" />
           <div class="suggest__notrans">
-            拒絕轉介
+            <span>拒絕轉介</span>
             <div>X</div>
           </div>
         </ButtonWrapper>
@@ -158,8 +158,9 @@ const InsuranceLayout = styled.section`
     color: white;
     background: #616161;
     border-radius: 20px;
-    font-size: 16px; 
-    padding: 2px 10px;
+    font-size: 14px; 
+    width: 110px;
+    height: 38px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -171,7 +172,7 @@ const InsuranceLayout = styled.section`
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 5px;
+      margin: 0 5px;
     }
   }
   .suggest__notime {
