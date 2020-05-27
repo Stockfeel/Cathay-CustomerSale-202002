@@ -44,9 +44,18 @@
       >
         列印
       </Button>
+      <a class="link" href="./test.pdf" target="_blank">
+        <Button 
+          bgColor="white" 
+          borderColor="#05b077" 
+          textColor="#05b077"
+        >
+          放大
+        </Button>
+      </a>
     </div>
     <div :class="`img__container ${isSync == 'on' ? 'active' : ''}`">
-      <img :src="require(`../assets/dm.png`)" />
+      <iframe src="./test.pdf" width="100%" />
     </div>
   </InformationLayout>
 </template>
@@ -62,6 +71,9 @@ import {
 import styled from 'vue-styled-components';
 
 const InformationLayout = styled.div`
+  a.link {
+    text-decoration: none;
+  }
   & > p {
     width: 80%;
     margin: 0 auto;
@@ -80,17 +92,17 @@ const InformationLayout = styled.div`
     }
   }
   div.img__container {
+    position: relative;
+    display: block;
     overflow: hidden;
-    width: 90%; 
-    height: 600px;
     margin: 0 auto;
+    width: 80%;
+    height: 960px;
     margin-top: 20px;
     border-radius: 15px;
-    img {
-      width: 100%:
-      height: 100%;
-      object-position: 50% 50%;
-      object-fit: cover;
+    iframe {
+      display: block;
+      width: 100%;
     }
     &.active {
       box-shadow: 0 0 0 6px #ffcbcb, 0 0 0 10px #feecec;

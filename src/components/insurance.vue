@@ -5,29 +5,26 @@
         <CloseButton/>
       </router-link>
       <Tab>
-        <Title textAlign='center' :class="tab == 'suggest' ? 'active': ''" @click="tab = 'suggest'">商品推薦</Title>
+        <Title textAlign='center' :class="tab == 'suggest' ? 'active': ''" data-tab="suggest" @click="changeTab">商品推薦</Title>
         <span>|</span>
-        <Title textAlign='center' :class="tab == 'hottest' ? 'active': ''" @click="tab = 'hottest'">熱銷商品</Title>
+        <Title textAlign='center' :class="tab == 'hottest' ? 'active': ''" data-tab="hottest" @click="changeTab">熱銷商品</Title>
       </Tab>
     </Header>
     <InsuranceLayout v-if="tab == 'suggest'">
       <InsuranceSection />
-      <section>
+      <section class="suggest__wrapper">
         <Product 
           :state="tab"
           v-for="(item, idx) in suggest" :key="`product-${idx}`"
-          :class="idx === id ? 'active' : ''">
+          @click="() => showSuggest(idx)" 
+          :data-id="idx"
+          :class="idx === id ? 'active' : ''"
+        >
           <div class="item__name">{{ item.name }}</div>
           <p class="item__link">
             <span>詳細資訊</span>
-            <Icon v-if="id !== idx" :iconUrl="require('../assets/icon-arrow-dark-down.svg')"
-              @click="showSuggest" 
-              :data-id="idx"
-            />
-            <Icon v-if="id === idx" :iconUrl="require('../assets/icon-arrow-dark-up.svg')"
-              @click="showSuggest" 
-              :data-id="idx"
-            />
+            <Icon v-if="id !== idx" :iconUrl="require('../assets/icon-arrow-dark-down.svg')" />
+            <Icon v-else :iconUrl="require('../assets/icon-arrow-dark-up.svg')" />
           </p>
           <StarIcon v-if="item.word" 
             :iconUrl="require('../assets/star.svg')" 
@@ -93,8 +90,7 @@
               :iconUrl="require('../assets/button_more.svg')" 
               :size="30" 
               :rotate="-90"
-              :data-id="id"
-              @click="showSuggest" 
+              @click="() => showSuggest(id)" 
             />
           </div>
         </div>
@@ -104,7 +100,7 @@
       </ButtonWrapper>
     </InsuranceLayout>
     <InsuranceLayout v-if="tab == 'hottest'">
-      <section v-for="(item, idx) in Object.keys(hottest)" :key="`section-${idx}`">
+      <section class="suggest__wrapper" v-for="(item, idx) in Object.keys(hottest)" :key="`section-${idx}`">
         <div class="section__title">{{ item }}</div>
         <p>註：{{ hottest[item].note }}</p>
         <div class="section__products">
@@ -112,6 +108,7 @@
             v-for="(product, idx) in hottest[item].products" 
             :key="`hottest-${idx}`" 
             :class="idx === hottest[item].isShow ? 'active' : ''"
+            @click="hottest[item].isShow = hottest[item].isShow === idx ? -1 : idx" 
           >
             <div class="item__name">{{ product.name }}</div>
             <p class="item__link">
@@ -126,14 +123,12 @@
                 :size="30" 
                 :rotate="90"
                 v-if="hottest[item].isShow !== idx"
-                @click="hottest[item].isShow = hottest[item].isShow === idx ? -1 : idx" 
               />
               <Icon 
                 :iconUrl="require('../assets/button_more.svg')" 
                 :size="30" 
                 :rotate="-90"
-                v-if="hottest[item].isShow === idx"
-                @click="hottest[item].isShow = hottest[item].isShow === idx ? -1 : idx" 
+                v-else
               />
             </div>
           </Product>
@@ -223,7 +218,6 @@ import {
   Tab,
   LinkStyle,
   ScrollIn,
-  // Footer
 } from "../style";
 import InsuranceSection from "./insuranceSection";
 import styled from 'vue-styled-components';
@@ -245,6 +239,7 @@ const Product = styled('div', productProps)`
   box-shadow: 0 2px 8px 0 rgba(226, 108, 108, 0.3);
   &.active {
     box-shadow: 0 4px 29px 0 rgba(${props => props.state == "suggest" ? "226,108,108" : "7,197,200"}, 0.5);
+    background: ${props => props.state == "suggest" ? "#ae4844" : "#48a3a4"};
   }
   .item__name {
     font-weight: bold;
@@ -276,6 +271,10 @@ const Product = styled('div', productProps)`
 `
 
 const InsuranceLayout = styled.main`
+  .suggest__wrapper {
+    width: 100%;
+    padding: 30px 60px;
+  }
   section {
     display: flex;
     justify-content: flex-start;
@@ -361,7 +360,6 @@ export default {
     ScrollIn,
     Textarea,
     DropDown,
-    // Footer
   },
   methods: {
     backTo() {
@@ -372,12 +370,22 @@ export default {
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       return parts.join('.');
     },
-    showSuggest(evt) {
-      if(Number(evt.target.dataset.id) === this.id) {
+    showSuggest(id) {
+      if(id === this.id) {
         this.id = -1;
       } else {
-        this.id = Number(evt.target.dataset.id);
+        this.id = id;
       }
+    },
+    initData() {
+      this.idEdit = false;
+      this.isAccept = false;
+      this.noteInput = '';
+      this.id = -1;
+    },
+    changeTab(evt) {
+      this.tab = evt.target.dataset.tab;
+      this.initData();
     }
   },
   data() {
