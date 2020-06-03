@@ -6,8 +6,9 @@
       <Icon v-show="isMenuOpen" :iconUrl="require('../../assets/icon-arrow-white-up.svg')" />        
     </DropDownButton>
     <Spacing />
-    <DropDownMenu v-show="isMenuOpen">
-      <router-link v-for="(item, idx) in list"
+    <DropDownMenu v-show="isMenuOpen" :isRelative="isRelative" >
+      <router-link v-for="(item, idx) in list" 
+        data-cy="dropdown"
         tag="div" 
         :key="`menu-${idx}`"
         :to="`./${item.slug}`">
@@ -34,7 +35,11 @@ export default {
   name: 'DropDown',
   props: {
     text: String, 
-    list: Array
+    list: Array,
+    isRelative: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     Icon,

@@ -680,11 +680,12 @@ export const Table = styled.table`
   }
 `
 
-export const DropDownMenu = styled.div`
+const DropDownProps = { isRelative: Boolean };
+export const DropDownMenu = styled('div', DropDownProps)`
 	z-index: 2;
 	background: white;
 	box-shadow: 0 6px 15px 0 rgba(128, 197, 197, 0.72);
-	position: absolute;
+	position: ${props => props.isRelative ? "relative" : "absolute" };
 	width: 100px;
 	border-radius: 12px;
 	overflow: hidden;
@@ -827,13 +828,12 @@ export const Modal = styled('div', modalProps)`
   `};
 	height: ${props => props.autoHeight ? 'auto' : '90%'};
   max-height: 90%;
-	main {
+	& > main {
 		width: 100%;
 		height: ${props => props.mainHeight || 82}%;
 		${props => props.scroll ? 'overflow-y: scroll;' : ''}
-	}
+  }
 `
-
 export const ErrorModal = styled(Modal)`
   height: 50%;
   width: 90%;
