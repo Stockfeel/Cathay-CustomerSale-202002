@@ -117,6 +117,7 @@ const InformationLayout = styled.div`
     white-space: -o-pre-wrap;
     word-wrap: break-word;
     color: #69808d;
+    font-size: 14px;
     font-family: 'Lato', 'Noto Sans TC';
   }
 `

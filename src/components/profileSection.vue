@@ -93,7 +93,7 @@ const AvatarLayout = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex: 0 1 160px;
+  flex: 1 0 160px;
   box-shadow: 0 6px 15px 0 rgba(128, 197, 197, 0.72);
   @media (max-width: 1280px) {
     flex: 0 1 230px;
@@ -150,9 +150,9 @@ const AvatarLayout = styled.div`
 `
 
 const IntroLayout = styled.div`
-  flex: 1 1 auto;
   position: relative;
   padding: 10px 20px;
+  width: 100%;
   .icon__wrapper {
     display: flex;
     & > * {
