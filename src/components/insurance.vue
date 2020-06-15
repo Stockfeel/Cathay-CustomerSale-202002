@@ -14,7 +14,8 @@
       <InsuranceSection />
       <section class="suggest__wrapper">
         <Product 
-          :state="tab"
+          data-cy="product"
+          color="181,93.2%,40.6%"
           v-for="(item, idx) in suggest" :key="`product-${idx}`"
           @click="() => showSuggest(idx)" 
           :data-id="idx"
@@ -51,12 +52,14 @@
       </ButtonWrapper>
     </InsuranceLayout>
     <InsuranceLayout v-if="tab == 'hottest'">
-      <section class="suggest__wrapper" v-for="(item, idx) in Object.keys(hottest)" :key="`section-${idx}`">
+      <section class="suggest__wrapper" v-for="(item, index) in Object.keys(hottest)" :key="`section-${index}`">
         <div class="section__title">{{ item }}</div>
         <p>註：{{ hottest[item].note }}</p>
         <div class="section__products">
           <Product 
             v-for="(product, idx) in hottest[item].products" 
+            :data-cy="`product-${index}`"
+            color="0,67%,65.5%"
             :key="`hottest-${idx}`" 
             :class="idx == hottest[item].isShow ? 'active' : ''"
             :data-name="item" 
@@ -109,7 +112,7 @@
     </InsuranceLayout>
     <Footer v-if="showTab">
       <ButtonWrapper wrapperAlign="center">
-        <Button :class="isEdit ? 'lock' : ''" bgColor="#05b077" data-reply="accept" @click="replyStatus">接受</Button>
+        <Button data-cy="accept" :class="isEdit ? 'lock' : ''" bgColor="#05b077" data-reply="accept" @click="replyStatus">接受</Button>
         <Button :class="isEdit || isAccept ? 'lock' : ''" bgColor="#efbd00" data-reply="notime" @click="replyStatus">沒時間</Button>
         <Button :class="isAccept ? 'lock' : ''" bgColor="#616161" data-reply="reject" @click="replyStatus">拒絕</Button>
       </ButtonWrapper>
@@ -182,21 +185,36 @@ import Information from './information';
 import Textarea from './ui/textarea';
 import DropDown from './ui/dropdown';
 
+const hslReducer = (hsl) => {
+  const strArr = hsl.split(',');
+  const h = strArr[0];
+  const s = strArr[1];
+  const l = `${parseFloat(strArr[2])-10}%`;
+  return `${h},${s},${l}`
+}
 
-const productProps = { state: String, isShow: Number } 
+const hslAdder = (hsl) => {
+  const strArr = hsl.split(',');
+  const h = strArr[0];
+  const s = strArr[1];
+  const l = `${parseFloat(strArr[2])-5}%`;
+  return `${h},${s},${l}`
+}
+
+const productProps = { color: String, isShow: Number } 
 const Product = styled('div', productProps)`
   position: relative;
-  background: ${props => props.state == "suggest" ? "#e26c6c" : "#07c5c8"};
+  background: hsl(${props => props.color});
   color: white;
   width: 165px; 
   height: 150px;
   padding: 20px 20px 0 20px;
   border-radius: 10px;
   margin: 10px;
-  box-shadow: 0 2px 8px 0 rgba(226, 108, 108, 0.3);
+  box-shadow: 0 2px 8px 0 hsla(${props => hslReducer(props.color)}, 0.4);
   &.active {
-    box-shadow: 0 4px 29px 0 rgba(${props => props.state == "suggest" ? "226,108,108" : "7,197,200"}, 0.5);
-    background: ${props => props.state == "suggest" ? "#ae4844" : "#48a3a4"};
+    box-shadow: 0 4px 20px 0 hsla(${props => hslReducer(props.color)}, 0.4);
+    background: hsl(${props => hslAdder(props.color)});
   }
   .item__name {
     font-weight: bold;
@@ -321,6 +339,7 @@ export default {
     resetReplyStatus() {
       this.isAccept = false;
       this.isEdit = false;
+      Object.keys(this.hottest).forEach(key => this.hottest[key].isShow = -1)
     },
     replyStatus(evt) {
       switch(evt.target.dataset.reply) {
@@ -367,9 +386,15 @@ export default {
           this.hottest[name].isShow = -1;
           this.showTab = false;
         } else {
-          this.hottest[name].isShow = id;
-          this.product = this.hottest[name].products[id];
-          this.showTab = true;
+          Object.keys(this.hottest).forEach(key => {
+            if(key !== name) {
+              this.hottest[key].isShow = -1
+            } else {
+              this.hottest[name].isShow = id;
+              this.product = this.hottest[name].products[id];
+              this.showTab = true;
+            }
+          })
         }
       }
     },

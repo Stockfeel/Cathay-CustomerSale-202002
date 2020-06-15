@@ -23,6 +23,14 @@ const font = {
 	text: "12px"
 }
 
+const convertBoxShadowHsl = (hsl) => {
+  const strArr = hsl.split(',');
+  const h = strArr[0];
+  const s = strArr[1];
+  const l = `${parseFloat(strArr[2])-10}%`;
+  return `${h},${s},${l}`
+}
+
 // Intial
 export const InitialLayout = injectGlobal`
   *{
@@ -464,21 +472,25 @@ const styleButton = type => {
     case 1:
       return {
         color: color.primary,
+        hsl: '160,94.5%,35.5%',
         url: yes,
       }
     case 2:
       return {
         color: color.wait,
+        hsl: '47.4,100%,46.9%',
         url: noTime,
       }
     case 3:
       return {
         color: color.reject,
+        hsl: '0,0%,38%',
         url: no,
       }
     default:
       return {
         color: "#06bdc0",
+        hsl: '181,93.9%,38.8%',
         url: '',
       };
   }
@@ -494,7 +506,7 @@ export const SuggestButton = styled('div', suggestProps)`
   justify-content: center;
   align-items: center;
   background: ${props => styleButton(props.state).color};
-  box-shadow: 0 2px 6px 0 #93d1d1;
+  box-shadow: 0 2px 6px 0 hsla(${props => convertBoxShadowHsl(styleButton(props.state).hsl)}, 0.5);
   margin: 8px 0;
   @media (max-width: 1280px) {
     width: 90%;

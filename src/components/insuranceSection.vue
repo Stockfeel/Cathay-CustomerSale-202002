@@ -1,6 +1,7 @@
 <template>
   <InsuranceLayout v-if="insurances.length > 0">
     <Insurance v-for="(insurance, idx) in insurances" 
+      data-cy="insurance"
       :key="`insurance-${idx}`" 
       :average="insurance.average" 
       :difference="insurance.average - insurance.value"
@@ -80,7 +81,7 @@ const Insurance = styled('div', InsuranceProps)`
     box-shadow: 0 0 0 3px #ffcbcb, 0 0 0 4px #feecec;
   }
   &:hover {
-    box-shadow: 0 4px 15px 0 rgba(221, 123, 123, 0.7);
+    box-shadow: 0 4px 15px 0 ${props => props.difference < 0 ? '#93d1d1' : '#dd7b7b'};
   }
   & * {
     display: inline-block;

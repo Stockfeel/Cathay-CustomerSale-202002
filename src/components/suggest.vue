@@ -11,7 +11,7 @@
     </SuggestMain>
     <Footer>
       <ButtonWrapper wrapperAlign="center">
-        <Button :class="isEdit ? 'lock' : ''" bgColor="#05b077" @click="backTo()">接受</Button>
+        <Button :class="isEdit ? 'lock' : ''" bgColor="#05b077" @click="backTo()" data-cy="accept">接受</Button>
         <Button :class="isEdit ? 'lock' : ''" bgColor="#efbd00" @click="backTo()">沒時間</Button>
         <Button bgColor="#616161" @click="isEdit = !isEdit">拒絕</Button>
       </ButtonWrapper>

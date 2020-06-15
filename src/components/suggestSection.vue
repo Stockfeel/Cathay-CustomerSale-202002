@@ -15,7 +15,7 @@
         <div class="product__type">
           <Title>商機推薦</Title>
           <SuggestButton v-for="(item, idx) in productTable" :key="`product-${idx}`" :state="item.state">
-            <router-link :to="`./suggest?id=${item.id}`"> {{ item.title }} </router-link>
+            <router-link data-cy="suggest" :to="`./suggest?id=${item.id}`"> {{ item.title }} </router-link>
           </SuggestButton>
           <div v-if="productTable.length === 0" class="nodata">
             <img src="../assets/img-empty.svg" />
