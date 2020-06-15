@@ -133,7 +133,6 @@ export default {
       this.queryData = homeProfile;
       if(this.queryData.ErrMsg.returnCode === 0) {
         // profile data show order 
-        console.log(this.queryData.AIE0_0500_bo.SPC_STRING);
         const data = {
             "特殊客戶": this.queryData.AIE0_0500_bo.SPC_STRING,
             "特殊狀態備註": this.queryData.AIE0_0500_bo.SPECIAL_RECORD === "Y" ? "有" : "沒有",

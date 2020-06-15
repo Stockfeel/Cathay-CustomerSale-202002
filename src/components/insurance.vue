@@ -59,7 +59,8 @@
             v-for="(product, idx) in hottest[item].products" 
             :key="`hottest-${idx}`" 
             :class="idx == hottest[item].isShow ? 'active' : ''"
-            :data-name="item" :data-id="idx"
+            :data-name="item" 
+            :data-id="idx"
             @click="showHottest" 
           >
             <div class="item__name" :data-name="item" :data-id="idx">{{ product.name }}</div>
@@ -96,7 +97,7 @@
               :size="30" 
               :rotate="-90"
               :data-name="item"
-              :data-id="idx"
+              :data-id="hottest[item].isShow"
               @click="showHottest" 
             />
           </div>
@@ -108,9 +109,9 @@
     </InsuranceLayout>
     <Footer v-if="showTab">
       <ButtonWrapper wrapperAlign="center">
-        <Button :class="isEdit ? 'lock' : ''" bgColor="#05b077" @click="isAccept = !isAccept">接受</Button>
-        <Button :class="isEdit ? 'lock' : ''" bgColor="#efbd00" @click="backTo()">沒時間</Button>
-        <Button bgColor="#616161" @click="isEdit = !isEdit">拒絕</Button>
+        <Button :class="isEdit ? 'lock' : ''" bgColor="#05b077" data-reply="accept" @click="replyStatus">接受</Button>
+        <Button :class="isEdit || isAccept ? 'lock' : ''" bgColor="#efbd00" data-reply="notime" @click="replyStatus">沒時間</Button>
+        <Button :class="isAccept ? 'lock' : ''" bgColor="#616161" data-reply="reject" @click="replyStatus">拒絕</Button>
       </ButtonWrapper>
       <ScrollIn v-if="isAccept">
         <p>請選擇轉介對象</p>
@@ -143,19 +144,16 @@
       <ScrollIn v-if="isEdit">
         <Textarea />
         <div class="input__button">
-          <Button bgColor="#05b077">
-            <router-link tag="div" to="../">
-              <LinkStyle>寄送預約</LinkStyle>
-            </router-link>
+          <Button bgColor="#05b077" @click="resetReplyStatus">
+            <LinkStyle>寄送預約</LinkStyle>
           </Button>
           <Button 
+            @click="resetReplyStatus"
             bgColor="#fff" 
             textColor="#05b077"
             borderColor="#05b077"
           >
-            <router-link tag="div" to="../">
-              <LinkStyle textColor="#05b077">稍後再填</LinkStyle>
-            </router-link>
+            <LinkStyle textColor="#05b077">稍後再填</LinkStyle>
           </Button>
         </div>
       </ScrollIn>
@@ -320,6 +318,27 @@ export default {
     Footer
   },
   methods: {
+    resetReplyStatus() {
+      this.isAccept = false;
+      this.isEdit = false;
+    },
+    replyStatus(evt) {
+      switch(evt.target.dataset.reply) {
+        case 'accept': 
+          this.isAccept = true;
+          this.isEdit = false;
+          break;
+        case 'notime': 
+          this.backTo();
+          break;
+        case 'reject': 
+          this.isAccept = false;
+          this.isEdit = true;
+          break;
+        default: 
+          break;
+      }
+    },
     backTo() {
       this.$router.push('/')
     },
@@ -329,24 +348,30 @@ export default {
       return parts.join('.');
     },
     showSuggest(id) {
-      if(id === this.id) {
-        this.id = -1;
-        this.showTab = false;
-      } else {
-        this.id = id;
-        this.showTab = true;
+      const isRepling = this.isAccept || this.isEdit;
+      if(!isRepling) {
+        if(id === this.id) {
+          this.id = -1;
+          this.showTab = false;
+        } else {
+          this.id = id;
+          this.showTab = true;
+        }
       }
     },
     showHottest(evt) {
+      const isRepling = this.isAccept || this.isEdit;
       const { name, id } = evt.target.dataset;
-      if(this.hottest[name].isShow == id) {
-        this.hottest[name].isShow = -1;
-        this.showTab = false;
-      } else {
-        this.hottest[name].isShow = id;
-        this.product = this.hottest[name].products[id];
-        this.showTab = true;
-      } 
+      if(!isRepling) {
+        if(this.hottest[name].isShow == id) {
+          this.hottest[name].isShow = -1;
+          this.showTab = false;
+        } else {
+          this.hottest[name].isShow = id;
+          this.product = this.hottest[name].products[id];
+          this.showTab = true;
+        }
+      }
     },
     initData() {
       this.idEdit = false;
