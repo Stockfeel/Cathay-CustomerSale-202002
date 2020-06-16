@@ -339,7 +339,11 @@ export default {
     resetReplyStatus() {
       this.isAccept = false;
       this.isEdit = false;
-      Object.keys(this.hottest).forEach(key => this.hottest[key].isShow = -1)
+      if(this.tab === 'hottest') {
+        Object.keys(this.hottest).forEach(key => this.hottest[key].isShow = -1)
+      } else {
+        this.id = -1;
+      }
     },
     replyStatus(evt) {
       switch(evt.target.dataset.reply) {
