@@ -731,8 +731,6 @@ export const DropDownCheckbox = styled.div`
   }
   & > * {
     margin: 2px 5px;
-    display: flex;
-    flex-wrap: wrap;
   }
 `
 

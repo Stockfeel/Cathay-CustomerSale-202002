@@ -110,14 +110,57 @@
         <Button>官網更多商品</Button>
       </ButtonWrapper>
     </InsuranceLayout>
-    <Reply 
-      v-if="showTab"
-      :isEdit="isEdit" 
-      :editStatus="editStatus" 
-      :onSend="resetReply" 
-      :onReply="replyStatus" 
-      :onCancel="resetReply" 
-    />
+    <Footer v-if="showTab">
+      <ButtonWrapper wrapperAlign="center">
+        <Button data-cy="accept" :class="isEdit ? 'lock' : ''" bgColor="#05b077" data-reply="accept" @click="replyStatus">接受</Button>
+        <Button :class="isEdit || isAccept ? 'lock' : ''" bgColor="#efbd00" data-reply="notime" @click="replyStatus">沒時間</Button>
+        <Button :class="isAccept ? 'lock' : ''" bgColor="#616161" data-reply="reject" @click="replyStatus">拒絕</Button>
+      </ButtonWrapper>
+      <ScrollIn v-if="isAccept">
+        <p>請選擇轉介對象</p>
+        <ButtonWrapper wrapperAlign="center">
+          <DropDown 
+            text="配對顧問"
+            data-cy="introduce"
+            :isRelative="true" 
+            :list="[{
+              text: '原顧問',
+              slug: 'introduce?type=current&cat=consult'
+            }, {
+              text: '新顧問',
+              slug: 'introduce?type=new&cat=consult'
+            }]" 
+          />
+          <DropDown 
+            text="諮詢客服"
+            :isRelative="true" 
+            :list="[{
+              text: '客服顧問',
+              slug: 'introduce?type=new&cat=service'
+            }, {
+              text: '本次客服',
+              slug: 'introduce?type=current&cat=service'
+            }]" 
+          />
+        </ButtonWrapper>
+      </ScrollIn>
+      <ScrollIn v-if="isEdit">
+        <Textarea />
+        <div class="input__button">
+          <Button bgColor="#05b077" @click="resetReplyStatus">
+            <LinkStyle>寄送預約</LinkStyle>
+          </Button>
+          <Button 
+            @click="resetReplyStatus"
+            bgColor="#fff" 
+            textColor="#05b077"
+            borderColor="#05b077"
+          >
+            <LinkStyle textColor="#05b077">稍後再填</LinkStyle>
+          </Button>
+        </div>
+      </ScrollIn>
+    </Footer>
   </Modal>
 </template>
 
@@ -132,11 +175,15 @@ import {
   Icon,
   StarIcon,
   Tab,
+  LinkStyle,
+  ScrollIn,
+  Footer
 } from "../style";
 import InsuranceSection from "./insuranceSection";
 import styled from 'vue-styled-components';
 import Information from './information';
-import Reply from './ui/reply';
+import Textarea from './ui/textarea';
+import DropDown from './ui/dropdown';
 
 const hslReducer = (hsl) => {
   const strArr = hsl.split(',');
@@ -282,12 +329,16 @@ export default {
     Tab,
     Product,
     Information,
-    Reply,
+    LinkStyle,
+    ScrollIn,
+    Textarea,
+    DropDown,
+    Footer
   },
   methods: {
-    resetReply() {
+    resetReplyStatus() {
+      this.isAccept = false;
       this.isEdit = false;
-      this.editStatus = "";
       if(this.tab === 'hottest') {
         Object.keys(this.hottest).forEach(key => this.hottest[key].isShow = -1)
       } else {
@@ -295,8 +346,21 @@ export default {
       }
     },
     replyStatus(evt) {
-      this.isEdit = true;
-      this.editStatus = evt.target.dataset.reply;
+      switch(evt.target.dataset.reply) {
+        case 'accept': 
+          this.isAccept = true;
+          this.isEdit = false;
+          break;
+        case 'notime': 
+          this.backTo();
+          break;
+        case 'reject': 
+          this.isAccept = false;
+          this.isEdit = true;
+          break;
+        default: 
+          break;
+      }
     },
     backTo() {
       this.$router.push('/')
@@ -307,7 +371,8 @@ export default {
       return parts.join('.');
     },
     showSuggest(id) {
-      if(!this.isEdit) {
+      const isRepling = this.isAccept || this.isEdit;
+      if(!isRepling) {
         if(id === this.id) {
           this.id = -1;
           this.showTab = false;
@@ -318,8 +383,9 @@ export default {
       }
     },
     showHottest(evt) {
+      const isRepling = this.isAccept || this.isEdit;
       const { name, id } = evt.target.dataset;
-      if(!this.isEdit) {
+      if(!isRepling) {
         if(this.hottest[name].isShow == id) {
           this.hottest[name].isShow = -1;
           this.showTab = false;
@@ -352,7 +418,6 @@ export default {
   data() {
     return {
       tab: "suggest",
-      editStatus: "",
       isEdit: false,
       isAccept: false,
       showTab: false,

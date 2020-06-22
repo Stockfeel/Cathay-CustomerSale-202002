@@ -9,14 +9,42 @@
     <SuggestMain>
       <Information :profile="profile" :product="products[$route.query.id]" />
     </SuggestMain>
-    <Reply 
-      v-if="true"
-      :isEdit="isEdit" 
-      :editStatus="editStatus" 
-      :onSend="resetReply" 
-      :onReply="replyStatus" 
-      :onCancel="resetReply" 
-    />
+    <Footer>
+      <ButtonWrapper wrapperAlign="center">
+        <Button :class="isEdit ? 'lock' : ''" bgColor="#05b077" @click="backTo()" data-cy="accept">接受</Button>
+        <Button :class="isEdit ? 'lock' : ''" bgColor="#efbd00" @click="backTo()">沒時間</Button>
+        <Button bgColor="#616161" @click="isEdit = !isEdit">拒絕</Button>
+      </ButtonWrapper>
+      <ScrollIn v-if="isEdit">
+        <Textarea width="100%" />
+        <SuggestFormWrapper>
+          <FormInput inputBasis="20%">
+            <input type="checkbox" v-model="isBook"/>
+            <label>預約聯絡</label>
+          </FormInput>
+          <FormInput v-if="isBook" inputBasis="50%">
+            <span>寄送時間</span>
+            <input type="date" />
+          </FormInput>
+        </SuggestFormWrapper>
+        <div class="input__button">
+          <Button bgColor="#05b077">
+            <router-link tag="div" to="../">
+              <LinkStyle>寄送預約</LinkStyle>
+            </router-link>
+          </Button>
+          <Button 
+            bgColor="#fff" 
+            textColor="#05b077"
+            borderColor="#05b077"
+          >
+            <router-link tag="div" to="../">
+              <LinkStyle textColor="#05b077">稍後再填</LinkStyle>
+            </router-link>
+          </Button>
+        </div>
+      </ScrollIn>
+    </Footer>
   </Modal>
 </template>
 
@@ -26,14 +54,28 @@ import {
   Header, 
   CloseButton, 
   Title,
+  ScrollIn,
+  Footer,
+  LinkStyle,
+  Button,
+  ButtonWrapper,
+  FormInput,
+  FormWrapper
 } from "../style.js";
 import Information from "./information";
-import Reply from "./ui/reply";
-
+import Textarea from "./ui/textarea.vue";
 import styled from 'vue-styled-components';
 
 const SuggestMain = styled.main`
   height: 80%;
+`
+const SuggestFormWrapper = styled(FormWrapper)`
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  span {
+    margin-right: 20px;
+  }
 `
 
 export default {
@@ -44,25 +86,27 @@ export default {
     CloseButton, 
     Title,
     Information,
+    ScrollIn,
+    Footer,
+    LinkStyle,
+    Button,
+    ButtonWrapper,
     SuggestMain,
-    Reply
+    FormInput,
+    SuggestFormWrapper,
+    Textarea
   },
   methods: {
-    resetReply() {
-      this.isEdit = false;
-      this.editStatus = "";
-    },
-    replyStatus(evt) {
-      this.isEdit = true;
-      this.editStatus = evt.target.dataset.reply;
-    },
+    backTo() {
+      this.$router.push('/')
+    }
   },
   data () {
     return {
       isSync: [],
       isPop: false,
       isEdit: false,
-      editStatus: "",
+      isBook: false,
       isEmailEnter: [],
       isMobileEnter: [],
       noteInput: '',
