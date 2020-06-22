@@ -37,13 +37,6 @@
           </ButtonWrapper>
         </PopUp>
       </div>
-      <Button 
-        bgColor="white" 
-        borderColor="#05b077" 
-        textColor="#05b077"
-      >
-        列印
-      </Button>
       <a class="link" href="./test.pdf" target="_blank">
         <Button 
           bgColor="white" 

@@ -129,13 +129,13 @@ export const InitialLayout = injectGlobal`
   }
 
   .custom__tooltip .tooltip-inner {
-     background-color: #fff !important;
-     color: ${color.text} !important;
-     box-shadow: 0 0 8px 2px rgba(210, 70, 95, 0.5);
+    background-color: #fff !important;
+    color: ${color.text} !important;
+    box-shadow: 0 0 8px 2px rgba(210, 70, 95, 0.5);
   }
 
   .custom__tooltip .arrow::before {
-     border-top-color: #fff !important;
+    border-top-color: #fff !important;
   }
 
   .page-item.custom__pagination {
@@ -317,29 +317,29 @@ export const FormInput = styled('div', formInputProps)`
     height: 6px;
     cursor: pointer;
     &:focus {
-    	outline: none;
+      outline: none;
     }
     &:checked {
-    	background: ${color.primary};	  
+      background: ${color.primary};	  
       box-shadow: 0 0 0 3px ${color.primary}, 0 0 0 4px ${color.primary}; 	
-    	& + label::before {
-		    content: '';
-		    margin-left: -12px;
+      & + label::before {
+        content: '';
+        margin-left: -12px;
         margin-top: 11px;
-		    z-index: 2;
+        z-index: 2;
         border: 1px solid black;
-		    position: absolute;
-		    background: transparent;
-		    border: #fff solid 2px;
-		    border-top: none;
-		    border-right: none;
-		    height: 4px;
-		    width: 8px;
-		    -moz-transform: translate(-50%, -50%) rotate(-45deg);
-		    -ms-transform: translate(-50%, -50%) rotate(-45deg);
-		    -webkit-transform: translate(-50%, -50%) rotate(-45deg); 
-		    transform: translate(-50%, -50%) rotate(-45deg);	
-    	}
+        position: absolute;
+        background: transparent;
+        border: #fff solid 2px;
+        border-top: none;
+        border-right: none;
+        height: 4px;
+        width: 8px;
+        -moz-transform: translate(-50%, -50%) rotate(-45deg);
+        -ms-transform: translate(-50%, -50%) rotate(-45deg);
+        -webkit-transform: translate(-50%, -50%) rotate(-45deg); 
+        transform: translate(-50%, -50%) rotate(-45deg);	
+      }
     }
     &::-ms-check {
       display: none;
@@ -361,12 +361,12 @@ export const FormInput = styled('div', formInputProps)`
     height: 6px;
     cursor: pointer;
     &:checked {
-	    outline: none;
-	    box-shadow: 0 0 0 3px ${color.primary}, 0 0 0 4px ${color.primary};
+      outline: none;
+      box-shadow: 0 0 0 3px ${color.primary}, 0 0 0 4px ${color.primary};
     }
-  	&::-ms-check {
-  		display: none;
-  	}
+    &::-ms-check {
+      display: none;
+    }
 	}
 	input[type='date'] {
 		padding: 5px;
@@ -400,6 +400,10 @@ export const FormInput = styled('div', formInputProps)`
   }
 `
 
+const transHexToRgb = (hex) => {
+  return `${parseInt(hex.slice(1,3), 16)}, ${parseInt(hex.slice(3,5), 16)}, ${parseInt(hex.slice(5,7), 16)}`
+}
+
 const btnProps = { 
   bgColor: String, 
   textColor: String, 
@@ -408,8 +412,9 @@ const btnProps = {
 export const Button = styled('div', btnProps)`
   display: flex;
   justify-content: center;
+  align-items: center;
   background: ${props => props.bgColor || color.primary};
-  box-shadow: 0 4px 12px 0 ${props => props.borderColor ? props.borderColor : props.bgColor};
+  box-shadow: 0 4px 8px 0 rgba(${props => transHexToRgb(props.borderColor ? props.borderColor : props.bgColor)}, 0.5);
   border-radius: 20px;
   color: ${props => props.textColor || "white"};
   border: ${props => props.borderColor || 'none'} solid 1px;
@@ -459,7 +464,7 @@ export const MoreButton = styled('div', moreProps)`
   justify-content: ${ props => props.align || 'flex-end'};
   cursor: pointer;
   p {
-  	margin: 0;
+    margin: 0;
     display: inline-block;
     color: ${color.contrast};
     font-size: ${font.h3};
@@ -680,7 +685,7 @@ export const Table = styled.table`
       padding: auto;
       color: #324c5a;
       p {
-      	display: inline-block;
+        display: inline-block;
         font-size: 14px;
         margin: 0 auto;
         text-align: left;
@@ -738,6 +743,7 @@ export const DropDownCheckbox = styled.div`
 
 export const PopUp = styled.div`
   position: absolute;
+  z-index: 10;
   background: white; 
   width: 376px; 
   height: 310px;
@@ -796,6 +802,7 @@ export const Tab = styled.div`
   & > * {
     margin: 10px;
     padding: 5px 20px; 
+    cursor: pointer;
     &.active {
       background: #05b077;
       color: white; 

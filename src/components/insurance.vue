@@ -156,6 +156,7 @@ const hslAdder = (hsl) => {
 
 const productProps = { color: String, isShow: Number } 
 const Product = styled('div', productProps)`
+  cursor: pointer;
   position: relative;
   background: hsl(${props => props.color});
   color: white;
@@ -341,6 +342,7 @@ export default {
       this.isAccept = false;
       this.noteInput = '';
       this.id = -1;
+      Object.keys(this.hottest).forEach(key => this.hottest[key].isShow = -1);
     },
     changeTab(evt) {
       this.tab = evt.target.dataset.tab;

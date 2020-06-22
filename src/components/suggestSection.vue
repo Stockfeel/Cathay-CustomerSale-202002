@@ -44,7 +44,7 @@
             <input type="checkbox" v-model="isSync" value="on"/>
             <span class="slider"></span>
           </SwitchButton>
-          <Button>轉介</Button>    
+          <Button bgColor="#05b077" @click="goToIntroduce">轉介</Button>    
           <div class="suggest__notrans">
             <span>拒絕轉介</span>
             <div>X</div>
@@ -111,9 +111,36 @@ const ProductLayout = styled.section`
       margin-right: 20px;
     }
   }
+  .suggest__notime {
+    cursor: pointer;
+    position: absolute; 
+    top: -5px;
+    right: -5px; 
+    color: white;
+    background: #f5bd32;
+    border-radius: 20px;
+    font-size: 16px; 
+    padding: 5px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    div {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: 10px;
+    }
+  }
 `
 
 const InsuranceLayout = styled.section`
+  position: relative;
   padding: 30px 20px;
   & > div {
     display: flex;
@@ -163,6 +190,7 @@ const InsuranceLayout = styled.section`
     }
   }
   .suggest__notime {
+    cursor: pointer;
     position: absolute; 
     top: -5px;
     right: -5px; 
@@ -209,6 +237,9 @@ export default {
       this.serviceTable = this.menuState ? this.service.slice(0, 2) : this.service;
       this.productTable = this.menuState ? this.product.slice(0, 2) : this.product;
       this.menuState = !this.menuState;
+    },
+    goToIntroduce() {
+      this.$router.push('/introduce');
     }
   },
   props: {
