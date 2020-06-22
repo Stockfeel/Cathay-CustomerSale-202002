@@ -89,7 +89,7 @@
                 </FormInput>
               </div>
               <div class="input__buttons" v-if="item.edit">
-                <SendButton @click="item.edit = !item.edit;">儲存寄出</SendButton>
+                <SendButton @click="item.edit = !item.edit;">送出</SendButton>
                 <span @click="item.edit = !item.edit;">取消</span>
               </div>
             </td>

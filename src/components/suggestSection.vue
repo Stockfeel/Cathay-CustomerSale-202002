@@ -28,6 +28,10 @@
         <Icon v-if="menuState" :iconUrl="require('../assets/button_more.svg')" :size="20" :rotate="-90" />
         <Icon v-if="!menuState" :iconUrl="require('../assets/button_more.svg')" :size="20" :rotate="90" />
       </MoreButton>
+      <div class="suggest__notime">
+        全部沒時間
+        <div>-</div>
+      </div>
     </ProductLayout>
     <InsuranceLayout>
       <div>
@@ -39,52 +43,35 @@
           <SwitchButton :word="isSync == 'on' ? '同步中 ●' : '同步畫面'">
             <input type="checkbox" v-model="isSync" value="on"/>
             <span class="slider"></span>
-          </SwitchButton>    
-          <DropDown 
-            text="配對顧問"
-            :list="[{
-              text: '原顧問',
-              slug: 'introduce?type=current&cat=consult'
-            }, {
-              text: '新顧問',
-              slug: 'introduce?type=new&cat=consult'
-            }]" />
-          <DropDown 
-            text="諮詢客服"
-            :list="[{
-              text: '客服顧問',
-              slug: 'introduce?type=new&cat=service'
-            }, {
-              text: '本次客服',
-              slug: 'introduce?type=current&cat=service'
-            }]" />
+          </SwitchButton>
+          <Button>轉介</Button>    
           <div class="suggest__notrans">
             <span>拒絕轉介</span>
             <div>X</div>
           </div>
         </ButtonWrapper>
       </div>
-      <InsuranceSection :insurances="insurances" :class="`${isSync == 'on' ? 'active' : ''}`" />
       <div class="suggest__notime">
         全部沒時間
         <div>-</div>
       </div>
+      <InsuranceSection :insurances="insurances" :class="`${isSync == 'on' ? 'active' : ''}`" />
     </InsuranceLayout>
   </Card>
 </template>
- 
+
 <script>
 import { 
   Card, 
   Title, 
   SuggestButton, 
   MoreButton, 
+  Button,
   Icon,
   SwitchButton, 
   ButtonWrapper
 } from '../style.js';
 import InsuranceSection from './insuranceSection.vue';
-import DropDown from './ui/dropdown.vue';
 import styled from 'vue-styled-components';
 
 const ProductLayout = styled.section`
@@ -215,7 +202,7 @@ export default {
     Icon,
     SwitchButton,
     ButtonWrapper,
-    DropDown
+    Button
   },
   methods: {
     showMore() {

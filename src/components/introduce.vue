@@ -2,12 +2,30 @@
   <Modal :autoHeight="true">
     <Header>
       <router-link to='./'>
-        <CloseButton/>
+        <CloseButton />
       </router-link>
-      <Title textAlign='center'>{{ step === 0 ? stepTitle[step][$route.query.cat][$route.query.type] : stepTitle[step] }}</Title>
+      <Title textAlign='center'>轉介</Title>
     </Header>
     <IntroduceLayout v-if="step == 0">
-      <section v-if="$route.query.type == 'new'">
+      <section>
+        <div>
+          <p>
+            <span>轉介人員</span> 
+            <Icon v-if="!isSourceOpen" 
+              @click="isSourceOpen = !isSourceOpen"
+              :iconUrl="require('../assets/icon-arrow-dark-down.svg')" 
+              :size="15"></Icon>
+            <Icon v-if="isSourceOpen" 
+              @click="isSourceOpen = !isSourceOpen"
+              :iconUrl="require('../assets/icon-arrow-dark-up.svg')" 
+              :size="15"></Icon>
+          </p>
+          <DropDownMenu v-if="isSourceOpen">
+            <div>原顧問</div>
+            <div>新顧問</div>
+            <div>客服顧問</div>
+          </DropDownMenu>
+        </div>
         <div>
           <p>
             <span>台北市</span> 
@@ -41,7 +59,7 @@
                 <label>全選</label> 
               </FormInput> 
             </span>
-            <FormInput>
+            <FormInput inputBasis="25%">
               <input type='checkbox' />
               <label>松山區</label> 
             </FormInput>
@@ -192,6 +210,7 @@ const IntroduceLayout = styled.main`
     margin-bottom: 20px;
     & > * {
       margin: 0 2%;
+      width: 33%;
       border: solid 1px #d9dbdb;
       border-radius: 12px;
       height: 40px;
@@ -238,6 +257,7 @@ export default {
     return {
       step: 0,
       isMenuOpen: false,
+      isSourceOpen: false,
       isListOpen: false,
       noteInput: '',
       stepTitle: [{
