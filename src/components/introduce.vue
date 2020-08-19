@@ -1,5 +1,5 @@
 <template>
-  <Modal :autoHeight="true">
+  <Modal v-if="step < 3" :autoHeight="true">
     <Header>
       <router-link to='./'>
         <CloseButton />
@@ -158,11 +158,26 @@
       <IntroduceCheck />
     </IntroduceLayout>
     <ButtonWrapper wrapperAlign="center">
-      <Button v-if="step > 0" @click="step -= 1" bgColor="#fff" textColor="#05b077" borderColor="#05b077">刪除</Button>
-      <Button v-if="step < 2" @click="step += 1">下一步</Button>
-      <Button v-if="step === 2" @click="$router.push('../')">送出</Button>
+      <Button v-if="step >= 0" @click="step -= 1" bgColor="#fff" textColor="#05b077" borderColor="#05b077">刪除</Button>
+      <Button v-if="step < 2" @click="step += 1" bgColor="#05b077" textColor="#fff" borderColor="#05b077">下一步</Button>
+      <Button v-if="step === 2" @click="step += 1" bgColor="#05b077" textColor="#fff" borderColor="#05b077">請客戶填寫預約單</Button>
     </ButtonWrapper>
   </Modal>
+  <ModalSP v-else>
+    <Header>
+      <router-link to='./'>
+        <CloseButton />
+      </router-link>
+      <Title textAlign='center'>轉介</Title>
+    </Header>
+    <IntroduceLayout v-if="step == 3">
+      <IntroduceCheckOver />
+    </IntroduceLayout>
+    <ButtonWrapper wrapperAlign="center">
+      <Button @click="step -= 1" bgColor="#fff" textColor="#05b077" borderColor="#05b077">關閉</Button>
+      <Button @click="$router.push('../')" bgColor="#05b077" textColor="#fff" borderColor="#05b077">送出</Button>
+    </ButtonWrapper>
+  </ModalSP>
 </template>
 
 <script>
@@ -177,9 +192,11 @@ import {
   Table, 
   DropDownCheckbox, 
   FormInput, 
-  Icon } from "../style.js";
+  Icon,
+  ModalSP } from "../style.js";
 import styled from "vue-styled-components";
 import IntroduceCheck from "./introduceCheck.vue";
+import IntroduceCheckOver from "./introduceCheckOver.vue";
 import Textarea from './ui/textarea.vue';
 
 const IntroduceTable = styled(Table)`
@@ -248,7 +265,9 @@ export default {
     FormInput,
     Icon,
     IntroduceCheck,
-    Textarea
+    IntroduceCheckOver,
+    Textarea,
+    ModalSP
   },
   methods: {
 

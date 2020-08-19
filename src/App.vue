@@ -36,7 +36,7 @@ export default {
   components: {
     Home,
     GlobalFonts,
-    InitialLayout
+    InitialLayout,
   },
   mounted() {
     if(document.querySelector("body").offsetWidth < 1280) {

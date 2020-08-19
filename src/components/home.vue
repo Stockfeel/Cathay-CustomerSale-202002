@@ -269,7 +269,7 @@ export default {
     MarketSection,
     SuggestSection,
     HomeLayout,
-    Loading
+    Loading,
   },
   mounted: function(){
     this.getData();

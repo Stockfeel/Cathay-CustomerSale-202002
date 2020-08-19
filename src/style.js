@@ -855,6 +855,28 @@ export const Modal = styled('div', modalProps)`
 		${props => props.scroll ? 'overflow-y: scroll;' : ''}
   }
 `
+
+export const ModalSP = styled('div', modalProps)`
+	padding: 20px 0;
+	position: fixed;
+	left: 50%
+	top: 50%;
+	transform: translate(-50%, -50%);
+	overflow-x: hidden;
+	width: 100vw;
+	border-radius: 8px;
+	background: ${color.bg};
+	z-index: 50;
+	height: 100vh;
+	box-shadow: 
+    0 0 0 1000px rgba(1,1,1,.3),
+    0 0 0 1000px rgba(1,1,1,.3);
+	& > main {
+		width: 100%;
+		height: 82%;
+  }
+`
+
 export const ErrorModal = styled(Modal)`
   height: 50%;
   width: 90%;
