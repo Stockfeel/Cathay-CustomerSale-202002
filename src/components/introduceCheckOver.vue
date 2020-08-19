@@ -40,12 +40,11 @@
       <tr>
         <th>
           <p>方便時間</p>
-          <p class="warning">(可複選)</p>
         </th>
         <td>
           <CheckFormWrapper>
             <FormInput inputBasis="50%" v-for="(time, idx) in formTime" :key="`time-${idx}`">
-              <input type="checkbox" :id="`time-${idx}`" />
+              <input type="radio" :id="`time-${idx}`" />
               <label :for="`time-${idx}`">{{ time }}</label>
             </FormInput>
           </CheckFormWrapper>
